@@ -14,9 +14,9 @@ type Handler struct {
 }
 
 func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	if h, ok := s.handlers[r.Method+" "+r.URL.Path]; ok {
 		w.WriteHeader(h.statusCode)
-		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprint(w, h.response)
 		return
 	}
