@@ -28,7 +28,7 @@ func (s *Server) Handlers() error {
 	s.handlers = make(map[string]Handler)
 
 	for path, v := range s.openapi.Paths {
-		for code, v := range v.Get.Responses {
+		for code, resp := range v.Get.Responses {
 			statusCode, err := strconv.Atoi(code)
 			if err != nil {
 				return err
@@ -38,7 +38,7 @@ func (s *Server) Handlers() error {
 				method:     http.MethodGet,
 				path:       path,
 				statusCode: statusCode,
-				response:   v.Content["application/json"].Example,
+				response:   resp.Content["application/json"].Example,
 			}
 		}
 	}
