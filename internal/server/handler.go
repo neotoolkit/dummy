@@ -1,8 +1,9 @@
 package server
 
 import (
-	"fmt"
+	"encoding/json"
 	"net/http"
+	"reflect"
 	"strconv"
 )
 
@@ -17,7 +18,8 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	if h, ok := s.handlers[r.Method+" "+r.URL.Path]; ok {
 		w.WriteHeader(h.statusCode)
-		fmt.Fprint(w, h.response)
+		bytes, _ := json.Marshal(h.response)
+		w.Write(bytes)
 		return
 	}
 
@@ -34,11 +36,34 @@ func (s *Server) Handlers() error {
 				return err
 			}
 
+			val := reflect.ValueOf(resp.Content["application/json"].Example)
+
+			var res interface{}
+
+			switch val.Kind() {
+			case reflect.Map:
+				m := make(map[string]interface{}, len(val.MapKeys()))
+				for _, e := range val.MapKeys() {
+					m[e.Elem().String()] = val.MapIndex(e).Elem().String()
+				}
+				res = m
+			case reflect.Slice:
+				arr := make([]interface{}, 0)
+				for i := 0; i < val.Len(); i++ {
+					m := make(map[string]interface{})
+					for _, e := range val.Index(i).Elem().MapKeys() {
+						m[e.Elem().String()] = val.Index(i).Elem().MapIndex(e).Elem().String()
+					}
+					arr = append(arr, m)
+				}
+				res = arr
+			}
+
 			s.handlers[http.MethodGet+" "+path] = Handler{
 				method:     http.MethodGet,
 				path:       path,
 				statusCode: statusCode,
-				response:   resp.Content["application/json"].Example,
+				response:   res,
 			}
 		}
 	}
