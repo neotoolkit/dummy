@@ -27,8 +27,8 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 func (s *Server) Handlers() error {
 	s.handlers = make(map[string]Handler)
 
-	for path, v := range s.openapi.Paths {
-		for code, resp := range v.Get.Responses {
+	for path, method := range s.openapi.Paths {
+		for code, resp := range method.Get.Responses {
 			statusCode, err := strconv.Atoi(code)
 			if err != nil {
 				return err
