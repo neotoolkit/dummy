@@ -2,6 +2,8 @@ package command
 
 import (
 	"fmt"
+	"github.com/go-dummy/dummy/internal/openapi3"
+	"github.com/go-dummy/dummy/internal/server"
 	"github.com/spf13/cobra"
 	"os"
 )
@@ -25,4 +27,17 @@ func (e *Executor) executeServer(_ *cobra.Command, args []string) {
 	}
 
 	e.cfg.Server.Path = args[0]
+
+	openapi, err := openapi3.Parse(e.cfg.Server.Path)
+	if err != nil {
+		fmt.Fprint(os.Stderr, "can't parse yaml\n")
+		os.Exit(3)
+	}
+
+	s := server.NewServer(e.cfg.Server, openapi)
+
+	if err := s.Run(); err != nil {
+		fmt.Fprint(os.Stderr, "server error\n")
+		os.Exit(3)
+	}
 }
