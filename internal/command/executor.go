@@ -8,7 +8,12 @@ type Executor struct {
 }
 
 func NewExecutor() *Executor {
-	return &Executor{}
+	e := &Executor{}
+
+	e.initRoot()
+	e.initServer()
+
+	return e
 }
 
 func (e *Executor) Execute() error {
