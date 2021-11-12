@@ -8,14 +8,3 @@ type Info struct {
 	License        License `json:"license" yaml:"license"`
 	Version        string  `json:"version" yaml:"version"`
 }
-
-type Contact struct {
-	Name  string `json:"name" yaml:"name"`
-	URL   string `json:"url" yaml:"url"`
-	Email string `json:"email" yaml:"email"`
-}
-
-type License struct {
-	Name string `json:"name" yaml:"name"`
-	URL  string `json:"url" yaml:"url"`
-}
