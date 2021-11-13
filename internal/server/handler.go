@@ -48,16 +48,13 @@ func (s *Server) Handlers() error {
 }
 
 func example(i interface{}) interface{} {
-	switch i.(type) {
+	switch data := i.(type) {
 	case map[interface{}]interface{}:
-		data := i.(map[interface{}]interface{})
 		return parseExample(data)
 	case []interface{}:
-		data := i.([]interface{})
 		res := make([]map[string]interface{}, len(data))
 		for k, v := range data {
-			data := v.(map[interface{}]interface{})
-			res[k] = parseExample(data)
+			res[k] = parseExample(v.(map[interface{}]interface{}))
 		}
 		return res
 	}
