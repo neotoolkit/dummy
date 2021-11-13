@@ -3,7 +3,6 @@ package server
 import (
 	"encoding/json"
 	"net/http"
-	"reflect"
 	"strconv"
 )
 
@@ -36,37 +35,40 @@ func (s *Server) Handlers() error {
 				return err
 			}
 
-			val := reflect.ValueOf(resp.Content["application/json"].Example)
-
-			var res interface{}
-
-			switch val.Kind() {
-			case reflect.Map:
-				m := make(map[string]interface{}, len(val.MapKeys()))
-				for _, e := range val.MapKeys() {
-					m[e.Elem().String()] = val.MapIndex(e).Elem().String()
-				}
-				res = m
-			case reflect.Slice:
-				arr := make([]interface{}, 0)
-				for i := 0; i < val.Len(); i++ {
-					m := make(map[string]interface{})
-					for _, e := range val.Index(i).Elem().MapKeys() {
-						m[e.Elem().String()] = val.Index(i).Elem().MapIndex(e).Elem().String()
-					}
-					arr = append(arr, m)
-				}
-				res = arr
-			}
-
 			s.handlers[http.MethodGet+" "+path] = Handler{
 				method:     http.MethodGet,
 				path:       path,
 				statusCode: statusCode,
-				response:   res,
+				response:   example(resp.Content["application/json"].Example),
 			}
 		}
 	}
 
 	return nil
+}
+
+func example(i interface{}) interface{} {
+	switch i.(type) {
+	case map[interface{}]interface{}:
+		data := i.(map[interface{}]interface{})
+		return parseExample(data)
+	case []interface{}:
+		data := i.([]interface{})
+		res := make([]map[string]interface{}, len(data))
+		for k, v := range data {
+			data := v.(map[interface{}]interface{})
+			res[k] = parseExample(data)
+		}
+		return res
+	}
+
+	return nil
+}
+
+func parseExample(example map[interface{}]interface{}) map[string]interface{} {
+	res := make(map[string]interface{}, len(example))
+	for k, v := range example {
+		res[k.(string)] = v
+	}
+	return res
 }
