@@ -14,8 +14,9 @@ type Server struct {
 
 func NewServer(cfg config.Server, openapi openapi3.OpenAPI) *Server {
 	return &Server{
-		cfg:     cfg,
-		openapi: openapi,
+		cfg:      cfg,
+		openapi:  openapi,
+		handlers: make(map[string]Handler, len(openapi.Paths)),
 	}
 }
 
