@@ -2,6 +2,7 @@ package test
 
 import (
 	"github.com/go-dummy/dummy/internal/config"
+	"github.com/go-dummy/dummy/internal/logger"
 	"github.com/go-dummy/dummy/internal/openapi3"
 	"github.com/go-dummy/dummy/internal/server"
 	"github.com/stretchr/testify/require"
@@ -37,6 +38,8 @@ func TestCheck(t *testing.T) {
 		}
 
 		s.OpenAPI = openapi
+
+		s.Logger = logger.NewLogger()
 
 		s.Handlers = make(map[string]server.Handler)
 
