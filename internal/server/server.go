@@ -7,22 +7,22 @@ import (
 )
 
 type Server struct {
-	cfg      config.Server
-	openapi  openapi3.OpenAPI
-	handlers map[string]Handler
-	server   *http.Server
+	Cfg      config.Server
+	OpenAPI  openapi3.OpenAPI
+	Handlers map[string]Handler
+	Server   *http.Server
 }
 
 func NewServer(cfg config.Server, openapi openapi3.OpenAPI) *Server {
 	return &Server{
-		cfg:      cfg,
-		openapi:  openapi,
-		handlers: make(map[string]Handler, len(openapi.Paths)),
+		Cfg:      cfg,
+		OpenAPI:  openapi,
+		Handlers: make(map[string]Handler, len(openapi.Paths)),
 	}
 }
 
 func (s *Server) Run() error {
-	if err := s.Handlers(); err != nil {
+	if err := s.SetHandlers(); err != nil {
 		return err
 	}
 
@@ -30,10 +30,10 @@ func (s *Server) Run() error {
 
 	mux.HandleFunc("/", s.Handler)
 
-	s.server = &http.Server{
-		Addr:    ":" + s.cfg.Port,
+	s.Server = &http.Server{
+		Addr:    ":" + s.Cfg.Port,
 		Handler: mux,
 	}
 
-	return s.server.ListenAndServe()
+	return s.Server.ListenAndServe()
 }

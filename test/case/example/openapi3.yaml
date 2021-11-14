@@ -1,0 +1,74 @@
+openapi: 3.0.3
+info:
+  title: Couriers dummy API
+  version: 0.1.0
+  description: ''
+tags:
+  - name: Couriers
+paths:
+  /couriers:
+    get:
+      tags:
+        - Couriers
+      summary: ''
+      operationId: getCouriers
+      parameters:
+        - in: query
+          name: status
+          description: ''
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - in: query
+          name: limit
+          description: ''
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - in: query
+          name: offset
+          description: ''
+          required: false
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Courier'
+              example:
+                - id: "1"
+                  firstName: "2"
+                  lastName: "3"
+                  status: "4"
+                - id: "1"
+                  firstName: "2"
+                  lastName: "3"
+                  status: "4"
+components:
+  schemas:
+    Courier:
+      type: object
+      required:
+        - id
+        - firstName
+        - lastName
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+        lastName:
+          type: string
+        status:
+          type: string
