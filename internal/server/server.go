@@ -10,6 +10,7 @@ type Server struct {
 	cfg      config.Server
 	openapi  openapi3.OpenAPI
 	handlers map[string]Handler
+	server   *http.Server
 }
 
 func NewServer(cfg config.Server, openapi openapi3.OpenAPI) *Server {
@@ -25,7 +26,14 @@ func (s *Server) Run() error {
 		return err
 	}
 
-	http.HandleFunc("/", s.Handler)
+	mux := http.NewServeMux()
 
-	return http.ListenAndServe(":"+s.cfg.Port, nil)
+	mux.HandleFunc("/", s.Handler)
+
+	s.server = &http.Server{
+		Addr:    ":" + s.cfg.Port,
+		Handler: mux,
+	}
+
+	return s.server.ListenAndServe()
 }
