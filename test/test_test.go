@@ -12,18 +12,18 @@ import (
 )
 
 func TestCheck(t *testing.T) {
-	cases, err := ioutil.ReadDir("./case")
+	cases, err := ioutil.ReadDir("./cases")
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	for _, c := range cases {
-		response, err := ioutil.ReadFile("case/" + c.Name() + "/response.json")
+		response, err := ioutil.ReadFile("cases/" + c.Name() + "/response.json")
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		path := "case/" + c.Name() + "/openapi3.yaml"
+		path := "cases/" + c.Name() + "/openapi3.yaml"
 
 		openapi, err := openapi3.Parse(path)
 		if err != nil {
@@ -52,17 +52,19 @@ func TestCheck(t *testing.T) {
 
 		for k, v := range s.OpenAPI.Paths {
 			if v.Get != nil {
-				resp, err := http.Get(newServer.URL + k)
-				if err != nil {
-					t.Fatal(err)
-				}
-				defer resp.Body.Close()
-				out, err := ioutil.ReadAll(resp.Body)
-				if err != nil {
-					t.Fatal(err)
-				}
+				t.Run(c.Name(), func(t *testing.T) {
+					resp, err := http.Get(newServer.URL + k)
+					if err != nil {
+						t.Fatal(err)
+					}
+					defer resp.Body.Close()
+					out, err := ioutil.ReadAll(resp.Body)
+					if err != nil {
+						t.Fatal(err)
+					}
 
-				require.JSONEq(t, string(out), string(response))
+					require.JSONEq(t, string(out), string(response))
+				})
 			}
 		}
 
