@@ -18,7 +18,7 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 	if h, ok := s.handlers[r.Method+" "+r.URL.Path]; ok {
 		w.WriteHeader(h.statusCode)
 		bytes, _ := json.Marshal(h.response)
-		w.Write(bytes)
+		_, _ = w.Write(bytes)
 		return
 	}
 
