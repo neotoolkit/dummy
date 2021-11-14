@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/go-dummy/dummy/internal/config"
+	"github.com/go-dummy/dummy/internal/logger"
 	"github.com/go-dummy/dummy/internal/openapi3"
 	"net/http"
 )
@@ -11,6 +12,7 @@ type Server struct {
 	OpenAPI  openapi3.OpenAPI
 	Handlers map[string]Handler
 	Server   *http.Server
+	Logger   *logger.Logger
 }
 
 func NewServer(cfg config.Server, openapi openapi3.OpenAPI) *Server {
@@ -18,6 +20,7 @@ func NewServer(cfg config.Server, openapi openapi3.OpenAPI) *Server {
 		Cfg:      cfg,
 		OpenAPI:  openapi,
 		Handlers: make(map[string]Handler, len(openapi.Paths)),
+		Logger:   logger.NewLogger(),
 	}
 }
 

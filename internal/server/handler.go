@@ -33,6 +33,8 @@ func (s *Server) SetHandlers() error {
 				return err
 			}
 
+			s.Logger.Info().Msg(http.MethodGet + " " + path)
+
 			s.Handlers[http.MethodGet+" "+path] = Handler{
 				method:     http.MethodGet,
 				path:       path,
