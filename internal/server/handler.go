@@ -46,6 +46,24 @@ func (s *Server) SetHandlers() error {
 				}
 			}
 		}
+
+		if method.Post != nil {
+			for code, resp := range method.Post.Responses {
+				statusCode, err := strconv.Atoi(code)
+				if err != nil {
+					return err
+				}
+
+				s.Logger.Info().Msg(http.MethodPost + " " + path)
+
+				s.Handlers[http.MethodPost+" "+path] = Handler{
+					method:     http.MethodPost,
+					path:       path,
+					statusCode: statusCode,
+					response:   example(resp.Content["application/json"].Example),
+				}
+			}
+		}
 	}
 
 	return nil
