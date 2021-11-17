@@ -27,19 +27,21 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) SetHandlers() error {
 	for path, method := range s.OpenAPI.Paths {
-		for code, resp := range method.Get.Responses {
-			statusCode, err := strconv.Atoi(code)
-			if err != nil {
-				return err
-			}
+		if method.Get != nil {
+			for code, resp := range method.Get.Responses {
+				statusCode, err := strconv.Atoi(code)
+				if err != nil {
+					return err
+				}
 
-			s.Logger.Info().Msg(http.MethodGet + " " + path)
+				s.Logger.Info().Msg(http.MethodGet + " " + path)
 
-			s.Handlers[http.MethodGet+" "+path] = Handler{
-				method:     http.MethodGet,
-				path:       path,
-				statusCode: statusCode,
-				response:   example(resp.Content["application/json"].Example),
+				s.Handlers[http.MethodGet+" "+path] = Handler{
+					method:     http.MethodGet,
+					path:       path,
+					statusCode: statusCode,
+					response:   example(resp.Content["application/json"].Example),
+				}
 			}
 		}
 	}

@@ -53,22 +53,24 @@ func TestCheck(t *testing.T) {
 
 		newServer := httptest.NewServer(mux)
 
-		for k, v := range s.OpenAPI.Paths {
-			if v.Get != nil {
-				t.Run(c.Name(), func(t *testing.T) {
-					resp, err := http.Get(newServer.URL + k)
-					if err != nil {
-						t.Fatal(err)
-					}
-					defer resp.Body.Close()
-					out, err := ioutil.ReadAll(resp.Body)
-					if err != nil {
-						t.Fatal(err)
-					}
+		for k := range s.OpenAPI.Paths {
 
+			t.Run(c.Name(), func(t *testing.T) {
+				resp, err := http.Get(newServer.URL + k)
+				if err != nil {
+					t.Fatal(err)
+				}
+				defer resp.Body.Close()
+				out, err := ioutil.ReadAll(resp.Body)
+				if err != nil {
+					t.Fatal(err)
+				}
+
+				if resp.StatusCode != http.StatusNotFound {
 					require.JSONEq(t, string(out), string(response))
-				})
-			}
+				}
+			})
+
 		}
 
 	}
