@@ -36,11 +36,8 @@ func TestCheck(t *testing.T) {
 			Port: "4000",
 			Path: path,
 		}
-
 		s.OpenAPI = openapi
-
 		s.Logger = logger.NewLogger()
-
 		s.Handlers = make(map[string]server.Handler)
 
 		if err := s.SetHandlers(); err != nil {
@@ -48,13 +45,10 @@ func TestCheck(t *testing.T) {
 		}
 
 		mux := http.NewServeMux()
-
 		mux.HandleFunc("/", s.Handler)
-
 		newServer := httptest.NewServer(mux)
 
 		for k := range s.OpenAPI.Paths {
-
 			t.Run(c.Name(), func(t *testing.T) {
 				resp, err := http.Get(newServer.URL + k)
 				if err != nil {
@@ -70,8 +64,6 @@ func TestCheck(t *testing.T) {
 					require.JSONEq(t, string(out), string(response))
 				}
 			})
-
 		}
-
 	}
 }

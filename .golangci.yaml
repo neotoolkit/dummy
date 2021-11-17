@@ -11,3 +11,4 @@ linters:
     - typecheck
     - unused
     - varcheck
+    - wsl

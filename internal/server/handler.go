@@ -15,10 +15,12 @@ type Handler struct {
 
 func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+
 	if h, ok := s.Handlers[r.Method+" "+r.URL.Path]; ok {
 		w.WriteHeader(h.statusCode)
 		bytes, _ := json.Marshal(h.response)
 		_, _ = w.Write(bytes)
+
 		return
 	}
 
@@ -58,6 +60,7 @@ func example(i interface{}) interface{} {
 		for k, v := range data {
 			res[k] = parseExample(v.(map[interface{}]interface{}))
 		}
+
 		return res
 	}
 
@@ -69,5 +72,6 @@ func parseExample(example map[interface{}]interface{}) map[string]interface{} {
 	for k, v := range example {
 		res[k.(string)] = v
 	}
+
 	return res
 }
