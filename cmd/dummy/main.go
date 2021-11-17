@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/go-dummy/dummy/internal/command"
+	"github.com/go-dummy/dummy/internal/exitcode"
 )
 
 func main() {
@@ -12,6 +13,6 @@ func main() {
 
 	if err := e.Execute(); err != nil {
 		fmt.Fprintf(os.Stderr, "failed executing command with error %v\n", err)
-		os.Exit(3)
+		os.Exit(exitcode.Failure)
 	}
 }
