@@ -53,7 +53,7 @@ func TestCheck(t *testing.T) {
 
 		newServer := httptest.NewServer(mux)
 
-		for k, _ := range s.OpenAPI.Paths {
+		for k := range s.OpenAPI.Paths {
 
 			t.Run(c.Name(), func(t *testing.T) {
 				resp, err := http.Get(newServer.URL + k)
