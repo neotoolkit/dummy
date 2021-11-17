@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
@@ -48,13 +49,26 @@ func TestCheck(t *testing.T) {
 		mux.HandleFunc("/", s.Handler)
 		newServer := httptest.NewServer(mux)
 
-		for k := range s.OpenAPI.Paths {
+		for k, v := range s.OpenAPI.Paths {
 			t.Run(c.Name(), func(t *testing.T) {
-				resp, err := http.Get(newServer.URL + k)
+				var method strings.Builder
+				switch {
+				case v.Post != nil:
+					method.WriteString(http.MethodPost)
+				case v.Get != nil:
+					method.WriteString(http.MethodGet)
+				}
+
+				req, err := http.NewRequest(method.String(), newServer.URL+k, nil)
 				if err != nil {
 					t.Fatal(err)
 				}
-				defer resp.Body.Close()
+
+				resp, err := http.DefaultClient.Do(req)
+				if err != nil {
+					t.Fatal(err)
+				}
+
 				out, err := ioutil.ReadAll(resp.Body)
 				if err != nil {
 					t.Fatal(err)
