@@ -27,7 +27,7 @@ func TestCheck(t *testing.T) {
 		}
 
 		s := new(server.Server)
-		s.Cfg = config.Server{
+		s.Config = config.Server{
 			Port: "4000",
 			Path: path,
 		}

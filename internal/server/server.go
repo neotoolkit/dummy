@@ -8,16 +8,16 @@ import (
 )
 
 type Server struct {
-	Cfg      config.Server
+	Config   config.Server
 	OpenAPI  openapi3.OpenAPI
 	Handlers map[string]Handler
 	Server   *http.Server
 	Logger   *logger.Logger
 }
 
-func NewServer(cfg config.Server, openapi openapi3.OpenAPI) *Server {
+func NewServer(config config.Server, openapi openapi3.OpenAPI) *Server {
 	return &Server{
-		Cfg:      cfg,
+		Config:   config,
 		OpenAPI:  openapi,
 		Handlers: make(map[string]Handler, len(openapi.Paths)),
 		Logger:   logger.NewLogger(),
@@ -34,7 +34,7 @@ func (s *Server) Run() error {
 	mux.HandleFunc("/", s.Handler)
 
 	s.Server = &http.Server{
-		Addr:    ":" + s.Cfg.Port,
+		Addr:    ":" + s.Config.Port,
 		Handler: mux,
 	}
 
