@@ -1,4 +1,4 @@
-Dummy is API mocking with OpenAPI v3.x
+Dummy is an API mocking with OpenAPI v3.x
 
 # Usage
 
