@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"github.com/go-dummy/dummy/internal/openapi3"
 	"net/http"
 	"strconv"
 )
@@ -29,39 +30,35 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) SetHandlers() error {
 	for path, method := range s.OpenAPI.Paths {
-		if method.Get != nil {
-			for code, resp := range method.Get.Responses {
-				statusCode, err := strconv.Atoi(code)
-				if err != nil {
-					return err
-				}
-
-				s.Logger.Info().Msg(http.MethodGet + " " + path)
-
-				s.Handlers[http.MethodGet+" "+path] = Handler{
-					method:     http.MethodGet,
-					path:       path,
-					statusCode: statusCode,
-					response:   example(resp.Content["application/json"].Example),
-				}
-			}
+		if err := addHandler(s.Handlers, http.MethodGet, path, method.Get); err != nil {
+			return err
 		}
 
-		if method.Post != nil {
-			for code, resp := range method.Post.Responses {
-				statusCode, err := strconv.Atoi(code)
-				if err != nil {
-					return err
-				}
+		if err := addHandler(s.Handlers, http.MethodPost, path, method.Post); err != nil {
+			return err
+		}
+	}
 
-				s.Logger.Info().Msg(http.MethodPost + " " + path)
+	return nil
+}
 
-				s.Handlers[http.MethodPost+" "+path] = Handler{
-					method:     http.MethodPost,
-					path:       path,
-					statusCode: statusCode,
-					response:   example(resp.Content["application/json"].Example),
-				}
+func addHandler(h map[string]Handler, method, path string, o *openapi3.Operation) error {
+	if o == nil {
+		return nil
+	}
+
+	for code, resp := range o.Responses {
+		statusCode, err := strconv.Atoi(code)
+		if err != nil {
+			return err
+		}
+
+		if statusCode >= http.StatusOK || statusCode <= http.StatusNoContent {
+			h[method+" "+path] = Handler{
+				method:     method,
+				path:       path,
+				statusCode: statusCode,
+				response:   example(resp.Content["application/json"].Example),
 			}
 		}
 	}
