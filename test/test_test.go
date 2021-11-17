@@ -9,7 +9,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 )
 
@@ -20,11 +19,6 @@ func TestCheck(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		response, err := ioutil.ReadFile("cases/" + c.Name() + "/response.json")
-		if err != nil {
-			t.Fatal(err)
-		}
-
 		path := "cases/" + c.Name() + "/openapi3.yaml"
 
 		openapi, err := openapi3.Parse(path)
@@ -51,33 +45,41 @@ func TestCheck(t *testing.T) {
 
 		for k, v := range s.OpenAPI.Paths {
 			t.Run(c.Name(), func(t *testing.T) {
-				var method strings.Builder
-				switch {
-				case v.Post != nil:
-					method.WriteString(http.MethodPost)
-				case v.Get != nil:
-					method.WriteString(http.MethodGet)
+				if v.Post != nil {
+					makeTestReq(t, http.MethodPost, newServer.URL+k, c.Name())
 				}
-
-				req, err := http.NewRequest(method.String(), newServer.URL+k, nil)
-				if err != nil {
-					t.Fatal(err)
-				}
-
-				resp, err := http.DefaultClient.Do(req)
-				if err != nil {
-					t.Fatal(err)
-				}
-
-				out, err := ioutil.ReadAll(resp.Body)
-				if err != nil {
-					t.Fatal(err)
-				}
-
-				if resp.StatusCode != http.StatusNotFound {
-					require.JSONEq(t, string(out), string(response))
+				if v.Get != nil {
+					makeTestReq(t, http.MethodGet, newServer.URL+k, c.Name())
 				}
 			})
 		}
+	}
+}
+
+func makeTestReq(t *testing.T, method, url, testCase string) {
+	t.Helper()
+
+	req, err := http.NewRequest(method, url, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	out, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	r, err := ioutil.ReadFile("cases/" + testCase + "/" + method + ".response.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if resp.StatusCode != http.StatusNotFound {
+		require.JSONEq(t, string(out), string(r))
 	}
 }
