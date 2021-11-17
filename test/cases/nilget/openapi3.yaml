@@ -1,0 +1,10 @@
+openapi: 3.0.3
+info:
+  title: Couriers dummy API
+  version: 0.1.0
+  description: ''
+tags:
+  - name: Couriers
+paths:
+  /couriers:
+    description: ''
