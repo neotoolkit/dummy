@@ -2,10 +2,12 @@ package command
 
 import (
 	"fmt"
+	"os"
+
+	"github.com/spf13/cobra"
+
 	"github.com/go-dummy/dummy/internal/openapi3"
 	"github.com/go-dummy/dummy/internal/server"
-	"github.com/spf13/cobra"
-	"os"
 )
 
 func (e *Executor) initServer() {

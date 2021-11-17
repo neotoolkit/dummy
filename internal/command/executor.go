@@ -1,8 +1,9 @@
 package command
 
 import (
-	"github.com/go-dummy/dummy/internal/config"
 	"github.com/spf13/cobra"
+
+	"github.com/go-dummy/dummy/internal/config"
 )
 
 type Executor struct {

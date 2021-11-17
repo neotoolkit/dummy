@@ -2,9 +2,10 @@ package server
 
 import (
 	"encoding/json"
-	"github.com/go-dummy/dummy/internal/openapi3"
 	"net/http"
 	"strconv"
+
+	"github.com/go-dummy/dummy/internal/openapi3"
 )
 
 type Handler struct {

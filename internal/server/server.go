@@ -1,10 +1,11 @@
 package server
 
 import (
+	"net/http"
+
 	"github.com/go-dummy/dummy/internal/config"
 	"github.com/go-dummy/dummy/internal/logger"
 	"github.com/go-dummy/dummy/internal/openapi3"
-	"net/http"
 )
 
 type Server struct {
