@@ -1,15 +1,17 @@
 package test
 
 import (
-	"github.com/go-dummy/dummy/internal/config"
-	"github.com/go-dummy/dummy/internal/logger"
-	"github.com/go-dummy/dummy/internal/openapi3"
-	"github.com/go-dummy/dummy/internal/server"
-	"github.com/stretchr/testify/require"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/stretchr/testify/require"
+
+	"github.com/go-dummy/dummy/internal/config"
+	"github.com/go-dummy/dummy/internal/logger"
+	"github.com/go-dummy/dummy/internal/openapi3"
+	"github.com/go-dummy/dummy/internal/server"
 )
 
 func TestCheck(t *testing.T) {

@@ -1,8 +1,9 @@
 package openapi3
 
 import (
-	"github.com/go-yaml/yaml"
 	"io/ioutil"
+
+	"github.com/go-yaml/yaml"
 )
 
 func Parse(path string) (res OpenAPI, err error) {
