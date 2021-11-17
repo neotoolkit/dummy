@@ -1,4 +1,4 @@
-# dummy
+Dummy is API mocking with OpenAPI v3.x
 
 # Usage
 
