@@ -6,8 +6,7 @@ import (
 )
 
 type Executor struct {
-	cfg *config.Config
-
+	cfg       *config.Config
 	rootCmd   *cobra.Command
 	serverCmd *cobra.Command
 }
