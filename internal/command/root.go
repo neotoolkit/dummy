@@ -16,7 +16,7 @@ func (e *Executor) initRoot() {
 		Long:  ``,
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) != 0 {
-				fmt.Fprintln(os.Stdout, "Usage: dummy")
+				fmt.Println("Usage: dummy")
 				os.Exit(exitcode.Success)
 			}
 		},
