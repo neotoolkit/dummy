@@ -2,8 +2,11 @@ package command
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
+
+	"github.com/go-dummy/dummy/internal/exitcode"
 )
 
 func (e *Executor) initVersion() {
@@ -11,7 +14,8 @@ func (e *Executor) initVersion() {
 		Use:   "version",
 		Short: "Version",
 		Run: func(_ *cobra.Command, _ []string) {
-			fmt.Println(e.version)
+			fmt.Fprint(os.Stdout, e.version+"\n")
+			os.Exit(exitcode.Success)
 		},
 	}
 
