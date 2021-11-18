@@ -7,18 +7,24 @@ import (
 )
 
 type Executor struct {
-	cfg       *config.Config
-	rootCmd   *cobra.Command
-	serverCmd *cobra.Command
+	cfg     *config.Config
+	version string
+
+	rootCmd    *cobra.Command
+	serverCmd  *cobra.Command
+	versionCmd *cobra.Command
 }
 
-func NewExecutor() *Executor {
+func NewExecutor(version string) *Executor {
 	e := &Executor{
 		cfg: config.NewConfig(),
+
+		version: version,
 	}
 
 	e.initRoot()
 	e.initServer()
+	e.initVersion()
 
 	return e
 }

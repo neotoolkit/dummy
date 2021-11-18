@@ -8,8 +8,10 @@ import (
 	"github.com/go-dummy/dummy/internal/exitcode"
 )
 
+const version = "0.0.0"
+
 func main() {
-	e := command.NewExecutor()
+	e := command.NewExecutor(version)
 
 	if err := e.Execute(); err != nil {
 		fmt.Fprintf(os.Stderr, "failed executing command with error %v\n", err)
