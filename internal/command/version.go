@@ -7,7 +7,7 @@ import (
 )
 
 func (e *Executor) initVersion() {
-	versionCmd := &cobra.Command{
+	e.versionCmd = &cobra.Command{
 		Use:   "version",
 		Short: "Version",
 		Run: func(cmd *cobra.Command, _ []string) {
@@ -15,5 +15,5 @@ func (e *Executor) initVersion() {
 		},
 	}
 
-	e.rootCmd.AddCommand(versionCmd)
+	e.rootCmd.AddCommand(e.versionCmd)
 }
