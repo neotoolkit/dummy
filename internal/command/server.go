@@ -25,7 +25,7 @@ func (e *Executor) initServer() {
 
 func (e *Executor) executeServer(_ *cobra.Command, args []string) {
 	if len(args) == 0 {
-		fmt.Fprint(os.Stderr, "empty path\n")
+		fmt.Fprintln(os.Stderr, "empty path")
 		os.Exit(exitcode.Failure)
 	}
 
@@ -33,14 +33,14 @@ func (e *Executor) executeServer(_ *cobra.Command, args []string) {
 
 	openapi, err := openapi3.Parse(e.cfg.Server.Path)
 	if err != nil {
-		fmt.Fprint(os.Stderr, "can't parse yaml\n")
+		fmt.Fprintln(os.Stderr, "can't parse yaml")
 		os.Exit(exitcode.Failure)
 	}
 
 	s := server.NewServer(e.cfg.Server, openapi)
 
 	if err := s.Run(); err != nil {
-		fmt.Fprint(os.Stderr, "server error\n")
+		fmt.Fprintln(os.Stderr, "server error")
 		os.Exit(exitcode.Failure)
 	}
 }

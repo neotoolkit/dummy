@@ -2,8 +2,11 @@ package command
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
+
+	"github.com/go-dummy/dummy/internal/exitcode"
 )
 
 func (e *Executor) initRoot() {
@@ -13,7 +16,8 @@ func (e *Executor) initRoot() {
 		Long:  ``,
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) != 0 {
-				fmt.Println("Usage: dummy")
+				fmt.Fprintln(os.Stdout, "Usage: dummy")
+				os.Exit(exitcode.Success)
 			}
 		},
 	}
