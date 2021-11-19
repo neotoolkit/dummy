@@ -1,13 +1,13 @@
 package test
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"strings"
 	"testing"
-
-	"github.com/stretchr/testify/require"
 
 	"github.com/go-dummy/dummy/internal/config"
 	"github.com/go-dummy/dummy/internal/logger"
@@ -95,12 +95,40 @@ func makeTestReq(t *testing.T, method, url, testCase string) {
 		t.Fatal(err)
 	}
 
-	r, err := ioutil.ReadFile("cases/" + testCase + "/" + method + ".response.json")
+	responses, err := ioutil.ReadDir("cases/" + testCase + "/" + method)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	if resp.StatusCode != http.StatusNotFound {
-		require.JSONEq(t, string(out), string(r))
+	for i := 0; i < len(responses); i++ {
+		r, err := ioutil.ReadFile("cases/" + testCase + "/" + method + "/" + responses[i].Name())
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		equal, err := jsonBytesEqual(out, r)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if equal {
+			return
+		}
 	}
+
+	t.Fatal()
+}
+
+func jsonBytesEqual(a, b []byte) (bool, error) {
+	var j, j2 interface{}
+
+	if err := json.Unmarshal(a, &j); err != nil {
+		return false, err
+	}
+
+	if err := json.Unmarshal(b, &j2); err != nil {
+		return false, err
+	}
+
+	return reflect.DeepEqual(j2, j), nil
 }
