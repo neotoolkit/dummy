@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/go-dummy/dummy/internal/openapi3"
 )
@@ -18,7 +19,16 @@ type Handler struct {
 func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	if h, ok := s.Handlers[r.Method+" "+r.URL.Path]; ok {
+	var key strings.Builder
+
+	key.WriteString(r.Method + " " + r.URL.Path)
+
+	exampleHeader := r.Header.Get("example")
+	if len(exampleHeader) > 0 {
+		key.WriteString("?example=" + exampleHeader)
+	}
+
+	if h, ok := s.Handlers[key.String()]; ok {
 		w.WriteHeader(h.statusCode)
 		bytes, _ := json.Marshal(h.response)
 		_, _ = w.Write(bytes)
@@ -54,14 +64,43 @@ func addHandler(h map[string]Handler, method, path string, o *openapi3.Operation
 			return err
 		}
 
+		var key strings.Builder
+
+		key.WriteString(method + " " + path)
+
 		if statusCode >= http.StatusOK || statusCode <= http.StatusNoContent {
-			h[method+" "+path] = Handler{
-				method:     method,
-				path:       path,
-				statusCode: statusCode,
-				response:   example(resp.Content["application/json"].Example),
+			content := resp.Content["application/json"]
+			keys := getExamplesKeys(content.Examples)
+			if len(keys) > 0 {
+				for i := 0; i < len(keys); i++ {
+					key.WriteString("?example=" + keys[i])
+					h[key.String()] = handler(method, path, statusCode, response(content, keys[i]))
+				}
+			} else {
+				h[key.String()] = handler(method, path, statusCode, response(content))
 			}
 		}
+	}
+
+	return nil
+}
+
+func handler(method, path string, statusCode int, response interface{}) Handler {
+	return Handler{
+		method:     method,
+		path:       path,
+		statusCode: statusCode,
+		response:   response,
+	}
+}
+
+func response(mt *openapi3.MediaType, key ...string) interface{} {
+	if mt.Example != nil {
+		return example(mt.Example)
+	}
+
+	if len(mt.Examples) > 0 {
+		return examples(mt.Examples, key[0])
 	}
 
 	return nil
@@ -90,4 +129,20 @@ func parseExample(example map[interface{}]interface{}) map[string]interface{} {
 	}
 
 	return res
+}
+
+func examples(e openapi3.Examples, key string) interface{} {
+	return example(e[key].Value)
+}
+
+func getExamplesKeys(e map[string]openapi3.Example) []string {
+	keys := make([]string, len(e))
+	i := 0
+
+	for k, _ := range e {
+		keys[i] = k
+		i++
+	}
+
+	return keys
 }
