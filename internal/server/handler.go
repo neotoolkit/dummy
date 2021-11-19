@@ -71,6 +71,7 @@ func addHandler(h map[string]Handler, method, path string, o *openapi3.Operation
 		if statusCode >= http.StatusOK || statusCode <= http.StatusNoContent {
 			content := resp.Content["application/json"]
 			keys := getExamplesKeys(content.Examples)
+
 			if len(keys) > 0 {
 				for i := 0; i < len(keys); i++ {
 					key.WriteString("?example=" + keys[i])
@@ -139,7 +140,7 @@ func getExamplesKeys(e map[string]openapi3.Example) []string {
 	keys := make([]string, len(e))
 	i := 0
 
-	for k, _ := range e {
+	for k := range e {
 		keys[i] = k
 		i++
 	}
