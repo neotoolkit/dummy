@@ -88,6 +88,7 @@ func makeTestReq(t *testing.T, method, url, testCase string) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	defer resp.Body.Close()
 
 	out, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
