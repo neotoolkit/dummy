@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -64,6 +65,23 @@ func makeTestReq(t *testing.T, method, url, testCase string) {
 	req, err := http.NewRequest(method, url, nil)
 	if err != nil {
 		t.Fatal(err)
+	}
+
+	h, err := ioutil.ReadFile("cases/" + testCase + "/header.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(h) > 0 {
+		headers := strings.Split(string(h), `\n`)
+
+		for i := 0; i < len(headers); i++ {
+			header := strings.Split(headers[i], ":")
+			key := header[0]
+			value := strings.TrimSpace(header[1])
+
+			req.Header.Set(key, value)
+		}
 	}
 
 	resp, err := http.DefaultClient.Do(req)
