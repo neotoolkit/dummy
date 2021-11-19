@@ -64,21 +64,20 @@ func addHandler(h map[string]Handler, method, path string, o *openapi3.Operation
 			return err
 		}
 
-		var key strings.Builder
-
-		key.WriteString(method + " " + path)
+		key := method + " " + path
 
 		if statusCode >= http.StatusOK || statusCode <= http.StatusNoContent {
 			content := resp.Content["application/json"]
 			keys := getExamplesKeys(content.Examples)
 
 			if len(keys) > 0 {
+				h[key] = handler(method, path, statusCode, response(content, keys[0]))
+
 				for i := 0; i < len(keys); i++ {
-					key.WriteString("?example=" + keys[i])
-					h[key.String()] = handler(method, path, statusCode, response(content, keys[i]))
+					h[key+"?example="+keys[i]] = handler(method, path, statusCode, response(content, keys[i]))
 				}
 			} else {
-				h[key.String()] = handler(method, path, statusCode, response(content))
+				h[key] = handler(method, path, statusCode, response(content))
 			}
 		}
 	}
@@ -100,7 +99,7 @@ func response(mt *openapi3.MediaType, key ...string) interface{} {
 		return example(mt.Example)
 	}
 
-	if len(mt.Examples) > 0 {
+	if len(mt.Examples) > 0 && len(key) > 0 {
 		return examples(mt.Examples, key[0])
 	}
 
