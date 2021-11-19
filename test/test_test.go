@@ -2,7 +2,6 @@ package test
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -102,7 +101,6 @@ func makeTestReq(t *testing.T, method, url, testCase string) {
 	}
 
 	for i := 0; i < len(responses); i++ {
-		fmt.Println("cases/" + testCase + "/" + method + "/" + responses[i].Name())
 		r, err := ioutil.ReadFile("cases/" + testCase + "/" + method + "/" + responses[i].Name())
 		if err != nil {
 			t.Fatal(err)
@@ -122,13 +120,15 @@ func makeTestReq(t *testing.T, method, url, testCase string) {
 }
 
 func jsonBytesEqual(a, b []byte) (bool, error) {
-	fmt.Println(string(a), string(b))
 	var j, j2 interface{}
+
 	if err := json.Unmarshal(a, &j); err != nil {
 		return false, err
 	}
+
 	if err := json.Unmarshal(b, &j2); err != nil {
 		return false, err
 	}
+
 	return reflect.DeepEqual(j2, j), nil
 }
