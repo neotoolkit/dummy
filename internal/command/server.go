@@ -33,7 +33,7 @@ func (e *Executor) executeServer(_ *cobra.Command, args []string) {
 
 	openapi, err := openapi3.Parse(e.cfg.Server.Path)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "specification parse err: %v\n", err)
+		fmt.Fprintf(os.Stderr, "specification parse error: %v\n", err)
 		os.Exit(exitcode.Failure)
 	}
 
