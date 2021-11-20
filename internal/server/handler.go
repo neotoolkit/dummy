@@ -66,13 +66,13 @@ func addHandler(h map[string]Handler, method, path string, o *openapi3.Operation
 
 		if statusCode >= http.StatusOK || statusCode <= http.StatusNoContent {
 			content := resp.Content["application/json"]
-			keys := getExamplesKeys(content.Examples)
+			examplesKeys := getExamplesKeys(content.Examples)
 
-			if len(keys) > 0 {
-				h[key] = handler(statusCode, response(content, keys[0]))
+			if len(examplesKeys) > 0 {
+				h[key] = handler(statusCode, response(content, examplesKeys[0]))
 
-				for i := 0; i < len(keys); i++ {
-					h[key+"?example="+keys[i]] = handler(statusCode, response(content, keys[i]))
+				for i := 0; i < len(examplesKeys); i++ {
+					h[key+"?example="+examplesKeys[i]] = handler(statusCode, response(content, examplesKeys[i]))
 				}
 			} else {
 				h[key] = handler(statusCode, response(content))
