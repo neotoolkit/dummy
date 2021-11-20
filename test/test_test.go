@@ -46,14 +46,11 @@ func TestCheck(t *testing.T) {
 		mux.HandleFunc("/", s.Handler)
 		newServer := httptest.NewServer(mux)
 
-		for k, v := range s.OpenAPI.Paths {
+		for k := range s.Handlers {
+			data := strings.Split(k, " ")
+
 			t.Run(c.Name(), func(t *testing.T) {
-				if v.Post != nil {
-					makeTestReq(t, http.MethodPost, newServer.URL+k, c.Name())
-				}
-				if v.Get != nil {
-					makeTestReq(t, http.MethodGet, newServer.URL+k, c.Name())
-				}
+				makeTestReq(t, data[0], newServer.URL+data[1], c.Name())
 			})
 		}
 	}

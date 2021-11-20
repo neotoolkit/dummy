@@ -56,13 +56,15 @@ func addHandler(h map[string]Handler, method, path string, o *openapi3.Operation
 		return nil
 	}
 
+	pathParams, _ := getParams(o.Parameters)
+
 	for code, resp := range o.Responses {
 		statusCode, err := strconv.Atoi(code)
 		if err != nil {
 			return err
 		}
 
-		key := method + " " + path
+		key := method + " " + makePath(path, pathParams)
 
 		if statusCode >= http.StatusOK || statusCode <= http.StatusNoContent {
 			content := resp.Content["application/json"]
@@ -141,4 +143,25 @@ func getExamplesKeys(e map[string]openapi3.Example) []string {
 	}
 
 	return keys
+}
+
+func getParams(p openapi3.Parameters) (path []string, query []string) {
+	for i := 0; i < len(p); i++ {
+		switch p[i].In {
+		case "path":
+			path = append(path, p[i].Name)
+		case "query":
+			query = append(query, p[i].Name)
+		}
+	}
+
+	return
+}
+
+func makePath(path string, pathParams []string) string {
+	if len(pathParams) == 0 {
+		return path
+	}
+
+	return strings.ReplaceAll(path, "{"+pathParams[0]+"}", "1")
 }
