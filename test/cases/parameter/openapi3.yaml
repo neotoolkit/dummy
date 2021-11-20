@@ -6,44 +6,31 @@ info:
 tags:
   - name: Couriers
 paths:
-  /couriers:
+  /couriers/{courierId}:
     get:
       tags:
         - Couriers
       summary: ''
-      operationId: getCouriers
+      operationId: getCourier
+      parameters:
+        - in: path
+          name: courierId
+          description: ''
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: ''
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Courier'
+                $ref: '#/components/schemas/Courier'
               example:
                 id: "1"
                 firstName: "2"
                 lastName: "3"
                 status: "4"
-    post:
-      tags:
-        - Couriers
-      summary: ''
-      operationId: createCouriers
-      responses:
-        '201':
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-              example:
-                id: "1"
-                firstName: "2"
-                lastName: "3"
-                status: "4"
-
 components:
   schemas:
     Courier:
