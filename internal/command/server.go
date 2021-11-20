@@ -33,14 +33,14 @@ func (e *Executor) executeServer(_ *cobra.Command, args []string) {
 
 	openapi, err := openapi3.Parse(e.cfg.Server.Path)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "can't parse yaml")
+		fmt.Fprintf(os.Stderr, "specification parse err: %v\n", err)
 		os.Exit(exitcode.Failure)
 	}
 
 	s := server.NewServer(e.cfg.Server, openapi)
 
 	if err := s.Run(); err != nil {
-		fmt.Fprintln(os.Stderr, "server error")
+		fmt.Fprintf(os.Stderr, "server run error: %v\n", err)
 		os.Exit(exitcode.Failure)
 	}
 }
