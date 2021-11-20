@@ -10,8 +10,6 @@ import (
 )
 
 type Handler struct {
-	method     string
-	path       string
 	statusCode int
 	response   interface{}
 }
@@ -71,13 +69,13 @@ func addHandler(h map[string]Handler, method, path string, o *openapi3.Operation
 			keys := getExamplesKeys(content.Examples)
 
 			if len(keys) > 0 {
-				h[key] = handler(method, path, statusCode, response(content, keys[0]))
+				h[key] = handler(statusCode, response(content, keys[0]))
 
 				for i := 0; i < len(keys); i++ {
-					h[key+"?example="+keys[i]] = handler(method, path, statusCode, response(content, keys[i]))
+					h[key+"?example="+keys[i]] = handler(statusCode, response(content, keys[i]))
 				}
 			} else {
-				h[key] = handler(method, path, statusCode, response(content))
+				h[key] = handler(statusCode, response(content))
 			}
 		}
 	}
@@ -85,10 +83,8 @@ func addHandler(h map[string]Handler, method, path string, o *openapi3.Operation
 	return nil
 }
 
-func handler(method, path string, statusCode int, response interface{}) Handler {
+func handler(statusCode int, response interface{}) Handler {
 	return Handler{
-		method:     method,
-		path:       path,
 		statusCode: statusCode,
 		response:   response,
 	}
