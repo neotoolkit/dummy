@@ -12,8 +12,8 @@ import (
 func (e *Executor) initRoot() {
 	rootCmd := &cobra.Command{
 		Use:   "dummy",
-		Short: "",
-		Long:  ``,
+		Short: "API mocking with OpenAPI v3.x",
+		Long:  `Dummy is an API mocking with OpenAPI v3.x`,
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) != 0 {
 				fmt.Println("Usage: dummy")
