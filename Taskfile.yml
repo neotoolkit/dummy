@@ -1,0 +1,13 @@
+version: '3'
+
+tasks:
+  default:
+    cmds:
+      - task: tidy
+      - task: lint
+
+  tidy:
+    - go mod tidy
+
+  lint:
+    - golangci-lint run
