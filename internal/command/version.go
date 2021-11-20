@@ -14,7 +14,7 @@ func (e *Executor) initVersion() {
 		Use:   "version",
 		Short: "Version",
 		Run: func(_ *cobra.Command, _ []string) {
-			fmt.Println(e.version)
+			fmt.Printf("Dummy version %s\n", e.version)
 			os.Exit(exitcode.Success)
 		},
 	}
