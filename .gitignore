@@ -13,3 +13,6 @@
 
 # Dependency directories
 vendor/
+
+# IDEA settings
+.idea
