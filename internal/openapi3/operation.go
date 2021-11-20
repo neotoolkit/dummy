@@ -1,5 +1,6 @@
 package openapi3
 
 type Operation struct {
-	Responses Responses `json:"responses" yaml:"responses"`
+	Parameters Parameters `json:"parameters,omitempty" yaml:"parameters,omitempty"`
+	Responses  Responses  `json:"responses" yaml:"responses"`
 }
