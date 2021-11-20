@@ -6,6 +6,7 @@ tasks:
       - task: tidy
       - task: lint
       - task: test
+      - task: fmt
 
   tidy:
     - go mod tidy
@@ -15,3 +16,6 @@ tasks:
 
   test:
     - go test ./test/...
+
+  fmt:
+    - go fmt ./...
