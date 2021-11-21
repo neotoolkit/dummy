@@ -11,6 +11,7 @@ import (
 
 type Handler struct {
 	path       string
+	method     string
 	pathParam  []string
 	queryParam []string
 	statusCode int
@@ -79,13 +80,13 @@ func addHandler(h map[string]Handler, method, path string, o *openapi3.Operation
 			examplesKeys := getExamplesKeys(content.Examples)
 
 			if len(examplesKeys) > 0 {
-				h[key] = handler(path, pathParam, queryPath, statusCode, response(content, examplesKeys[0]))
+				h[key] = handler(path, method, pathParam, queryPath, statusCode, response(content, examplesKeys[0]))
 
 				for i := 0; i < len(examplesKeys); i++ {
-					h[key+"?example="+examplesKeys[i]] = handler(path, pathParam, queryPath, statusCode, response(content, examplesKeys[i]))
+					h[key+"?example="+examplesKeys[i]] = handler(path, method, pathParam, queryPath, statusCode, response(content, examplesKeys[i]))
 				}
 			} else {
-				h[key] = handler(path, pathParam, queryPath, statusCode, response(content))
+				h[key] = handler(path, method, pathParam, queryPath, statusCode, response(content))
 			}
 		}
 	}
@@ -93,9 +94,10 @@ func addHandler(h map[string]Handler, method, path string, o *openapi3.Operation
 	return nil
 }
 
-func handler(path string, pathParam, queryParam []string, statusCode int, response interface{}) Handler {
+func handler(path, method string, pathParam, queryParam []string, statusCode int, response interface{}) Handler {
 	return Handler{
 		path:       path,
+		method:     method,
 		pathParam:  pathParam,
 		queryParam: queryParam,
 		statusCode: statusCode,
