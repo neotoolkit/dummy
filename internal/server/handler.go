@@ -190,7 +190,7 @@ func pathMaskDetect(path, mask string) bool {
 	}
 
 	for i := 0; i < len(p); i++ {
-		if strings.HasPrefix(m[i], "{") {
+		if len(m[i]) > 0 && m[i][0] == '{' {
 			continue
 		}
 
