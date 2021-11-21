@@ -14,6 +14,7 @@ type Server struct {
 	Handlers map[string]Handler
 	Server   *http.Server
 	Logger   *logger.Logger
+	Storage  map[string][]map[string]interface{}
 }
 
 func NewServer(config config.Server, openapi openapi3.OpenAPI) *Server {
@@ -22,6 +23,7 @@ func NewServer(config config.Server, openapi openapi3.OpenAPI) *Server {
 		OpenAPI:  openapi,
 		Handlers: make(map[string]Handler, len(openapi.Paths)),
 		Logger:   logger.NewLogger(),
+		Storage:  make(map[string][]map[string]interface{}),
 	}
 }
 

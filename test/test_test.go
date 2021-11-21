@@ -37,6 +37,7 @@ func TestCheck(t *testing.T) {
 		s.OpenAPI = openapi
 		s.Logger = logger.NewLogger()
 		s.Handlers = make(map[string]server.Handler)
+		s.Storage = make(map[string][]map[string]interface{})
 
 		if err := s.SetHandlers(); err != nil {
 			t.Fatal(err)
