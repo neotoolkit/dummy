@@ -17,16 +17,7 @@ type Handler struct {
 func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	var key strings.Builder
-
-	key.WriteString(r.Method + " " + r.URL.Path)
-
-	exampleHeader := r.Header.Get("example")
-	if len(exampleHeader) > 0 {
-		key.WriteString("?example=" + exampleHeader)
-	}
-
-	if h, ok := s.Handlers[key.String()]; ok {
+	if h, ok := s.GetHandler(r.Method, r.URL.Path, r.Header.Get("example")); ok {
 		w.WriteHeader(h.statusCode)
 		bytes, _ := json.Marshal(h.response)
 		_, _ = w.Write(bytes)
@@ -49,6 +40,20 @@ func (s *Server) SetHandlers() error {
 	}
 
 	return nil
+}
+
+func (s *Server) GetHandler(method, path, exampleHeader string) (Handler, bool) {
+	var key strings.Builder
+
+	key.WriteString(method + " " + path)
+
+	if len(exampleHeader) > 0 {
+		key.WriteString("?example=" + exampleHeader)
+	}
+
+	h, found := s.Handlers[key.String()]
+
+	return h, found
 }
 
 func addHandler(h map[string]Handler, method, path string, o *openapi3.Operation) error {
