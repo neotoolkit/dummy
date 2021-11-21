@@ -42,7 +42,7 @@ func (s *Server) SetHandlers() error {
 	return nil
 }
 
-func (s *Server) GetHandler(method, path, exampleHeader string) (Handler, bool) {
+func (s *Server) GetHandler(method, path, exampleHeader string) (h Handler, found bool) {
 	var key strings.Builder
 
 	key.WriteString(method + " " + path)
@@ -51,9 +51,9 @@ func (s *Server) GetHandler(method, path, exampleHeader string) (Handler, bool) 
 		key.WriteString("?example=" + exampleHeader)
 	}
 
-	h, found := s.Handlers[key.String()]
+	h, found = s.Handlers[key.String()]
 
-	return h, found
+	return
 }
 
 func addHandler(h map[string]Handler, method, path string, o *openapi3.Operation) error {
