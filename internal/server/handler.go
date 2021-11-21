@@ -10,6 +10,9 @@ import (
 )
 
 type Handler struct {
+	path       string
+	pathParam  []string
+	queryParam []string
 	statusCode int
 	response   interface{}
 }
@@ -61,7 +64,7 @@ func addHandler(h map[string]Handler, method, path string, o *openapi3.Operation
 		return nil
 	}
 
-	pathParams, _ := getParams(o.Parameters)
+	pathParam, queryPath := getParams(o.Parameters)
 
 	for code, resp := range o.Responses {
 		statusCode, err := strconv.Atoi(code)
@@ -69,20 +72,20 @@ func addHandler(h map[string]Handler, method, path string, o *openapi3.Operation
 			return err
 		}
 
-		key := method + " " + makePath(path, pathParams)
+		key := method + " " + makePath(path, pathParam)
 
 		if statusCode >= http.StatusOK || statusCode <= http.StatusNoContent {
 			content := resp.Content["application/json"]
 			examplesKeys := getExamplesKeys(content.Examples)
 
 			if len(examplesKeys) > 0 {
-				h[key] = handler(statusCode, response(content, examplesKeys[0]))
+				h[key] = handler(path, pathParam, queryPath, statusCode, response(content, examplesKeys[0]))
 
 				for i := 0; i < len(examplesKeys); i++ {
-					h[key+"?example="+examplesKeys[i]] = handler(statusCode, response(content, examplesKeys[i]))
+					h[key+"?example="+examplesKeys[i]] = handler(path, pathParam, queryPath, statusCode, response(content, examplesKeys[i]))
 				}
 			} else {
-				h[key] = handler(statusCode, response(content))
+				h[key] = handler(path, pathParam, queryPath, statusCode, response(content))
 			}
 		}
 	}
@@ -90,8 +93,11 @@ func addHandler(h map[string]Handler, method, path string, o *openapi3.Operation
 	return nil
 }
 
-func handler(statusCode int, response interface{}) Handler {
+func handler(path string, pathParam, queryParam []string, statusCode int, response interface{}) Handler {
 	return Handler{
+		path:       path,
+		pathParam:  pathParam,
+		queryParam: queryParam,
 		statusCode: statusCode,
 		response:   response,
 	}
