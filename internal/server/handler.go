@@ -57,6 +57,8 @@ func (s *Server) GetHandler(method, path, exampleHeader string) (h Handler, foun
 
 	h, found = s.Handlers[key.String()]
 
+	pathMaskDetect(path, h.path)
+
 	return
 }
 
@@ -177,4 +179,25 @@ func makePath(path string, pathParams []string) string {
 	}
 
 	return strings.ReplaceAll(path, "{"+pathParams[0]+"}", "1")
+}
+
+func pathMaskDetect(path, mask string) bool {
+	p := strings.Split(path, "/")
+	m := strings.Split(mask, "/")
+
+	if len(p) != len(m) {
+		return false
+	}
+
+	for i := 0; i < len(p); i++ {
+		if strings.HasPrefix(m[i], "{") {
+			continue
+		}
+
+		if p[i] != m[i] {
+			return false
+		}
+	}
+
+	return true
 }
