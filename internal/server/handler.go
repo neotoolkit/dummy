@@ -106,6 +106,19 @@ func (s *Server) GetHandler(method, path, exampleHeader string) (h Handler, foun
 						}
 					}
 
+					if lastParamIsMask(mask) {
+						if handlers[i].Response == nil {
+							for _, v := range s.Handlers[parentPath(mask)] {
+								data := v.Response.([]map[string]interface{})
+								for _, v := range data {
+									if v["id"] == getLastParam(path) {
+										s.Handlers[path] = append(s.Handlers[path], handler(path, method, map[string]string{}, 200, v))
+									}
+								}
+							}
+						}
+					}
+
 					h = handlers[i]
 					found = true
 				}
@@ -188,4 +201,22 @@ func pathMaskDetect(path, mask string) bool {
 	}
 
 	return true
+}
+
+func parentPath(path string) string {
+	p := strings.Split(path, "/")
+
+	return strings.Join(p[0:len(p)-1], "/")
+}
+
+func lastParamIsMask(path string) bool {
+	p := strings.Split(path, "/")
+
+	return strings.HasPrefix(p[len(p)-1], "{") && strings.HasSuffix(p[len(p)-1], "}")
+}
+
+func getLastParam(path string) string {
+	p := strings.Split(path, "/")
+
+	return p[len(p)-1]
 }
