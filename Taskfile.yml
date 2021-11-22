@@ -4,18 +4,18 @@ tasks:
   default:
     cmds:
       - task: tidy
+      - task: fmt
       - task: lint
       - task: test
-      - task: fmt
 
   tidy:
     - go mod tidy
+
+  fmt:
+    - go fmt ./...
 
   lint:
     - golangci-lint run
 
   test:
     - go test ./test/...
-
-  fmt:
-    - go fmt ./...
