@@ -97,13 +97,12 @@ func (s *Server) GetHandler(method, path, exampleHeader string) (h Handler, foun
 		if pathMaskDetect(path, mask) {
 			for i := 0; i < len(handlers); i++ {
 				if handlers[i].Method == method {
-					for header, v := range handlers[i].Header {
-						if header == "example" && v == exampleHeader {
-							h = handlers[i]
-							found = true
+					header, ok := handlers[i].Header["example"]
+					if ok && header == exampleHeader {
+						h = handlers[i]
+						found = true
 
-							return
-						}
+						return
 					}
 
 					if lastParamIsMask(mask) && handlers[i].Response == nil {
