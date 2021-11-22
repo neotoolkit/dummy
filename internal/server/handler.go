@@ -110,9 +110,9 @@ func (s *Server) GetHandler(method, path, exampleHeader string) (h Handler, foun
 						for _, v := range s.Handlers[parentPath(mask)] {
 							if v.Method == method {
 								data := v.Response.([]map[string]interface{})
-								for _, v := range data {
-									if v["id"] == getLastParam(path) {
-										s.Handlers[path] = append(s.Handlers[path], handler(path, method, map[string]string{}, 200, v))
+								for i := 0; i < len(data); i++ {
+									if data[i]["id"] == getLastParam(path) {
+										s.Handlers[path] = append(s.Handlers[path], handler(path, method, map[string]string{}, 200, data[i]))
 
 										h = s.Handlers[path][0]
 										found = true
