@@ -10,20 +10,19 @@ import (
 )
 
 type Handler struct {
-	path       string
-	method     string
-	pathParam  []string
-	queryParam []string
-	statusCode int
-	response   interface{}
+	Path       string
+	Method     string
+	Header     map[string]string
+	StatusCode int
+	Response   interface{}
 }
 
 func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	if h, ok := s.GetHandler(r.Method, r.URL.Path, r.Header.Get("example")); ok {
-		w.WriteHeader(h.statusCode)
-		bytes, _ := json.Marshal(h.response)
+		w.WriteHeader(h.StatusCode)
+		bytes, _ := json.Marshal(h.Response)
 		_, _ = w.Write(bytes)
 
 		return
@@ -34,77 +33,87 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) SetHandlers() error {
 	for path, method := range s.OpenAPI.Paths {
-		if err := addHandler(s.Handlers, http.MethodGet, path, method.Get); err != nil {
-			return err
+		if method.Get != nil {
+			handlers, err := handlers(path, http.MethodGet, method.Get)
+			if err != nil {
+				return err
+			}
+
+			s.Handlers[path] = append(s.Handlers[path], handlers...)
 		}
 
-		if err := addHandler(s.Handlers, http.MethodPost, path, method.Post); err != nil {
-			return err
+		if method.Post != nil {
+			handlers, err := handlers(path, http.MethodPost, method.Post)
+			if err != nil {
+				return err
+			}
+
+			s.Handlers[path] = append(s.Handlers[path], handlers...)
 		}
 	}
 
 	return nil
 }
 
-func (s *Server) GetHandler(method, path, exampleHeader string) (h Handler, found bool) {
-	var key strings.Builder
-
-	key.WriteString(method + " " + path)
-
-	if len(exampleHeader) > 0 {
-		key.WriteString("?example=" + exampleHeader)
-	}
-
-	h, found = s.Handlers[key.String()]
-
-	pathMaskDetect(path, h.path)
-
-	return
-}
-
-func addHandler(h map[string]Handler, method, path string, o *openapi3.Operation) error {
-	if o == nil {
-		return nil
-	}
-
-	pathParam, queryPath := getParams(o.Parameters)
+func handlers(path, method string, o *openapi3.Operation) ([]Handler, error) {
+	var res []Handler
 
 	for code, resp := range o.Responses {
 		statusCode, err := strconv.Atoi(code)
 		if err != nil {
-			return err
+			return nil, err
 		}
 
-		key := method + " " + makePath(path, pathParam)
+		content := resp.Content["application/json"]
 
-		if statusCode >= http.StatusOK || statusCode <= http.StatusNoContent {
-			content := resp.Content["application/json"]
-			examplesKeys := getExamplesKeys(content.Examples)
+		examplesKeys := getExamplesKeys(content.Examples)
 
-			if len(examplesKeys) > 0 {
-				h[key] = handler(path, method, pathParam, queryPath, statusCode, response(content, examplesKeys[0]))
+		if len(examplesKeys) > 0 {
+			res = append(res, handler(path, method, map[string]string{}, statusCode, response(content, examplesKeys[0])))
 
-				for i := 0; i < len(examplesKeys); i++ {
-					h[key+"?example="+examplesKeys[i]] = handler(path, method, pathParam, queryPath, statusCode, response(content, examplesKeys[i]))
+			for i := 0; i < len(examplesKeys); i++ {
+				res = append(res, handler(path, method, map[string]string{"example": examplesKeys[i]}, statusCode, response(content, examplesKeys[i])))
+			}
+		} else {
+			res = append(res, handler(path, method, map[string]string{}, statusCode, response(content)))
+		}
+	}
+
+	return res, nil
+}
+
+func handler(path, method string, header map[string]string, statusCode int, response interface{}) Handler {
+	return Handler{
+		Path:       path,
+		Method:     method,
+		Header:     header,
+		StatusCode: statusCode,
+		Response:   response,
+	}
+}
+
+func (s *Server) GetHandler(method, path, exampleHeader string) (h Handler, found bool) {
+	for mask, handlers := range s.Handlers {
+		if pathMaskDetect(path, mask) {
+			for i := 0; i < len(handlers); i++ {
+				if handlers[i].Method == method {
+					for header, v := range handlers[i].Header {
+						if header == "example" && v == exampleHeader {
+							h = handlers[i]
+							found = true
+
+							return
+						}
+					}
+
+					h = handlers[i]
+					found = true
 				}
-			} else {
-				h[key] = handler(path, method, pathParam, queryPath, statusCode, response(content))
 			}
 		}
 	}
 
-	return nil
-}
-
-func handler(path, method string, pathParam, queryParam []string, statusCode int, response interface{}) Handler {
-	return Handler{
-		path:       path,
-		method:     method,
-		pathParam:  pathParam,
-		queryParam: queryParam,
-		statusCode: statusCode,
-		response:   response,
-	}
+	return
 }
 
 func response(mt *openapi3.MediaType, key ...string) interface{} {
@@ -158,27 +167,6 @@ func getExamplesKeys(e map[string]openapi3.Example) []string {
 	}
 
 	return keys
-}
-
-func getParams(p openapi3.Parameters) (path []string, query []string) {
-	for i := 0; i < len(p); i++ {
-		switch p[i].In {
-		case "path":
-			path = append(path, p[i].Name)
-		case "query":
-			query = append(query, p[i].Name)
-		}
-	}
-
-	return
-}
-
-func makePath(path string, pathParams []string) string {
-	if len(pathParams) == 0 {
-		return path
-	}
-
-	return strings.ReplaceAll(path, "{"+pathParams[0]+"}", "1")
 }
 
 func pathMaskDetect(path, mask string) bool {

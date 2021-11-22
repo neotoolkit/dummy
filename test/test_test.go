@@ -36,8 +36,7 @@ func TestCheck(t *testing.T) {
 		}
 		s.OpenAPI = openapi
 		s.Logger = logger.NewLogger()
-		s.Handlers = make(map[string]server.Handler)
-		s.Storage = make(map[string][]map[string]interface{})
+		s.Handlers = make(map[string][]server.Handler)
 
 		if err := s.SetHandlers(); err != nil {
 			t.Fatal(err)
@@ -47,12 +46,12 @@ func TestCheck(t *testing.T) {
 		mux.HandleFunc("/", s.Handler)
 		newServer := httptest.NewServer(mux)
 
-		for k := range s.Handlers {
-			data := strings.Split(k, " ")
-
-			t.Run(c.Name(), func(t *testing.T) {
-				makeTestReq(t, data[0], newServer.URL+data[1], c.Name())
-			})
+		for _, data := range s.Handlers {
+			for _, v := range data {
+				t.Run(c.Name(), func(t *testing.T) {
+					makeTestReq(t, v.Method, newServer.URL+v.Path, c.Name())
+				})
+			}
 		}
 	}
 }
@@ -77,7 +76,6 @@ func makeTestReq(t *testing.T, method, url, testCase string) {
 			header := strings.Split(headers[i], ":")
 			key := header[0]
 			value := strings.TrimSpace(header[1])
-
 			req.Header.Set(key, value)
 		}
 	}
