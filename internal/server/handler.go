@@ -92,17 +92,14 @@ func handler(path, method string, header map[string]string, statusCode int, resp
 	}
 }
 
-func (s *Server) GetHandler(method, path, exampleHeader string) (h Handler, found bool) {
+func (s *Server) GetHandler(method, path, exampleHeader string) (Handler, bool) {
 	for mask, handlers := range s.Handlers {
 		if pathMaskDetect(path, mask) {
 			for i := 0; i < len(handlers); i++ {
 				if handlers[i].Method == method {
 					header, ok := handlers[i].Header["example"]
 					if ok && header == exampleHeader {
-						h = handlers[i]
-						found = true
-
-						return
+						return handlers[i], true
 					}
 
 					if lastParamIsMask(mask) && handlers[i].Response == nil {
@@ -113,24 +110,20 @@ func (s *Server) GetHandler(method, path, exampleHeader string) (h Handler, foun
 									if data[i]["id"] == getLastParam(path) {
 										s.Handlers[path] = append(s.Handlers[path], handler(path, method, map[string]string{}, 200, data[i]))
 
-										h = s.Handlers[path][0]
-										found = true
-
-										return
+										return s.Handlers[path][0], true
 									}
 								}
 							}
 						}
 					}
 
-					h = handlers[i]
-					found = true
+					return handlers[i], true
 				}
 			}
 		}
 	}
 
-	return
+	return Handler{}, false
 }
 
 func response(mt *openapi3.MediaType, key ...string) interface{} {
