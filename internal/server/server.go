@@ -11,19 +11,17 @@ import (
 type Server struct {
 	Config   config.Server
 	OpenAPI  openapi3.OpenAPI
-	Handlers map[string]Handler
 	Server   *http.Server
 	Logger   *logger.Logger
-	Storage  map[string][]map[string]interface{}
+	Handlers map[string][]Handler
 }
 
 func NewServer(config config.Server, openapi openapi3.OpenAPI) *Server {
 	return &Server{
 		Config:   config,
 		OpenAPI:  openapi,
-		Handlers: make(map[string]Handler, len(openapi.Paths)),
 		Logger:   logger.NewLogger(),
-		Storage:  make(map[string][]map[string]interface{}),
+		Handlers: make(map[string][]Handler),
 	}
 }
 
