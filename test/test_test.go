@@ -49,17 +49,22 @@ func TestCheck(t *testing.T) {
 		for _, data := range s.Handlers {
 			for _, v := range data {
 				t.Run(c.Name(), func(t *testing.T) {
-					makeTestReq(t, v.Method, newServer.URL+v.Path, c.Name())
+
+					makeTestReq(t, v.Method, v.Path, newServer.URL+v.Path, c.Name())
 				})
 			}
 		}
 	}
 }
 
-func makeTestReq(t *testing.T, method, url, testCase string) {
+func makeTestReq(t *testing.T, method, path, url, testCase string) {
+	newURL := changePathMask(url)
 	t.Helper()
 
-	req, err := http.NewRequest(method, url, nil)
+	p := strings.Split(path, "/")
+	newPath := strings.Join(p[1:], "-")
+
+	req, err := http.NewRequest(method, newURL, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -91,13 +96,13 @@ func makeTestReq(t *testing.T, method, url, testCase string) {
 		t.Fatal(err)
 	}
 
-	responses, err := ioutil.ReadDir("cases/" + testCase + "/" + method)
+	responses, err := ioutil.ReadDir("cases/" + testCase + "/" + newPath + "/" + method)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	for i := 0; i < len(responses); i++ {
-		r, err := ioutil.ReadFile("cases/" + testCase + "/" + method + "/" + responses[i].Name())
+		r, err := ioutil.ReadFile("cases/" + testCase + "/" + newPath + "/" + method + "/" + responses[i].Name())
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -127,4 +132,14 @@ func jsonBytesEqual(a, b []byte) (bool, error) {
 	}
 
 	return reflect.DeepEqual(j2, j), nil
+}
+
+func changePathMask(path string) string {
+	p := strings.Split(path, "/")
+	for i := 0; i < len(p); i++ {
+		if strings.HasPrefix(p[i], "{") && strings.HasSuffix(p[i], "}") {
+			p[i] = "1"
+		}
+	}
+	return strings.Join(p, "/")
 }
