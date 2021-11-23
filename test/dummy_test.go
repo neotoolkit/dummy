@@ -16,13 +16,13 @@ import (
 )
 
 func TestCheck(t *testing.T) {
-	cases, err := ioutil.ReadDir("./cases")
+	testCases, err := ioutil.ReadDir("./case")
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	for _, c := range cases {
-		path := "cases/" + c.Name() + "/openapi3.yml"
+	for _, c := range testCases {
+		path := "case/" + c.Name() + "/openapi3.yml"
 
 		openapi, err := openapi3.Parse(path)
 		if err != nil {
@@ -64,7 +64,7 @@ func makeTestReq(t *testing.T, method, path, url, testCase string) {
 		t.Fatal(err)
 	}
 
-	h, err := ioutil.ReadFile("cases/" + testCase + "/header.txt")
+	h, err := ioutil.ReadFile("case/" + testCase + "/header.txt")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -94,13 +94,13 @@ func makeTestReq(t *testing.T, method, path, url, testCase string) {
 	p := strings.Split(path, "/")
 	newPath := strings.Join(p[1:], "-")
 
-	responses, err := ioutil.ReadDir("cases/" + testCase + "/" + newPath + "/" + method)
+	responses, err := ioutil.ReadDir("case/" + testCase + "/" + newPath + "/" + method)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	for i := 0; i < len(responses); i++ {
-		r, err := ioutil.ReadFile("cases/" + testCase + "/" + newPath + "/" + method + "/" + responses[i].Name())
+		r, err := ioutil.ReadFile("case/" + testCase + "/" + newPath + "/" + method + "/" + responses[i].Name())
 		if err != nil {
 			t.Fatal(err)
 		}

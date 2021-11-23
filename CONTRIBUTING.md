@@ -13,7 +13,7 @@
 │   ├── openapi3
 │   └── server
 ├── test
-│   ├── cases
+│   ├── case
 │   │   └── '{case name}'
 │   │       ├── '{openapi path}'
 │   │       │   └── '{method}'
