@@ -1,22 +1,15 @@
 openapi: 3.0.3
 info:
-  title: Couriers dummy API
+  title: Users dummy API
   version: 0.1.0
-  description: ''
-tags:
-  - name: Couriers
 paths:
-  /couriers/{courierId}:
+  /users/{userId}:
     get:
-      tags:
-        - Couriers
-      summary: ''
-      operationId: getCourier
       parameters:
         - in: path
-          name: courierId
+          name: userId
           description: ''
-          required: false
+          required: true
           schema:
             type: string
       responses:
@@ -25,21 +18,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Courier'
+                $ref: '#/components/schemas/User'
               example:
-                id: "1"
-                firstName: "2"
-                lastName: "3"
-                status: "4"
+                id: e1afccea-5168-4735-84d4-cb96f6fb5d25
+                firstName: Elon
+                lastName: Musk
 components:
   schemas:
-    Courier:
+    User:
       type: object
       required:
         - id
         - firstName
         - lastName
-        - status
       properties:
         id:
           type: string
@@ -47,6 +38,4 @@ components:
         firstName:
           type: string
         lastName:
-          type: string
-        status:
           type: string
