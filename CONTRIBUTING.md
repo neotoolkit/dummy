@@ -4,7 +4,7 @@
 ```
 ├── cmd
 │   └── dummy
-│       └── main.go
+│       └── main.go                         # CLI entry point
 ├── internal
 │   ├── command
 │   ├── config
@@ -20,7 +20,7 @@
 │   │       │       └── '{response}'.json
 │   │       ├── header.txt
 │   │       └── openapi3.yml
-│   └── test_test.go
+│   └── dummy_test.go                       # Test entry point
 ├── .gitignore
 ├── .golangci.yaml
 ├── CONTRIBUTING.md
