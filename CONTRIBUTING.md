@@ -1,7 +1,34 @@
 # Contributing to Dummy
 [Russian](CONTRIBUTING_RU.md)
 # Project structure
-
+```
+├── cmd
+│   └── dummy
+│       └── main.go
+├── internal
+│   ├── command
+│   ├── config
+│   ├── exitcode
+│   ├── logger
+│   ├── openapi3
+│   └── server
+├── test
+│   └── cases
+│       └── '{case name}'
+│           ├── '{method}'
+│           │   └── '{data}'.json
+│           ├── header.txt
+│           └── openapi3.yml
+├── .gitignore
+├── .golangci.yaml
+├── CONTRIBUTING.md
+├── CONTRIBUTING_RU.md
+├── go.mod
+├── go.sum
+├── LICENSE
+├── README.md
+└── Taskfile.yml
+```
 # Run tests
 
 ```
