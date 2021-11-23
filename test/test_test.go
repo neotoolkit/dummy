@@ -46,20 +46,20 @@ func TestCheck(t *testing.T) {
 		mux.HandleFunc("/", s.Handler)
 		newServer := httptest.NewServer(mux)
 
-		for _, data := range s.Handlers {
-			for _, v := range data {
+		for key, data := range s.Handlers {
+			for i := 0; i < len(data); i++ {
 				t.Run(c.Name(), func(t *testing.T) {
-					makeTestReq(t, v.Method, newServer.URL+v.Path, c.Name())
+					makeTestReq(t, data[i].Method, key, newServer.URL+data[i].Path, c.Name())
 				})
 			}
 		}
 	}
 }
 
-func makeTestReq(t *testing.T, method, url, testCase string) {
+func makeTestReq(t *testing.T, method, path, url, testCase string) {
 	t.Helper()
 
-	req, err := http.NewRequest(method, url, nil)
+	req, err := http.NewRequest(method, changePathMask(url), nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -91,13 +91,16 @@ func makeTestReq(t *testing.T, method, url, testCase string) {
 		t.Fatal(err)
 	}
 
-	responses, err := ioutil.ReadDir("cases/" + testCase + "/" + method)
+	p := strings.Split(path, "/")
+	newPath := strings.Join(p[1:], "-")
+
+	responses, err := ioutil.ReadDir("cases/" + testCase + "/" + newPath + "/" + method)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	for i := 0; i < len(responses); i++ {
-		r, err := ioutil.ReadFile("cases/" + testCase + "/" + method + "/" + responses[i].Name())
+		r, err := ioutil.ReadFile("cases/" + testCase + "/" + newPath + "/" + method + "/" + responses[i].Name())
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -127,4 +130,16 @@ func jsonBytesEqual(a, b []byte) (bool, error) {
 	}
 
 	return reflect.DeepEqual(j2, j), nil
+}
+
+func changePathMask(path string) string {
+	p := strings.Split(path, "/")
+
+	for i := 0; i < len(p); i++ {
+		if strings.HasPrefix(p[i], "{") && strings.HasSuffix(p[i], "}") {
+			p[i] = "1"
+		}
+	}
+
+	return strings.Join(p, "/")
 }

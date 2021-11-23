@@ -15,8 +15,9 @@
 ├── test
 │   └── cases
 │       └── '{case name}'
-│           ├── '{method}'
-│           │   └── '{data}'.json
+│           ├── '{openapi path}'
+│           │   └── '{method}'
+│           │       └── '{response}'.json
 │           ├── header.txt
 │           └── openapi3.yml
 ├── .gitignore
