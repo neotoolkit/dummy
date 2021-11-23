@@ -1,5 +1,5 @@
 # Contributing to Dummy
-
+[Russian](CONTRIBUTING_RU.md)
 # Project structure
 
 # Run tests
