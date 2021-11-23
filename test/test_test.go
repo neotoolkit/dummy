@@ -2,6 +2,7 @@ package test
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -46,11 +47,10 @@ func TestCheck(t *testing.T) {
 		mux.HandleFunc("/", s.Handler)
 		newServer := httptest.NewServer(mux)
 
-		for _, data := range s.Handlers {
-			for _, v := range data {
+		for key, data := range s.Handlers {
+			for i := 0; i < len(data); i++ {
 				t.Run(c.Name(), func(t *testing.T) {
-					path := v.Path
-					makeTestReq(t, v.Method, path, newServer.URL+path, c.Name())
+					makeTestReq(t, data[i].Method, key, newServer.URL+data[i].Path, c.Name())
 				})
 			}
 		}
@@ -60,12 +60,7 @@ func TestCheck(t *testing.T) {
 func makeTestReq(t *testing.T, method, path, url, testCase string) {
 	t.Helper()
 
-	newURL := changePathMask(url)
-
-	p := strings.Split(path, "/")
-	newPath := strings.Join(p[1:], "-")
-
-	req, err := http.NewRequest(method, newURL, nil)
+	req, err := http.NewRequest(method, changePathMask(url), nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -97,6 +92,9 @@ func makeTestReq(t *testing.T, method, path, url, testCase string) {
 		t.Fatal(err)
 	}
 
+	p := strings.Split(path, "/")
+	newPath := strings.Join(p[1:], "-")
+
 	responses, err := ioutil.ReadDir("cases/" + testCase + "/" + newPath + "/" + method)
 	if err != nil {
 		t.Fatal(err)
@@ -116,6 +114,7 @@ func makeTestReq(t *testing.T, method, path, url, testCase string) {
 		if equal {
 			return
 		}
+		fmt.Println(string(out), string(r))
 	}
 
 	t.Fatal()
@@ -137,11 +136,12 @@ func jsonBytesEqual(a, b []byte) (bool, error) {
 
 func changePathMask(path string) string {
 	p := strings.Split(path, "/")
+	fmt.Println(p)
 	for i := 0; i < len(p); i++ {
 		if strings.HasPrefix(p[i], "{") && strings.HasSuffix(p[i], "}") {
 			p[i] = "1"
 		}
 	}
-
+	fmt.Println(p)
 	return strings.Join(p, "/")
 }
