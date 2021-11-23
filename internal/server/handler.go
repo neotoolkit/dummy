@@ -101,7 +101,11 @@ func (s *Server) GetHandler(method, path, exampleHeader string) (Handler, bool) 
 					if ok && header == exampleHeader {
 						return handlers[i], true
 					}
+				}
+			}
 
+			for i := 0; i < len(handlers); i++ {
+				if handlers[i].Method == method {
 					if lastParamIsMask(mask) && handlers[i].Response == nil {
 						for _, v := range s.Handlers[parentPath(mask)] {
 							if v.Method == method {
