@@ -22,7 +22,7 @@ func TestCheck(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		path := "cases/" + c.Name() + "/openapi3.yaml"
+		path := "cases/" + c.Name() + "/openapi3.yml"
 
 		openapi, err := openapi3.Parse(path)
 		if err != nil {
