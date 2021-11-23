@@ -2,7 +2,6 @@ package test
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -114,7 +113,6 @@ func makeTestReq(t *testing.T, method, path, url, testCase string) {
 		if equal {
 			return
 		}
-		fmt.Println(string(out), string(r))
 	}
 
 	t.Fatal()
@@ -136,12 +134,12 @@ func jsonBytesEqual(a, b []byte) (bool, error) {
 
 func changePathMask(path string) string {
 	p := strings.Split(path, "/")
-	fmt.Println(p)
+
 	for i := 0; i < len(p); i++ {
 		if strings.HasPrefix(p[i], "{") && strings.HasSuffix(p[i], "}") {
 			p[i] = "1"
 		}
 	}
-	fmt.Println(p)
+
 	return strings.Join(p, "/")
 }
