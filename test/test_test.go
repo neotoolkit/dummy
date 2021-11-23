@@ -49,8 +49,8 @@ func TestCheck(t *testing.T) {
 		for _, data := range s.Handlers {
 			for _, v := range data {
 				t.Run(c.Name(), func(t *testing.T) {
-
-					makeTestReq(t, v.Method, v.Path, newServer.URL+v.Path, c.Name())
+					path := v.Path
+					makeTestReq(t, v.Method, path, newServer.URL+path, c.Name())
 				})
 			}
 		}
@@ -58,8 +58,9 @@ func TestCheck(t *testing.T) {
 }
 
 func makeTestReq(t *testing.T, method, path, url, testCase string) {
-	newURL := changePathMask(url)
 	t.Helper()
+
+	newURL := changePathMask(url)
 
 	p := strings.Split(path, "/")
 	newPath := strings.Join(p[1:], "-")
@@ -141,5 +142,6 @@ func changePathMask(path string) string {
 			p[i] = "1"
 		}
 	}
+
 	return strings.Join(p, "/")
 }
