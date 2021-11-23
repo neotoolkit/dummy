@@ -4,22 +4,23 @@
 ```
 ├── cmd
 │   └── dummy
-│       └── main.go
+│       └── main.go                         # Точка входа CLI
 ├── internal
-│   ├── command
-│   ├── config
-│   ├── exitcode
-│   ├── logger
-│   ├── openapi3
-│   └── server
-├── test
-│   └── cases
-│       └── '{case name}'
-│           ├── '{openapi path}'
-│           │   └── '{method}'
-│           │       └── '{response}'.json
-│           ├── header.txt
-│           └── openapi3.yml
+│   ├── command                             # Реализация CLI-команд
+│   ├── config                              # Конфигурация
+│   ├── exitcode                            # Коды ошибок
+│   ├── logger                              # Логирование
+│   ├── openapi3                            # Пакет для сериализации OpenAPI спецификации
+│   └── server                              # Реализация мок-сервера
+├── test                                    # Дирекатория для тестов
+│   ├── cases                               # Тест-кейсы
+│   │   └── '{case name}'                   # Директория с названием тест-кейса
+│   │       ├── '{openapi path}'            # Директория с названием path описанного в openapi3.yml
+│   │       │   └── '{method}'              # Директория с названием метода вложенного в path
+│   │       │       └── '{response}'.json   # Планируемый варианты ответов. Их может быть несколько так как есть кейс когда ответ рандомный, и в этом случае нужно перечислить все
+│   │       ├── header.txt                  # Заголовки, которые буду прокинуты в запросы
+│   │       └── openapi3.yml                # OpenAPI спецификация на основе которой будут строится тесты
+│   └── test_test.go                        # Точка входа тестирования
 ├── .gitignore
 ├── .golangci.yaml
 ├── CONTRIBUTING.md

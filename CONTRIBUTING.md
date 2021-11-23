@@ -13,13 +13,14 @@
 │   ├── openapi3
 │   └── server
 ├── test
-│   └── cases
-│       └── '{case name}'
-│           ├── '{openapi path}'
-│           │   └── '{method}'
-│           │       └── '{response}'.json
-│           ├── header.txt
-│           └── openapi3.yml
+│   ├── cases
+│   │   └── '{case name}'
+│   │       ├── '{openapi path}'
+│   │       │   └── '{method}'
+│   │       │       └── '{response}'.json
+│   │       ├── header.txt
+│   │       └── openapi3.yml
+│   └── test_test.go
 ├── .gitignore
 ├── .golangci.yaml
 ├── CONTRIBUTING.md
