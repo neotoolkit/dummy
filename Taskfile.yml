@@ -5,6 +5,7 @@ tasks:
     cmds:
       - task: tidy
       - task: fmt
+      - task: imports
       - task: lint
       - task: test
 
@@ -13,6 +14,9 @@ tasks:
 
   fmt:
     - go fmt ./...
+
+  imports:
+    - goimports -local github.com/go-dummy/dummy/ -w -l ./
 
   lint:
     - golangci-lint run
