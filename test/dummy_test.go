@@ -92,7 +92,7 @@ func makeTestReq(t *testing.T, method, path, url, testCase string) {
 	}
 
 	p := strings.Split(path, "/")
-	newPath := strings.Join(p[1:], "-")
+	newPath := strings.Join(p[1:], "|")
 
 	responses, err := ioutil.ReadDir("case/" + testCase + "/" + newPath + "/" + method)
 	if err != nil {
@@ -137,7 +137,7 @@ func changePathMask(path string) string {
 
 	for i := 0; i < len(p); i++ {
 		if strings.HasPrefix(p[i], "{") && strings.HasSuffix(p[i], "}") {
-			p[i] = "1"
+			p[i] = "e1afccea-5168-4735-84d4-cb96f6fb5d25"
 		}
 	}
 
