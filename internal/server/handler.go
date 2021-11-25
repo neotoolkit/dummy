@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"io"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -22,7 +23,7 @@ type Handler struct {
 func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	if h, ok := s.GetHandler(r.Method, r.URL.Path, r.URL.Query(), r.Header.Get("x-example")); ok {
+	if h, ok := s.GetHandler(r.Method, r.URL.Path, r.URL.Query(), r.Header.Get("x-example"), r.Body); ok {
 		w.WriteHeader(h.StatusCode)
 		bytes, _ := json.Marshal(h.Response)
 		_, _ = w.Write(bytes)
@@ -103,7 +104,7 @@ func handler(path, method string, queryParam url.Values, header map[string]strin
 	}
 }
 
-func (s *Server) GetHandler(method, path string, queryParam url.Values, exampleHeader string) (Handler, bool) {
+func (s *Server) GetHandler(method, path string, queryParam url.Values, exampleHeader string, body io.ReadCloser) (Handler, bool) {
 	for mask, handlers := range s.Handlers {
 		if pathMaskDetect(path, mask) {
 			for i := 0; i < len(handlers); i++ {
@@ -127,6 +128,31 @@ func (s *Server) GetHandler(method, path string, queryParam url.Values, exampleH
 
 										return s.Handlers[path][0], true
 									}
+								}
+							}
+						}
+					}
+
+					if method == http.MethodPost {
+						for i := 0; i < len(s.Handlers[path]); i++ {
+							if s.Handlers[path][i].Method == http.MethodGet {
+								data, ok := s.Handlers[path][i].Response.([]map[string]interface{})
+								if ok {
+									var res map[string]interface{}
+
+									err := json.NewDecoder(body).Decode(&res)
+									if err != nil {
+										s.Logger.Log().Err(err)
+									}
+
+									data = append(data, res)
+
+									s.Handlers[path][i].Response = data
+
+									return Handler{
+										StatusCode: s.Handlers[path][i].StatusCode,
+										Response:   res,
+									}, true
 								}
 							}
 						}
