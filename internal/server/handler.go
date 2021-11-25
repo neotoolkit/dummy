@@ -3,6 +3,7 @@ package server
 import (
 	"encoding/json"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -12,6 +13,7 @@ import (
 type Handler struct {
 	Path       string
 	Method     string
+	QueryParam url.Values
 	Header     map[string]string
 	StatusCode int
 	Response   interface{}
@@ -20,7 +22,7 @@ type Handler struct {
 func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	if h, ok := s.GetHandler(r.Method, r.URL.Path, r.Header.Get("x-example")); ok {
+	if h, ok := s.GetHandler(r.Method, r.URL.Path, r.URL.Query(), r.Header.Get("x-example")); ok {
 		w.WriteHeader(h.StatusCode)
 		bytes, _ := json.Marshal(h.Response)
 		_, _ = w.Write(bytes)
@@ -58,6 +60,14 @@ func (s *Server) SetHandlers() error {
 func handlers(path, method string, o *openapi3.Operation) ([]Handler, error) {
 	var res []Handler
 
+	queryParam := make(url.Values)
+
+	for i := 0; i < len(o.Parameters); i++ {
+		if o.Parameters[i].In == "query" {
+			queryParam[o.Parameters[i].Name] = append(queryParam[o.Parameters[i].Name], "")
+		}
+	}
+
 	for code, resp := range o.Responses {
 		statusCode, err := strconv.Atoi(code)
 		if err != nil {
@@ -69,30 +79,31 @@ func handlers(path, method string, o *openapi3.Operation) ([]Handler, error) {
 		examplesKeys := getExamplesKeys(content.Examples)
 
 		if len(examplesKeys) > 0 {
-			res = append(res, handler(path, method, map[string]string{}, statusCode, response(content, examplesKeys[0])))
+			res = append(res, handler(path, method, queryParam, map[string]string{}, statusCode, response(content, examplesKeys[0])))
 
 			for i := 0; i < len(examplesKeys); i++ {
-				res = append(res, handler(path, method, map[string]string{"example": examplesKeys[i]}, statusCode, response(content, examplesKeys[i])))
+				res = append(res, handler(path, method, queryParam, map[string]string{"example": examplesKeys[i]}, statusCode, response(content, examplesKeys[i])))
 			}
 		} else {
-			res = append(res, handler(path, method, map[string]string{}, statusCode, response(content)))
+			res = append(res, handler(path, method, queryParam, map[string]string{}, statusCode, response(content)))
 		}
 	}
 
 	return res, nil
 }
 
-func handler(path, method string, header map[string]string, statusCode int, response interface{}) Handler {
+func handler(path, method string, queryParam url.Values, header map[string]string, statusCode int, response interface{}) Handler {
 	return Handler{
 		Path:       path,
 		Method:     method,
+		QueryParam: queryParam,
 		Header:     header,
 		StatusCode: statusCode,
 		Response:   response,
 	}
 }
 
-func (s *Server) GetHandler(method, path, exampleHeader string) (Handler, bool) {
+func (s *Server) GetHandler(method, path string, queryParam url.Values, exampleHeader string) (Handler, bool) {
 	for mask, handlers := range s.Handlers {
 		if pathMaskDetect(path, mask) {
 			for i := 0; i < len(handlers); i++ {
@@ -112,13 +123,43 @@ func (s *Server) GetHandler(method, path, exampleHeader string) (Handler, bool) 
 								data := v.Response.([]map[string]interface{})
 								for i := 0; i < len(data); i++ {
 									if data[i]["id"] == getLastParam(path) {
-										s.Handlers[path] = append(s.Handlers[path], handler(path, method, map[string]string{}, 200, data[i]))
+										s.Handlers[path] = append(s.Handlers[path], handler(path, method, url.Values{}, map[string]string{}, 200, data[i]))
 
 										return s.Handlers[path][0], true
 									}
 								}
 							}
 						}
+					}
+
+					limit, offset, found, err := pagination(queryParam)
+					if err != nil {
+						s.Logger.Log().Err(err)
+					}
+
+					if found {
+						data := handlers[i].Response.([]map[string]interface{})
+						if offset > len(data) {
+							return Handler{}, true
+						}
+
+						size := len(data) - offset
+						if size > limit {
+							size = limit
+						}
+
+						resp := make([]map[string]interface{}, size)
+						n := 0
+
+						for i := offset; n < size; i++ {
+							resp[n] = data[i]
+							n++
+						}
+
+						return Handler{
+							Response:   resp,
+							StatusCode: http.StatusOK,
+						}, true
 					}
 
 					return handlers[i], true
@@ -220,4 +261,24 @@ func getLastParam(path string) string {
 	p := strings.Split(path, "/")
 
 	return p[len(p)-1]
+}
+
+func pagination(queryParam url.Values) (limit, offset int, found bool, err error) {
+	l, ok := queryParam["limit"]
+	if !ok {
+		return
+	}
+
+	if ok {
+		limit, err = strconv.Atoi(l[0])
+	}
+
+	o, ok := queryParam["offset"]
+	if ok {
+		offset, err = strconv.Atoi(o[0])
+	}
+
+	found = true
+
+	return
 }
