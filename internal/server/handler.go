@@ -123,7 +123,7 @@ func (s *Server) GetHandler(method, path string, queryParam url.Values, exampleH
 							if v.Method == method {
 								data := v.Response.([]map[string]interface{})
 								for i := 0; i < len(data); i++ {
-									if data[i]["id"] == getLastParam(path) {
+									if data[i]["id"] == GetLastPathSegment(path) {
 										s.Handlers[path] = append(s.Handlers[path], handler(path, method, url.Values{}, map[string]string{}, 200, data[i]))
 
 										return s.Handlers[path][0], true
@@ -283,7 +283,7 @@ func lastParamIsMask(path string) bool {
 	return strings.HasPrefix(p[len(p)-1], "{") && strings.HasSuffix(p[len(p)-1], "}")
 }
 
-func getLastParam(path string) string {
+func GetLastPathSegment(path string) string {
 	p := strings.Split(path, "/")
 
 	return p[len(p)-1]
