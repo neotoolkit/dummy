@@ -21,6 +21,12 @@ type Handler struct {
 }
 
 func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
+	if r.Header.Get("X-Set-Status-Code") == "500" {
+		w.WriteHeader(http.StatusInternalServerError)
+
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 
 	if h, ok := s.GetHandler(r.Method, r.URL.Path, r.URL.Query(), r.Header.Get("x-example"), r.Body); ok {

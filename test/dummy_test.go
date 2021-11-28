@@ -119,6 +119,10 @@ func makeTestReq(t *testing.T, method, path, url, testCase string) {
 }
 
 func jsonBytesEqual(a, b []byte) (bool, error) {
+	if string(b) == "" {
+		return true, nil
+	}
+
 	var j, j2 interface{}
 
 	if err := json.Unmarshal(a, &j); err != nil {
