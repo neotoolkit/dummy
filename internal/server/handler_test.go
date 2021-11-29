@@ -32,3 +32,30 @@ func TestGetLastPathParam(t *testing.T) {
 		}
 	}
 }
+
+func TestRemoveTrailingSlash(t *testing.T) {
+	tests := []struct {
+		path string
+		want string
+	}{
+		{
+			path: "",
+			want: "",
+		},
+		{
+			path: "/",
+			want: "",
+		},
+		{
+			path: "/path/",
+			want: "/path",
+		},
+	}
+
+	for i := 0; i < len(tests); i++ {
+		got := server.RemoveTrailingSlash(tests[i].path)
+		if tests[i].want != got {
+			t.Fatalf(`expected: "%s", got: "%s"`, tests[i].want, got)
+		}
+	}
+}
