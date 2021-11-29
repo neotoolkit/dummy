@@ -29,7 +29,7 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
-	if h, ok := s.GetHandler(r.Method, r.URL.Path, r.URL.Query(), r.Header.Get("x-example"), r.Body); ok {
+	if h, ok := s.GetHandler(r.Method, RemoveTrailingSlash(r.URL.Path), r.URL.Query(), r.Header.Get("x-example"), r.Body); ok {
 		w.WriteHeader(h.StatusCode)
 		bytes, _ := json.Marshal(h.Response)
 		_, _ = w.Write(bytes)
@@ -313,4 +313,12 @@ func pagination(queryParam url.Values) (limit, offset int, found bool, err error
 	found = true
 
 	return
+}
+
+func RemoveTrailingSlash(path string) string {
+	if len(path) > 0 && path[len(path)-1] == '/' {
+		return path[0 : len(path)-1]
+	}
+
+	return path
 }
