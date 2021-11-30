@@ -59,6 +59,24 @@ func (s *Server) SetHandlers() error {
 
 			s.Handlers[path] = append(s.Handlers[path], handlers...)
 		}
+
+		if method.Put != nil {
+			handlers, err := handlers(path, http.MethodPut, method.Put)
+			if err != nil {
+				return err
+			}
+
+			s.Handlers[path] = append(s.Handlers[path], handlers...)
+		}
+
+		if method.Patch != nil {
+			handlers, err := handlers(path, http.MethodPatch, method.Patch)
+			if err != nil {
+				return err
+			}
+
+			s.Handlers[path] = append(s.Handlers[path], handlers...)
+		}
 	}
 
 	return nil
