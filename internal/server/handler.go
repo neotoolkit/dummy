@@ -341,3 +341,8 @@ func RemoveTrailingSlash(path string) string {
 
 	return path
 }
+
+// RemoveFragment - clear url from reference in path
+func RemoveFragment(path string) string {
+	return strings.Split(path, "#")[0]
+}
