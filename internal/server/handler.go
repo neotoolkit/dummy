@@ -143,7 +143,7 @@ func (s *Server) GetHandler(method, path string, queryParam url.Values, exampleH
 
 			for i := 0; i < len(handlers); i++ {
 				if handlers[i].Method == method {
-					if lastParamIsMask(mask) && handlers[i].Response == nil {
+					if LastParamIsMask(mask) && handlers[i].Response == nil {
 						for _, v := range s.Handlers[parentPath(mask)] {
 							if v.Method == method {
 								data := v.Response.([]map[string]interface{})
@@ -302,7 +302,7 @@ func parentPath(path string) string {
 	return strings.Join(p[0:len(p)-1], "/")
 }
 
-func lastParamIsMask(path string) bool {
+func LastParamIsMask(path string) bool {
 	p := strings.Split(path, "/")
 
 	return strings.HasPrefix(p[len(p)-1], "{") && strings.HasSuffix(p[len(p)-1], "}")
