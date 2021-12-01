@@ -117,3 +117,49 @@ func TestParentPath(t *testing.T) {
 		}
 	}
 }
+
+func TestPathByMaskDetect(t *testing.T) {
+	tests := []struct {
+		path string
+		mask string
+		want bool
+	}{
+		{
+			path: "",
+			mask: "",
+			want: true,
+		},
+		{
+			path: "/path",
+			mask: "/path",
+			want: true,
+		},
+		{
+			path: "/path/1",
+			mask: "/path/{1}",
+			want: true,
+		},
+		{
+			path: "/path/1/path/1",
+			mask: "/path/{1}/path",
+			want: false,
+		},
+		{
+			path: "/path/1/path/1",
+			mask: "/path/{1}/path/{1}",
+			want: true,
+		},
+		{
+			path: "/path/1/path/1",
+			mask: "/path/{1}/path/{1}",
+			want: true,
+		},
+	}
+
+	for i := 0; i < len(tests); i++ {
+		got := server.PathByMaskDetect(tests[i].path, tests[i].mask)
+		if tests[i].want != got {
+			t.Fatalf(`expected: "%v", got: "%v"`, tests[i].want, got)
+		}
+	}
+}
