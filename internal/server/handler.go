@@ -29,7 +29,7 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
-	if h, ok := s.GetHandler(r.Method, RemoveTrailingSlash(r.URL.Path), r.URL.Query(), r.Header.Get("x-example"), r.Body); ok {
+	if h, ok := s.GetHandler(r.Method, RemoveTrailingSlash(r.URL.Path), r.URL.Query(), r.Header.Get("X-Example"), r.Body); ok {
 		w.WriteHeader(h.StatusCode)
 		bytes, _ := json.Marshal(h.Response)
 		_, _ = w.Write(bytes)
@@ -89,6 +89,7 @@ func handlers(path, method string, o *openapi3.Operation) ([]Handler, error) {
 
 	for i := 0; i < len(o.Parameters); i++ {
 		if o.Parameters[i].In == "query" {
+			// TODO: Add default from specification
 			queryParam[o.Parameters[i].Name] = append(queryParam[o.Parameters[i].Name], "")
 		}
 	}
