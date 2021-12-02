@@ -1,11 +1,13 @@
 package server_test
 
 import (
+	"testing"
+
+	"github.com/stretchr/testify/require"
+
 	"github.com/go-dummy/dummy/internal/config"
 	"github.com/go-dummy/dummy/internal/openapi3"
 	"github.com/go-dummy/dummy/internal/server"
-	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestNewServerRunError(t *testing.T) {
