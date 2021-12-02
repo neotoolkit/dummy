@@ -12,15 +12,6 @@
 │   ├── logger
 │   ├── openapi3
 │   └── server
-├── test
-│   ├── case
-│   │   └── '{case name}'
-│   │       ├── '{openapi path}'
-│   │       │   └── '{method}'
-│   │       │       └── '{response}'.json
-│   │       ├── header.txt
-│   │       └── openapi3.yml
-│   └── dummy_test.go                       # Test entry point
 ├── .gitignore
 ├── .golangci.yaml
 ├── CONTRIBUTING.md
