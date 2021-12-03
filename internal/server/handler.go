@@ -90,7 +90,7 @@ func handlers(path, method string, o *openapi3.Operation) ([]Handler, error) {
 	for i := 0; i < len(o.Parameters); i++ {
 		if o.Parameters[i].In == "query" {
 			// TODO: Add default from specification
-			queryParam[o.Parameters[i].Name] = append(queryParam[o.Parameters[i].Name], "")
+			queryParam.Add(o.Parameters[i].Name, "")
 		}
 	}
 
