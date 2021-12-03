@@ -175,7 +175,7 @@ func (s *Server) GetHandler(method, path string, queryParam url.Values, exampleH
 									s.Handlers[path][i].Response = data
 
 									return Handler{
-										StatusCode: s.Handlers[path][i].StatusCode,
+										StatusCode: http.StatusCreated,
 										Response:   res,
 									}, true
 								}

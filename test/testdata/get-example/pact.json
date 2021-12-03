@@ -7,7 +7,7 @@
   },
   "interactions": [
     {
-      "description": "",
+      "description": "Example is array",
       "request": {
         "method": "GET",
         "path": "/users"
