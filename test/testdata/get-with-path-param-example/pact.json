@@ -10,17 +10,14 @@
       "description": "",
       "request": {
         "method": "GET",
-        "path": "/users",
-        "headers": {
-          "X-Example": "472063cc-4c83-11ec-81d3-0242ac130003"
-        }
+        "path": "/users/example"
       },
       "response": {
         "status": 200,
         "body": {
-          "firstName": "Sergey",
-          "id": "472063cc-4c83-11ec-81d3-0242ac130003",
-          "lastName": "Brin"
+          "firstName": "Elon",
+          "id": "e1afccea-5168-4735-84d4-cb96f6fb5d25",
+          "lastName": "Musk"
         }
       }
     }

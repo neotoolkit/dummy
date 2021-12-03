@@ -1,0 +1,94 @@
+{
+  "consumer": {
+    "name": "consumer"
+  },
+  "provider": {
+    "name": "dummy"
+  },
+  "interactions": [
+    {
+      "description": "",
+      "request": {
+        "method": "GET",
+        "path": "/users"
+      },
+      "response": {
+        "status": 200,
+        "body": [
+          {
+            "firstName": "Elon",
+            "id": "e1afccea-5168-4735-84d4-cb96f6fb5d25",
+            "lastName": "Musk"
+          },
+          {
+            "firstName": "Sergey",
+            "id": "472063cc-4c83-11ec-81d3-0242ac130003",
+            "lastName": "Brin"
+          }
+        ]
+      }
+    },
+    {
+      "description": "",
+      "request": {
+        "method": "POST",
+        "path": "/users",
+        "body": {
+          "firstName": "Rob",
+          "id": "bcc3bc6c-20cc-4b6c-a8f2-c7a63d4e29fe",
+          "lastName": "Pike"
+        }
+      },
+      "response": {
+        "status": 201,
+        "body": {
+          "firstName": "Rob",
+          "id": "bcc3bc6c-20cc-4b6c-a8f2-c7a63d4e29fe",
+          "lastName": "Pike"
+        }
+      }
+    },
+    {
+      "description": "",
+      "request": {
+        "method": "GET",
+        "path": "/users/bcc3bc6c-20cc-4b6c-a8f2-c7a63d4e29fe"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "firstName": "Rob",
+          "id": "bcc3bc6c-20cc-4b6c-a8f2-c7a63d4e29fe",
+          "lastName": "Pike"
+        }
+      }
+    },
+    {
+      "description": "",
+      "request": {
+        "method": "GET",
+        "path": "/users"
+      },
+      "response": {
+        "status": 200,
+        "body": [
+          {
+            "firstName": "Elon",
+            "id": "e1afccea-5168-4735-84d4-cb96f6fb5d25",
+            "lastName": "Musk"
+          },
+          {
+            "firstName": "Sergey",
+            "id": "472063cc-4c83-11ec-81d3-0242ac130003",
+            "lastName": "Brin"
+          },
+          {
+            "firstName": "Rob",
+            "id": "bcc3bc6c-20cc-4b6c-a8f2-c7a63d4e29fe",
+            "lastName": "Pike"
+          }
+        ]
+      }
+    }
+  ]
+}
