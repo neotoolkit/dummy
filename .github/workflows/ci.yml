@@ -15,17 +15,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
-        with:
-          go-version: 1.17
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.6
-      - name: Unit tests
-        run: go test -v -race -covermode atomic -coverprofile=coverage.txt ./internal/...
-      - name: Upload coverage report
-        run: bash <(curl -s https://codecov.io/bash)
-      - name: Integration tests
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+      - name: Tests
         run: |
           gem install pact-provider-verifier
-          go test ./test/...
+          go test -v -race -covermode atomic -coverprofile=coverage.txt ./...
+      - name: Upload coverage report
+        run: bash <(curl -s https://codecov.io/bash)
