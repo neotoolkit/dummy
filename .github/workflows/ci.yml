@@ -22,7 +22,7 @@ jobs:
         with:
           ruby-version: 2.6
       - name: Unit tests
-        run: go test -v -race -covermode atomic -coverprofile=coverage.txt ./internal/...
+        run: go test -v -race -covermode atomic -coverprofile=coverage.txt ./...
       - name: Upload coverage report
         run: bash <(curl -s https://codecov.io/bash)
       - name: Integration tests
