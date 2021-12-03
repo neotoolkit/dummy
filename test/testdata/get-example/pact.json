@@ -1,0 +1,32 @@
+{
+  "consumer": {
+    "name": "consumer"
+  },
+  "provider": {
+    "name": "dummy"
+  },
+  "interactions": [
+    {
+      "description": "",
+      "request": {
+        "method": "GET",
+        "path": "/users"
+      },
+      "response": {
+        "status": 200,
+        "body": [
+          {
+            "firstName": "Elon",
+            "id": "e1afccea-5168-4735-84d4-cb96f6fb5d25",
+            "lastName": "Musk"
+          },
+          {
+            "firstName": "Sergey",
+            "id": "472063cc-4c83-11ec-81d3-0242ac130003",
+            "lastName": "Brin"
+          }
+        ]
+      }
+    }
+  ]
+}

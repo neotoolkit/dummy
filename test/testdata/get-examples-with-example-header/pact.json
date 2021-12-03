@@ -1,0 +1,28 @@
+{
+  "consumer": {
+    "name": "consumer"
+  },
+  "provider": {
+    "name": "dummy"
+  },
+  "interactions": [
+    {
+      "description": "",
+      "request": {
+        "method": "GET",
+        "path": "/users",
+        "headers": {
+          "X-Example": "472063cc-4c83-11ec-81d3-0242ac130003"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "firstName": "Sergey",
+          "id": "472063cc-4c83-11ec-81d3-0242ac130003",
+          "lastName": "Brin"
+        }
+      }
+    }
+  ]
+}
