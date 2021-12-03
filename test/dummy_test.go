@@ -28,7 +28,8 @@ func TestDummy(t *testing.T) {
 		}
 
 		s := new(server.Server)
-		s.Config = config.Server{}
+		conf := config.NewConfig()
+		s.Config = conf.Server
 		s.OpenAPI = openapi
 		s.Logger = logger.NewLogger()
 		s.Handlers = make(map[string][]server.Handler)
