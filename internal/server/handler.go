@@ -154,6 +154,7 @@ func (s *Server) GetHandler(method, path string, queryParam url.Values, exampleH
 										return s.Handlers[path][0], true
 									}
 								}
+								return Handler{}, false
 							}
 						}
 					}

@@ -89,6 +89,16 @@
           }
         ]
       }
+    },
+    {
+      "description": "",
+      "request": {
+        "method": "GET",
+        "path": "/users/c5526390-5452-11ec-bf63-0242ac130002"
+      },
+      "response": {
+        "status": 404
+      }
     }
   ]
 }
