@@ -12,5 +12,5 @@ go install github.com/go-dummy/dummy/cmd/dummy
 ```
 ### Usage
 ```bash
-dummy server ./openapi.yaml
+dummy server ./openapi.yml
 ```
