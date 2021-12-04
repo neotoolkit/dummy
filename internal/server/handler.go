@@ -144,7 +144,7 @@ func (s *Server) GetHandler(method, path string, queryParam url.Values, exampleH
 			for i := 0; i < len(handlers); i++ {
 				if handlers[i].Method == method {
 					if LastPathSegmentIsMask(mask) && handlers[i].Response == nil {
-						for _, v := range s.Handlers[parentPath(mask)] {
+						for _, v := range s.Handlers[ParentPath(mask)] {
 							if v.Method == method {
 								data := v.Response.([]map[string]interface{})
 								for i := 0; i < len(data); i++ {
