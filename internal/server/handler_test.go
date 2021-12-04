@@ -62,7 +62,7 @@ func TestRemoveTrailingSlash(t *testing.T) {
 	}
 }
 
-func TestLastParamIsMask(t *testing.T) {
+func TestLastPathSegmentIsMask(t *testing.T) {
 	tests := []struct {
 		path string
 		want bool
@@ -82,7 +82,7 @@ func TestLastParamIsMask(t *testing.T) {
 	}
 
 	for i := 0; i < len(tests); i++ {
-		got := server.LastParamIsMask(tests[i].path)
+		got := server.LastPathSegmentIsMask(tests[i].path)
 		if tests[i].want != got {
 			t.Fatalf(`expected: "%v", got: "%v"`, tests[i].want, got)
 		}
