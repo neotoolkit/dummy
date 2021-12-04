@@ -62,7 +62,7 @@ func TestRemoveTrailingSlash(t *testing.T) {
 	}
 }
 
-func TestLastPathSegmentIsMask(t *testing.T) {
+func TestLastPathSegmentIsParam(t *testing.T) {
 	tests := []struct {
 		path string
 		want bool
