@@ -13,7 +13,7 @@
 │   ├── openapi3
 │   └── server
 ├── .gitignore
-├── .golangci.yaml
+├── .golangci.yml
 ├── CONTRIBUTING.md
 ├── CONTRIBUTING_RU.md
 ├── go.mod
