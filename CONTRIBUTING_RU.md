@@ -13,7 +13,7 @@
 │   ├── openapi3                            # Пакет для сериализации OpenAPI спецификации
 │   └── server                              # Реализация мок-сервера
 ├── .gitignore
-├── .golangci.yaml
+├── .golangci.yml
 ├── CONTRIBUTING.md
 ├── CONTRIBUTING_RU.md
 ├── go.mod
