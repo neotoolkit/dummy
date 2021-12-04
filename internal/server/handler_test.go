@@ -82,7 +82,7 @@ func TestLastPathSegmentIsParam(t *testing.T) {
 	}
 
 	for i := 0; i < len(tests); i++ {
-		got := server.LastPathSegmentIsMask(tests[i].path)
+		got := server.LastPathSegmentIsParam(tests[i].path)
 		if tests[i].want != got {
 			t.Fatalf(`expected: "%v", got: "%v"`, tests[i].want, got)
 		}
