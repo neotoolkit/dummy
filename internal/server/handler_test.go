@@ -159,7 +159,7 @@ func TestPathByMaskDetect(t *testing.T) {
 	}
 
 	for i := 0; i < len(tests); i++ {
-		got := server.PathByMaskDetect(tests[i].path, tests[i].mask)
+		got := server.PathByParamDetect(tests[i].path, tests[i].mask)
 		if tests[i].want != got {
 			t.Fatalf(`expected: "%v", got: "%v"`, tests[i].want, got)
 		}
