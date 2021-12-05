@@ -18,6 +18,7 @@ func TestMediaTypeResponseByExample(t *testing.T) {
 
 func TestMediaTypeResponseByExamplesKey(t *testing.T) {
 	const key = "key"
+
 	m := openapi3.MediaType{
 		Examples: openapi3.Examples{
 			key: openapi3.Example{
