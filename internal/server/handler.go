@@ -130,7 +130,7 @@ func handler(path, method string, queryParam url.Values, header map[string]strin
 
 func (s *Server) GetHandler(method, path string, queryParam url.Values, exampleHeader string, body io.ReadCloser) (Handler, bool) {
 	for mask, handlers := range s.Handlers {
-		if PathByMaskDetect(path, mask) {
+		if PathByParamDetect(path, mask) {
 			for i := 0; i < len(handlers); i++ {
 				if handlers[i].Method == method {
 					header, ok := handlers[i].Header["example"]
@@ -223,7 +223,7 @@ func (s *Server) GetHandler(method, path string, queryParam url.Values, exampleH
 	return Handler{}, false
 }
 
-func PathByMaskDetect(path, mask string) bool {
+func PathByParamDetect(path, mask string) bool {
 	p := strings.Split(path, "/")
 	m := strings.Split(mask, "/")
 
