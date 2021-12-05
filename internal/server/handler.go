@@ -311,3 +311,12 @@ func RemoveTrailingSlash(path string) string {
 func RemoveFragment(path string) string {
 	return strings.Split(path, "#")[0]
 }
+
+// RefSplit - returns a list of references
+func RefSplit(ref string) []string {
+	if len(ref) > 2 && ref[:2] == "#/" {
+		return strings.Split(ref[2:], "/")
+	}
+
+	return []string{}
+}
