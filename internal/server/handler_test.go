@@ -186,3 +186,25 @@ func TestRemoveFragment(t *testing.T) {
 		assert.Equal(t, tc.response, p)
 	}
 }
+
+func TestRefSplit(t *testing.T) {
+	type test struct {
+		request  string
+		response []string
+	}
+
+	tests := []test{
+		{"", []string{}},
+		{"/", []string{}},
+		{"#/", []string{}},
+		{"#/components", []string{"components"}},
+		{"#/components/schemas/User", []string{"components", "schemas", "User"}},
+		{"#/components/schemas/Users", []string{"components", "schemas", "Users"}},
+	}
+
+	for _, tc := range tests {
+		p := server.RefSplit(tc.request)
+
+		assert.Equal(t, tc.response, p)
+	}
+}
