@@ -143,43 +143,62 @@ func (s *Server) GetHandler(method, path string, queryParam url.Values, exampleH
 			for i := 0; i < len(handlers); i++ {
 				if handlers[i].Method == method {
 					if LastPathSegmentIsParam(mask) && handlers[i].Response == nil {
-						for _, v := range s.Handlers[ParentPath(mask)] {
-							if v.Method == method {
-								data := v.Response.([]map[string]interface{})
-								for i := 0; i < len(data); i++ {
-									if data[i]["id"] == GetLastPathSegment(path) {
-										s.Handlers[path] = append(s.Handlers[path], handler(path, method, url.Values{}, map[string]string{}, 200, data[i]))
+						h, found := s.getHandlerByPathAndMethod(ParentPath(mask), method)
+						if found {
+							data := h.Response.([]map[string]interface{})
+							for i := 0; i < len(data); i++ {
+								if data[i]["id"] == GetLastPathSegment(path) {
+									s.Handlers[path] = append(s.Handlers[path], handler(path, method, url.Values{}, map[string]string{}, 200, data[i]))
 
-										return s.Handlers[path][0], true
-									}
+									return s.Handlers[path][0], true
 								}
-
-								return Handler{}, false
 							}
+
+							return Handler{}, false
 						}
 					}
 
 					if method == http.MethodPost {
-						for i := 0; i < len(s.Handlers[path]); i++ {
-							if s.Handlers[path][i].Method == http.MethodGet {
-								data, ok := s.Handlers[path][i].Response.([]map[string]interface{})
-								if ok {
-									var res map[string]interface{}
+						h, found := s.getHandlerByPathAndMethod(path, http.MethodGet)
+						if found {
+							data, ok := h.Response.([]map[string]interface{})
+							if ok {
+								var res map[string]interface{}
 
-									err := json.NewDecoder(body).Decode(&res)
-									if err != nil {
-										s.Logger.Log().Err(err)
-									}
-
-									data = append(data, res)
-
-									s.Handlers[path][i].Response = data
-
-									return Handler{
-										StatusCode: http.StatusCreated,
-										Response:   res,
-									}, true
+								err := json.NewDecoder(body).Decode(&res)
+								if err != nil {
+									s.Logger.Log().Err(err)
 								}
+
+								data = append(data, res)
+
+								h.Response = data
+
+								return Handler{
+									StatusCode: http.StatusCreated,
+									Response:   res,
+								}, true
+							}
+						}
+					}
+
+					if method == http.MethodPut || method == http.MethodPatch {
+						h, found := s.getHandlerByPathAndMethod(path, http.MethodGet)
+						if found {
+							if _, ok := h.Response.(map[string]interface{}); ok {
+								var res map[string]interface{}
+
+								err := json.NewDecoder(body).Decode(&res)
+								if err != nil {
+									s.Logger.Log().Err(err)
+								}
+
+								h.Response = res
+
+								return Handler{
+									StatusCode: http.StatusOK,
+									Response:   res,
+								}, true
 							}
 						}
 					}
@@ -221,6 +240,19 @@ func (s *Server) GetHandler(method, path string, queryParam url.Values, exampleH
 	}
 
 	return Handler{}, false
+}
+
+func (s *Server) getHandlerByPathAndMethod(path, method string) (*Handler, bool) {
+	h, found := s.Handlers[path]
+	if found {
+		for i := 0; i < len(h); i++ {
+			if h[i].Method == method {
+				return &h[i], true
+			}
+		}
+	}
+
+	return &Handler{}, false
 }
 
 func PathByParamDetect(path, param string) bool {
