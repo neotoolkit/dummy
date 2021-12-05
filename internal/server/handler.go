@@ -223,9 +223,9 @@ func (s *Server) GetHandler(method, path string, queryParam url.Values, exampleH
 	return Handler{}, false
 }
 
-func PathByParamDetect(path, mask string) bool {
+func PathByParamDetect(path, param string) bool {
 	p := strings.Split(path, "/")
-	m := strings.Split(mask, "/")
+	m := strings.Split(param, "/")
 
 	if len(p) != len(m) {
 		return false

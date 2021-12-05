@@ -16,3 +16,6 @@ vendor/
 
 # IDEA settings
 .idea
+
+# Pact logs
+test/log/pact.log
