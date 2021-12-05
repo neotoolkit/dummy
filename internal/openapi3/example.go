@@ -5,3 +5,15 @@ type Example struct {
 }
 
 type Examples map[string]Example
+
+func (e Examples) GetExamplesKeys() []string {
+	keys := make([]string, len(e))
+	i := 0
+
+	for k := range e {
+		keys[i] = k
+		i++
+	}
+
+	return keys
+}

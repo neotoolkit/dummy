@@ -89,7 +89,6 @@ func handlers(path, method string, o *openapi3.Operation) ([]Handler, error) {
 
 	for i := 0; i < len(o.Parameters); i++ {
 		if o.Parameters[i].In == "query" {
-			// TODO: Add default from specification
 			queryParam.Add(o.Parameters[i].Name, "")
 		}
 	}
@@ -102,16 +101,16 @@ func handlers(path, method string, o *openapi3.Operation) ([]Handler, error) {
 
 		content := resp.Content["application/json"]
 
-		examplesKeys := getExamplesKeys(content.Examples)
+		examplesKeys := content.Examples.GetExamplesKeys()
 
 		if len(examplesKeys) > 0 {
-			res = append(res, handler(path, method, queryParam, map[string]string{}, statusCode, response(content, examplesKeys[0])))
+			res = append(res, handler(path, method, queryParam, map[string]string{}, statusCode, content.Response(examplesKeys[0])))
 
 			for i := 0; i < len(examplesKeys); i++ {
-				res = append(res, handler(path, method, queryParam, map[string]string{"example": examplesKeys[i]}, statusCode, response(content, examplesKeys[i])))
+				res = append(res, handler(path, method, queryParam, map[string]string{"example": examplesKeys[i]}, statusCode, content.Response(examplesKeys[i])))
 			}
 		} else {
-			res = append(res, handler(path, method, queryParam, map[string]string{}, statusCode, response(content)))
+			res = append(res, handler(path, method, queryParam, map[string]string{}, statusCode, content.Response()))
 		}
 	}
 
@@ -222,59 +221,6 @@ func (s *Server) GetHandler(method, path string, queryParam url.Values, exampleH
 	}
 
 	return Handler{}, false
-}
-
-func response(mt *openapi3.MediaType, key ...string) interface{} {
-	if mt.Example != nil {
-		return example(mt.Example)
-	}
-
-	if len(mt.Examples) > 0 && len(key) > 0 {
-		return examples(mt.Examples, key[0])
-	}
-
-	return nil
-}
-
-func example(i interface{}) interface{} {
-	switch data := i.(type) {
-	case map[interface{}]interface{}:
-		return parseExample(data)
-	case []interface{}:
-		res := make([]map[string]interface{}, len(data))
-		for k, v := range data {
-			res[k] = parseExample(v.(map[interface{}]interface{}))
-		}
-
-		return res
-	}
-
-	return nil
-}
-
-func parseExample(example map[interface{}]interface{}) map[string]interface{} {
-	res := make(map[string]interface{}, len(example))
-	for k, v := range example {
-		res[k.(string)] = v
-	}
-
-	return res
-}
-
-func examples(e openapi3.Examples, key string) interface{} {
-	return example(e[key].Value)
-}
-
-func getExamplesKeys(e map[string]openapi3.Example) []string {
-	keys := make([]string, len(e))
-	i := 0
-
-	for k := range e {
-		keys[i] = k
-		i++
-	}
-
-	return keys
 }
 
 func PathByMaskDetect(path, mask string) bool {
