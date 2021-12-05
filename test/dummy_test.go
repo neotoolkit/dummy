@@ -1,16 +1,18 @@
 package test_test
 
 import (
-	"github.com/go-dummy/dummy/internal/config"
-	"github.com/go-dummy/dummy/internal/logger"
-	"github.com/go-dummy/dummy/internal/openapi3"
-	"github.com/go-dummy/dummy/internal/server"
-	"github.com/pact-foundation/pact-go/dsl"
-	"github.com/pact-foundation/pact-go/types"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/pact-foundation/pact-go/dsl"
+	"github.com/pact-foundation/pact-go/types"
+
+	"github.com/go-dummy/dummy/internal/config"
+	"github.com/go-dummy/dummy/internal/logger"
+	"github.com/go-dummy/dummy/internal/openapi3"
+	"github.com/go-dummy/dummy/internal/server"
 )
 
 func TestDummy(t *testing.T) {
