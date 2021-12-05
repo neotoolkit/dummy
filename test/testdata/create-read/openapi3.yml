@@ -35,6 +35,7 @@ paths:
                 - id: 472063cc-4c83-11ec-81d3-0242ac130003
                   firstName: Sergey
                   lastName: Brin
+
   /users/{userId}:
     get:
       parameters:
@@ -51,6 +52,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+
 components:
   schemas:
     User:
