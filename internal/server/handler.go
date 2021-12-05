@@ -25,42 +25,37 @@ type Handlers struct {
 	Handlers map[string][]Handler
 }
 
+func (h Handlers) Add(path, method string, o *openapi3.Operation) error {
+	if o != nil {
+		p := RemoveTrailingSlash(path)
+
+		handlers, err := handlers(p, method, o)
+		if err != nil {
+			return err
+		}
+
+		h.Handlers[p] = append(h.Handlers[p], handlers...)
+	}
+
+	return nil
+}
+
 func (h Handlers) Set() error {
 	for path, method := range h.OpenAPI.Paths {
-		if method.Get != nil {
-			handlers, err := handlers(path, http.MethodGet, method.Get)
-			if err != nil {
-				return err
-			}
-
-			h.Handlers[path] = append(h.Handlers[path], handlers...)
+		if err := h.Add(path, http.MethodGet, method.Get); err != nil {
+			return err
 		}
 
-		if method.Post != nil {
-			handlers, err := handlers(path, http.MethodPost, method.Post)
-			if err != nil {
-				return err
-			}
-
-			h.Handlers[path] = append(h.Handlers[path], handlers...)
+		if err := h.Add(path, http.MethodPost, method.Post); err != nil {
+			return err
 		}
 
-		if method.Put != nil {
-			handlers, err := handlers(path, http.MethodPut, method.Put)
-			if err != nil {
-				return err
-			}
-
-			h.Handlers[path] = append(h.Handlers[path], handlers...)
+		if err := h.Add(path, http.MethodPut, method.Put); err != nil {
+			return err
 		}
 
-		if method.Patch != nil {
-			handlers, err := handlers(path, http.MethodPatch, method.Patch)
-			if err != nil {
-				return err
-			}
-
-			h.Handlers[path] = append(h.Handlers[path], handlers...)
+		if err := h.Add(path, http.MethodPatch, method.Patch); err != nil {
+			return err
 		}
 	}
 
@@ -126,7 +121,7 @@ func handler(path, method string, queryParam url.Values, header map[string]strin
 	}
 }
 
-func (s *Server) GetHandler(method, path string, queryParam url.Values, exampleHeader string, body io.ReadCloser) (Handler, bool) {
+func (s *Server) GetHandler(path, method string, queryParam url.Values, exampleHeader string, body io.ReadCloser) (Handler, bool) {
 	for p, handlers := range s.Handlers.Handlers {
 		if PathByParamDetect(path, p) {
 			for i := 0; i < len(handlers); i++ {
