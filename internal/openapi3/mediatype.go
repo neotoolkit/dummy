@@ -5,16 +5,12 @@ type MediaType struct {
 	Examples Examples    `json:"examples,omitempty" yaml:"examples,omitempty"`
 }
 
-func (mt MediaType) Response(key ...string) interface{} {
-	if mt.Example != nil {
-		return mt.example(mt.Example)
-	}
+func (mt MediaType) ResponseByExample() interface{} {
+	return mt.example(mt.Example)
+}
 
-	if len(mt.Examples) > 0 && len(key) > 0 {
-		return mt.examples(key[0])
-	}
-
-	return nil
+func (mt MediaType) ResponseByExamplesKey(key string) interface{} {
+	return mt.examples(key)
 }
 
 func (mt MediaType) example(i interface{}) interface{} {

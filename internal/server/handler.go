@@ -104,13 +104,13 @@ func handlers(path, method string, o *openapi3.Operation) ([]Handler, error) {
 		examplesKeys := content.Examples.GetExamplesKeys()
 
 		if len(examplesKeys) > 0 {
-			res = append(res, handler(path, method, queryParam, map[string]string{}, statusCode, content.Response(examplesKeys[0])))
+			res = append(res, handler(path, method, queryParam, map[string]string{}, statusCode, content.ResponseByExamplesKey(examplesKeys[0])))
 
 			for i := 0; i < len(examplesKeys); i++ {
-				res = append(res, handler(path, method, queryParam, map[string]string{"example": examplesKeys[i]}, statusCode, content.Response(examplesKeys[i])))
+				res = append(res, handler(path, method, queryParam, map[string]string{"example": examplesKeys[i]}, statusCode, content.ResponseByExamplesKey(examplesKeys[i])))
 			}
 		} else {
-			res = append(res, handler(path, method, queryParam, map[string]string{}, statusCode, content.Response()))
+			res = append(res, handler(path, method, queryParam, map[string]string{}, statusCode, content.ResponseByExample()))
 		}
 	}
 
