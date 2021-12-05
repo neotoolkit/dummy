@@ -67,6 +67,19 @@ func (h Handlers) Set() error {
 	return nil
 }
 
+func (h Handlers) GetByPathAndMethod(path, method string) (*Handler, bool) {
+	handlers, found := h.Handlers[path]
+	if found {
+		for i := 0; i < len(handlers); i++ {
+			if handlers[i].Method == method {
+				return &handlers[i], true
+			}
+		}
+	}
+
+	return nil, false
+}
+
 func handlers(path, method string, o *openapi3.Operation) ([]Handler, error) {
 	var res []Handler
 
@@ -92,7 +105,7 @@ func handlers(path, method string, o *openapi3.Operation) ([]Handler, error) {
 			res = append(res, handler(path, method, queryParam, map[string]string{}, statusCode, content.ResponseByExamplesKey(examplesKeys[0])))
 
 			for i := 0; i < len(examplesKeys); i++ {
-				res = append(res, handler(path, method, queryParam, map[string]string{"example": examplesKeys[i]}, statusCode, content.ResponseByExamplesKey(examplesKeys[i])))
+				res = append(res, handler(path, method, queryParam, map[string]string{"X-Example": examplesKeys[i]}, statusCode, content.ResponseByExamplesKey(examplesKeys[i])))
 			}
 		} else {
 			res = append(res, handler(path, method, queryParam, map[string]string{}, statusCode, content.ResponseByExample()))
@@ -114,11 +127,11 @@ func handler(path, method string, queryParam url.Values, header map[string]strin
 }
 
 func (s *Server) GetHandler(method, path string, queryParam url.Values, exampleHeader string, body io.ReadCloser) (Handler, bool) {
-	for mask, handlers := range s.Handlers.Handlers {
-		if PathByParamDetect(path, mask) {
+	for p, handlers := range s.Handlers.Handlers {
+		if PathByParamDetect(path, p) {
 			for i := 0; i < len(handlers); i++ {
 				if handlers[i].Method == method {
-					header, ok := handlers[i].Header["example"]
+					header, ok := handlers[i].Header["X-Example"]
 					if ok && header == exampleHeader {
 						return handlers[i], true
 					}
@@ -127,8 +140,8 @@ func (s *Server) GetHandler(method, path string, queryParam url.Values, exampleH
 
 			for i := 0; i < len(handlers); i++ {
 				if handlers[i].Method == method {
-					if LastPathSegmentIsParam(mask) && handlers[i].Response == nil {
-						h, found := s.getHandlerByPathAndMethod(ParentPath(mask), method)
+					if LastPathSegmentIsParam(p) && handlers[i].Response == nil {
+						h, found := s.Handlers.GetByPathAndMethod(ParentPath(p), method)
 						if found {
 							data := h.Response.([]map[string]interface{})
 							for i := 0; i < len(data); i++ {
@@ -144,7 +157,7 @@ func (s *Server) GetHandler(method, path string, queryParam url.Values, exampleH
 					}
 
 					if method == http.MethodPost {
-						h, found := s.getHandlerByPathAndMethod(path, http.MethodGet)
+						h, found := s.Handlers.GetByPathAndMethod(path, http.MethodGet)
 						if found {
 							data, ok := h.Response.([]map[string]interface{})
 							if ok {
@@ -168,7 +181,7 @@ func (s *Server) GetHandler(method, path string, queryParam url.Values, exampleH
 					}
 
 					if method == http.MethodPut || method == http.MethodPatch {
-						h, found := s.getHandlerByPathAndMethod(path, http.MethodGet)
+						h, found := s.Handlers.GetByPathAndMethod(path, http.MethodGet)
 						if found {
 							if _, ok := h.Response.(map[string]interface{}); ok {
 								var res map[string]interface{}
@@ -225,19 +238,6 @@ func (s *Server) GetHandler(method, path string, queryParam url.Values, exampleH
 	}
 
 	return Handler{}, false
-}
-
-func (s *Server) getHandlerByPathAndMethod(path, method string) (*Handler, bool) {
-	h, found := s.Handlers.Handlers[path]
-	if found {
-		for i := 0; i < len(h); i++ {
-			if h[i].Method == method {
-				return &h[i], true
-			}
-		}
-	}
-
-	return &Handler{}, false
 }
 
 func PathByParamDetect(path, param string) bool {
