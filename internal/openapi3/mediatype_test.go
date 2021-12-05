@@ -10,10 +10,10 @@ import (
 
 func TestMediaTypeResponseByExample(t *testing.T) {
 	m := openapi3.MediaType{
-		Example: map[interface{}]interface{}{},
+		Example: []interface{}{},
 	}
 
-	require.IsType(t, map[string]interface{}{}, m.ResponseByExample())
+	require.IsType(t, []map[string]interface{}{}, m.ResponseByExample())
 }
 
 func TestMediaTypeResponseByExamplesKey(t *testing.T) {
