@@ -20,35 +20,20 @@ type Handler struct {
 	Response   interface{}
 }
 
-func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
-	if r.Header.Get("X-Set-Status-Code") == "500" {
-		w.WriteHeader(http.StatusInternalServerError)
-
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-
-	if h, ok := s.GetHandler(r.Method, RemoveTrailingSlash(r.URL.Path), r.URL.Query(), r.Header.Get("X-Example"), r.Body); ok {
-		w.WriteHeader(h.StatusCode)
-		bytes, _ := json.Marshal(h.Response)
-		_, _ = w.Write(bytes)
-
-		return
-	}
-
-	w.WriteHeader(http.StatusNotFound)
+type Handlers struct {
+	OpenAPI  openapi3.OpenAPI
+	Handlers map[string][]Handler
 }
 
-func (s *Server) SetHandlers() error {
-	for path, method := range s.OpenAPI.Paths {
+func (h Handlers) Set() error {
+	for path, method := range h.OpenAPI.Paths {
 		if method.Get != nil {
 			handlers, err := handlers(path, http.MethodGet, method.Get)
 			if err != nil {
 				return err
 			}
 
-			s.Handlers[path] = append(s.Handlers[path], handlers...)
+			h.Handlers[path] = append(h.Handlers[path], handlers...)
 		}
 
 		if method.Post != nil {
@@ -57,7 +42,7 @@ func (s *Server) SetHandlers() error {
 				return err
 			}
 
-			s.Handlers[path] = append(s.Handlers[path], handlers...)
+			h.Handlers[path] = append(h.Handlers[path], handlers...)
 		}
 
 		if method.Put != nil {
@@ -66,7 +51,7 @@ func (s *Server) SetHandlers() error {
 				return err
 			}
 
-			s.Handlers[path] = append(s.Handlers[path], handlers...)
+			h.Handlers[path] = append(h.Handlers[path], handlers...)
 		}
 
 		if method.Patch != nil {
@@ -75,7 +60,7 @@ func (s *Server) SetHandlers() error {
 				return err
 			}
 
-			s.Handlers[path] = append(s.Handlers[path], handlers...)
+			h.Handlers[path] = append(h.Handlers[path], handlers...)
 		}
 	}
 
@@ -129,7 +114,7 @@ func handler(path, method string, queryParam url.Values, header map[string]strin
 }
 
 func (s *Server) GetHandler(method, path string, queryParam url.Values, exampleHeader string, body io.ReadCloser) (Handler, bool) {
-	for mask, handlers := range s.Handlers {
+	for mask, handlers := range s.Handlers.Handlers {
 		if PathByParamDetect(path, mask) {
 			for i := 0; i < len(handlers); i++ {
 				if handlers[i].Method == method {
@@ -148,9 +133,9 @@ func (s *Server) GetHandler(method, path string, queryParam url.Values, exampleH
 							data := h.Response.([]map[string]interface{})
 							for i := 0; i < len(data); i++ {
 								if data[i]["id"] == GetLastPathSegment(path) {
-									s.Handlers[path] = append(s.Handlers[path], handler(path, method, url.Values{}, map[string]string{}, 200, data[i]))
+									s.Handlers.Handlers[path] = append(s.Handlers.Handlers[path], handler(path, method, url.Values{}, map[string]string{}, 200, data[i]))
 
-									return s.Handlers[path][0], true
+									return s.Handlers.Handlers[path][0], true
 								}
 							}
 
@@ -243,7 +228,7 @@ func (s *Server) GetHandler(method, path string, queryParam url.Values, exampleH
 }
 
 func (s *Server) getHandlerByPathAndMethod(path, method string) (*Handler, bool) {
-	h, found := s.Handlers[path]
+	h, found := s.Handlers.Handlers[path]
 	if found {
 		for i := 0; i < len(h); i++ {
 			if h[i].Method == method {

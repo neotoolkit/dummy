@@ -32,11 +32,11 @@ func TestDummy(t *testing.T) {
 		s := new(server.Server)
 		conf := config.NewConfig()
 		s.Config = conf.Server
-		s.OpenAPI = openapi
+		s.Handlers.OpenAPI = openapi
 		s.Logger = logger.NewLogger()
-		s.Handlers = make(map[string][]server.Handler)
+		s.Handlers.Handlers = make(map[string][]server.Handler)
 
-		if err := s.SetHandlers(); err != nil {
+		if err := s.Handlers.Set(); err != nil {
 			t.Fatal(err)
 		}
 

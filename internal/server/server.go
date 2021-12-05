@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/go-dummy/dummy/internal/config"
@@ -10,23 +11,24 @@ import (
 
 type Server struct {
 	Config   config.Server
-	OpenAPI  openapi3.OpenAPI
 	Server   *http.Server
 	Logger   *logger.Logger
-	Handlers map[string][]Handler
+	Handlers Handlers
 }
 
 func NewServer(config config.Server, openapi openapi3.OpenAPI) *Server {
 	return &Server{
-		Config:   config,
-		OpenAPI:  openapi,
-		Logger:   logger.NewLogger(),
-		Handlers: make(map[string][]Handler),
+		Config: config,
+		Logger: logger.NewLogger(),
+		Handlers: Handlers{
+			OpenAPI:  openapi,
+			Handlers: make(map[string][]Handler),
+		},
 	}
 }
 
 func (s *Server) Run() error {
-	if err := s.SetHandlers(); err != nil {
+	if err := s.Handlers.Set(); err != nil {
 		return err
 	}
 
@@ -40,4 +42,24 @@ func (s *Server) Run() error {
 	}
 
 	return s.Server.ListenAndServe()
+}
+
+func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
+	if r.Header.Get("X-Set-Status-Code") == "500" {
+		w.WriteHeader(http.StatusInternalServerError)
+
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	if h, ok := s.GetHandler(r.Method, RemoveTrailingSlash(r.URL.Path), r.URL.Query(), r.Header.Get("X-Example"), r.Body); ok {
+		w.WriteHeader(h.StatusCode)
+		bytes, _ := json.Marshal(h.Response)
+		_, _ = w.Write(bytes)
+
+		return
+	}
+
+	w.WriteHeader(http.StatusNotFound)
 }
