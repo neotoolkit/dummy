@@ -1,9 +1,11 @@
 package openapi3_test
 
 import (
-	"github.com/go-dummy/dummy/internal/openapi3"
-	"github.com/stretchr/testify/require"
 	"testing"
+
+	"github.com/stretchr/testify/require"
+
+	"github.com/go-dummy/dummy/internal/openapi3"
 )
 
 func TestExamplesGetExamplesKeys(t *testing.T) {
