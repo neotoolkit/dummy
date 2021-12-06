@@ -22,10 +22,12 @@ func TestMediaTypeResponseByExamplesKey(t *testing.T) {
 	m := openapi3.MediaType{
 		Examples: openapi3.Examples{
 			key: openapi3.Example{
-				Value: map[interface{}]interface{}{},
+				Value: map[interface{}]interface{}{
+					"key": "value",
+				},
 			},
 		},
 	}
 
-	require.IsType(t, map[string]interface{}{}, m.ResponseByExamplesKey(key))
+	require.IsType(t, map[string]interface{}{"key": "value"}, m.ResponseByExamplesKey(key))
 }
