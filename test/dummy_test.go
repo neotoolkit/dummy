@@ -36,7 +36,7 @@ func TestDummy(t *testing.T) {
 		s.Logger = logger.NewLogger()
 		s.Handlers.Handlers = make(map[string][]server.Handler)
 
-		if err := s.Handlers.Set(); err != nil {
+		if err := s.Handlers.Init(); err != nil {
 			t.Fatal(err)
 		}
 

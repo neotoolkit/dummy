@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -29,7 +30,7 @@ func (h Handlers) Add(path, method string, o *openapi3.Operation) error {
 	if o != nil {
 		p := RemoveTrailingSlash(path)
 
-		handlers, err := handlers(p, method, o)
+		handlers, err := h.Set(p, method, o)
 		if err != nil {
 			return err
 		}
@@ -40,7 +41,7 @@ func (h Handlers) Add(path, method string, o *openapi3.Operation) error {
 	return nil
 }
 
-func (h Handlers) Set() error {
+func (h Handlers) Init() error {
 	for path, method := range h.OpenAPI.Paths {
 		if err := h.Add(path, http.MethodGet, method.Get); err != nil {
 			return err
@@ -75,7 +76,7 @@ func (h Handlers) GetByPathAndMethod(path, method string) (*Handler, bool) {
 	return nil, false
 }
 
-func handlers(path, method string, o *openapi3.Operation) ([]Handler, error) {
+func (h Handlers) Set(path, method string, o *openapi3.Operation) ([]Handler, error) {
 	var res []Handler
 
 	queryParam := make(url.Values)
@@ -97,20 +98,20 @@ func handlers(path, method string, o *openapi3.Operation) ([]Handler, error) {
 		examplesKeys := content.Examples.GetExamplesKeys()
 
 		if len(examplesKeys) > 0 {
-			res = append(res, handler(path, method, queryParam, map[string]string{}, statusCode, content.ResponseByExamplesKey(examplesKeys[0])))
+			res = append(res, h.set(path, method, queryParam, map[string]string{}, statusCode, content.ResponseByExamplesKey(examplesKeys[0])))
 
 			for i := 0; i < len(examplesKeys); i++ {
-				res = append(res, handler(path, method, queryParam, map[string]string{"X-Example": examplesKeys[i]}, statusCode, content.ResponseByExamplesKey(examplesKeys[i])))
+				res = append(res, h.set(path, method, queryParam, map[string]string{"X-Example": examplesKeys[i]}, statusCode, content.ResponseByExamplesKey(examplesKeys[i])))
 			}
 		} else {
-			res = append(res, handler(path, method, queryParam, map[string]string{}, statusCode, content.ResponseByExample()))
+			res = append(res, h.set(path, method, queryParam, map[string]string{}, statusCode, content.ResponseByExample()))
 		}
 	}
 
 	return res, nil
 }
 
-func handler(path, method string, queryParam url.Values, header map[string]string, statusCode int, response interface{}) Handler {
+func (h Handlers) set(path, method string, queryParam url.Values, header map[string]string, statusCode int, response interface{}) Handler {
 	return Handler{
 		Path:       path,
 		Method:     method,
@@ -121,8 +122,8 @@ func handler(path, method string, queryParam url.Values, header map[string]strin
 	}
 }
 
-func (s *Server) GetHandler(path, method string, queryParam url.Values, exampleHeader string, body io.ReadCloser) (Handler, bool) {
-	for p, handlers := range s.Handlers.Handlers {
+func (h Handlers) Get(path, method string, queryParam url.Values, exampleHeader string, body io.ReadCloser) (Handler, bool) {
+	for p, handlers := range h.Handlers {
 		if PathByParamDetect(path, p) {
 			for i := 0; i < len(handlers); i++ {
 				if handlers[i].Method == method {
@@ -136,14 +137,14 @@ func (s *Server) GetHandler(path, method string, queryParam url.Values, exampleH
 			for i := 0; i < len(handlers); i++ {
 				if handlers[i].Method == method {
 					if LastPathSegmentIsParam(p) && handlers[i].Response == nil {
-						h, found := s.Handlers.GetByPathAndMethod(ParentPath(p), method)
+						handler, found := h.GetByPathAndMethod(ParentPath(p), method)
 						if found {
-							data := h.Response.([]map[string]interface{})
-							for i := 0; i < len(data); i++ {
-								if data[i]["id"] == GetLastPathSegment(path) {
-									s.Handlers.Handlers[path] = append(s.Handlers.Handlers[path], handler(path, method, url.Values{}, map[string]string{}, 200, data[i]))
+							response := handler.Response.([]map[string]interface{})
+							for i := 0; i < len(response); i++ {
+								if response[i]["id"] == GetLastPathSegment(path) {
+									h.Handlers[path] = append(h.Handlers[path], h.set(path, method, url.Values{}, map[string]string{}, 200, response[i]))
 
-									return s.Handlers.Handlers[path][0], true
+									return h.Handlers[path][0], true
 								}
 							}
 
@@ -152,20 +153,20 @@ func (s *Server) GetHandler(path, method string, queryParam url.Values, exampleH
 					}
 
 					if method == http.MethodPost {
-						h, found := s.Handlers.GetByPathAndMethod(path, http.MethodGet)
+						handler, found := h.GetByPathAndMethod(path, http.MethodGet)
 						if found {
-							data, ok := h.Response.([]map[string]interface{})
+							data, ok := handler.Response.([]map[string]interface{})
 							if ok {
 								var res map[string]interface{}
 
 								err := json.NewDecoder(body).Decode(&res)
 								if err != nil {
-									s.Logger.Log().Err(err)
+									fmt.Println(err)
 								}
 
 								data = append(data, res)
 
-								h.Response = data
+								handler.Response = data
 
 								return Handler{
 									StatusCode: http.StatusCreated,
@@ -176,17 +177,17 @@ func (s *Server) GetHandler(path, method string, queryParam url.Values, exampleH
 					}
 
 					if method == http.MethodPut || method == http.MethodPatch {
-						h, found := s.Handlers.GetByPathAndMethod(path, http.MethodGet)
+						handler, found := h.GetByPathAndMethod(path, http.MethodGet)
 						if found {
-							if _, ok := h.Response.(map[string]interface{}); ok {
+							if _, ok := handler.Response.(map[string]interface{}); ok {
 								var res map[string]interface{}
 
 								err := json.NewDecoder(body).Decode(&res)
 								if err != nil {
-									s.Logger.Log().Err(err)
+									fmt.Println(err)
 								}
 
-								h.Response = res
+								handler.Response = res
 
 								return Handler{
 									StatusCode: http.StatusOK,
@@ -198,7 +199,7 @@ func (s *Server) GetHandler(path, method string, queryParam url.Values, exampleH
 
 					limit, offset, found, err := pagination(queryParam)
 					if err != nil {
-						s.Logger.Log().Err(err)
+						fmt.Println(err)
 					}
 
 					if found {
@@ -304,14 +305,15 @@ func RemoveTrailingSlash(path string) string {
 
 // RemoveFragment - clear url from reference in path
 func RemoveFragment(path string) string {
-	return strings.Split(path, "#")[0]
+	return RemoveTrailingSlash(strings.Split(path, "#")[0])
 }
 
 // RefSplit - returns a list of references
 func RefSplit(ref string) []string {
 	if len(ref) > 2 && ref[:2] == "#/" {
-		return strings.Split(ref[2:], "/")
+		r := RemoveTrailingSlash(ref[2:])
+		return strings.Split(r, "/")
 	}
 
-	return []string{}
+	return nil
 }
