@@ -28,7 +28,7 @@ func NewServer(config config.Server, openapi openapi3.OpenAPI) *Server {
 }
 
 func (s *Server) Run() error {
-	if err := s.Handlers.Set(); err != nil {
+	if err := s.Handlers.Init(); err != nil {
 		return err
 	}
 
@@ -53,7 +53,7 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
-	if h, ok := s.GetHandler(RemoveTrailingSlash(r.URL.Path), r.Method, r.URL.Query(), r.Header.Get("X-Example"), r.Body); ok {
+	if h, ok := s.Handlers.Get(RemoveFragment(r.URL.Path), r.Method, r.URL.Query(), r.Header.Get("X-Example"), r.Body); ok {
 		w.WriteHeader(h.StatusCode)
 		bytes, _ := json.Marshal(h.Response)
 		_, _ = w.Write(bytes)

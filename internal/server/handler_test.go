@@ -174,10 +174,11 @@ func TestRemoveFragment(t *testing.T) {
 
 	tests := []test{
 		{"", ""},
-		{"/", "/"},
+		{"/", ""},
 		{"/user", "/user"},
 		{"/user#id", "/user"},
 		{"/user#id,password", "/user"},
+		{"/user/#id,password", "/user"},
 	}
 
 	for _, tc := range tests {
@@ -194,12 +195,13 @@ func TestRefSplit(t *testing.T) {
 	}
 
 	tests := []test{
-		{"", []string{}},
-		{"/", []string{}},
-		{"#/", []string{}},
+		{"", nil},
+		{"/", nil},
+		{"#/", nil},
 		{"#/components", []string{"components"}},
 		{"#/components/schemas/User", []string{"components", "schemas", "User"}},
 		{"#/components/schemas/Users", []string{"components", "schemas", "Users"}},
+		{"#/components/schemas/Users/", []string{"components", "schemas", "Users"}},
 	}
 
 	for _, tc := range tests {
