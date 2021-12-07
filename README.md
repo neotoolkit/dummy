@@ -14,3 +14,4 @@ go install github.com/go-dummy/dummy/cmd/dummy
 ```bash
 dummy server ./openapi.yml
 ```
+More usage [examples](examples)
