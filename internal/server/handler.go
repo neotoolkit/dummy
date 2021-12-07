@@ -60,6 +60,26 @@ func (h Handlers) Init() error {
 		}
 	}
 
+	for p, handlers := range h.Handlers {
+		for i := 0; i < len(handlers); i++ {
+			if handlers[i].Method == http.MethodGet {
+				if LastPathSegmentIsParam(p) && handlers[i].Response == nil {
+					handler, found := h.GetByPathAndMethod(ParentPath(p), http.MethodGet)
+					if found {
+						response := handler.Response.([]map[string]interface{})
+						for i := 0; i < len(response); i++ {
+							id, found := response[i]["id"]
+							if found {
+								path := ParentPath(p) + "/" + id.(string)
+								h.Handlers[path] = append(h.Handlers[path], h.set(path, http.MethodGet, url.Values{}, map[string]string{}, 200, response[i]))
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	return nil
 }
 
