@@ -1,8 +1,6 @@
 package server
 
 import (
-	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -26,21 +24,6 @@ type Handlers struct {
 	Handlers map[string][]Handler
 }
 
-func (h Handlers) Add(path, method string, o *openapi3.Operation) error {
-	if o != nil {
-		p := RemoveTrailingSlash(path)
-
-		handlers, err := h.Set(p, method, o)
-		if err != nil {
-			return err
-		}
-
-		h.Handlers[p] = append(h.Handlers[p], handlers...)
-	}
-
-	return nil
-}
-
 func (h Handlers) Init() error {
 	for path, method := range h.OpenAPI.Paths {
 		if err := h.Add(path, http.MethodGet, method.Get); err != nil {
@@ -60,40 +43,22 @@ func (h Handlers) Init() error {
 		}
 	}
 
-	for p, handlers := range h.Handlers {
-		for i := 0; i < len(handlers); i++ {
-			if handlers[i].Method == http.MethodGet {
-				if LastPathSegmentIsParam(p) && handlers[i].Response == nil {
-					handler, found := h.GetByPathAndMethod(ParentPath(p), http.MethodGet)
-					if found {
-						response := handler.Response.([]map[string]interface{})
-						for i := 0; i < len(response); i++ {
-							id, found := response[i]["id"]
-							if found {
-								path := ParentPath(p) + "/" + id.(string)
-								h.Handlers[path] = append(h.Handlers[path], h.set(path, http.MethodGet, url.Values{}, map[string]string{}, 200, response[i]))
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
 	return nil
 }
 
-func (h Handlers) GetByPathAndMethod(path, method string) (*Handler, bool) {
-	handlers, found := h.Handlers[path]
-	if found {
-		for i := 0; i < len(handlers); i++ {
-			if handlers[i].Method == method {
-				return &handlers[i], true
-			}
+func (h Handlers) Add(path, method string, o *openapi3.Operation) error {
+	if o != nil {
+		p := RemoveTrailingSlash(path)
+
+		handlers, err := h.Set(p, method, o)
+		if err != nil {
+			return err
 		}
+
+		h.Handlers[p] = append(h.Handlers[p], handlers...)
 	}
 
-	return nil, false
+	return nil
 }
 
 func (h Handlers) Set(path, method string, o *openapi3.Operation) ([]Handler, error) {
@@ -156,113 +121,6 @@ func (h Handlers) Get(path, method string, queryParam url.Values, exampleHeader 
 
 			for i := 0; i < len(handlers); i++ {
 				if handlers[i].Method == method {
-					if LastPathSegmentIsParam(p) && handlers[i].Response == nil {
-						handler, found := h.GetByPathAndMethod(ParentPath(p), method)
-						if found {
-							response := handler.Response.([]map[string]interface{})
-							for i := 0; i < len(response); i++ {
-								if response[i]["id"] == GetLastPathSegment(path) {
-									h.Handlers[path] = append(h.Handlers[path], h.set(path, method, url.Values{}, map[string]string{}, 200, response[i]))
-
-									return h.Handlers[path][0], true
-								}
-							}
-
-							return Handler{}, false
-						}
-					}
-
-					if method == http.MethodPost {
-						handler, found := h.GetByPathAndMethod(path, http.MethodGet)
-						if found {
-							data, ok := handler.Response.([]map[string]interface{})
-							if ok {
-								var res map[string]interface{}
-
-								err := json.NewDecoder(body).Decode(&res)
-								if err != nil {
-									fmt.Println(err)
-								}
-
-								data = append(data, res)
-
-								handler.Response = data
-
-								return Handler{
-									StatusCode: http.StatusCreated,
-									Response:   res,
-								}, true
-							}
-
-							if _, found := handler.Response.(map[string]interface{}); found {
-								var res map[string]interface{}
-
-								err := json.NewDecoder(body).Decode(&res)
-								if err != nil {
-									fmt.Println(err)
-								}
-
-								handler.Response = res
-
-								return Handler{
-									StatusCode: http.StatusCreated,
-									Response:   res,
-								}, true
-							}
-						}
-					}
-
-					if method == http.MethodPut || method == http.MethodPatch {
-						handler, found := h.GetByPathAndMethod(path, http.MethodGet)
-						if found {
-							if _, ok := handler.Response.(map[string]interface{}); ok {
-								var res map[string]interface{}
-
-								err := json.NewDecoder(body).Decode(&res)
-								if err != nil {
-									fmt.Println(err)
-								}
-
-								handler.Response = res
-
-								return Handler{
-									StatusCode: http.StatusOK,
-									Response:   res,
-								}, true
-							}
-						}
-					}
-
-					limit, offset, found, err := pagination(queryParam)
-					if err != nil {
-						fmt.Println(err)
-					}
-
-					if found {
-						data := handlers[i].Response.([]map[string]interface{})
-						if offset > len(data) {
-							return Handler{}, true
-						}
-
-						size := len(data) - offset
-						if size > limit {
-							size = limit
-						}
-
-						resp := make([]map[string]interface{}, size)
-						n := 0
-
-						for i := offset; n < size; i++ {
-							resp[n] = data[i]
-							n++
-						}
-
-						return Handler{
-							Response:   resp,
-							StatusCode: http.StatusOK,
-						}, true
-					}
-
 					return handlers[i], true
 				}
 			}
@@ -309,26 +167,6 @@ func GetLastPathSegment(path string) string {
 	p := strings.Split(path, "/")
 
 	return p[len(p)-1]
-}
-
-func pagination(queryParam url.Values) (limit, offset int, found bool, err error) {
-	l, ok := queryParam["limit"]
-	if !ok {
-		return
-	}
-
-	if ok {
-		limit, err = strconv.Atoi(l[0])
-	}
-
-	o, ok := queryParam["offset"]
-	if ok {
-		offset, err = strconv.Atoi(o[0])
-	}
-
-	found = true
-
-	return
 }
 
 func RemoveTrailingSlash(path string) string {
