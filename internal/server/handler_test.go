@@ -210,3 +210,25 @@ func TestRefSplit(t *testing.T) {
 		assert.Equal(t, tc.response, p)
 	}
 }
+
+func TestEqualHeadersByValues(t *testing.T) {
+	type test struct {
+		h1     []string
+		h2     []string
+		result bool
+	}
+
+	tests := []test{
+		{nil, nil, true},
+		{[]string{"1"}, nil, false},
+		{nil, []string{"1"}, false},
+		{[]string{"1"}, []string{"1"}, true},
+		{[]string{"1"}, []string{"1", "2"}, false},
+	}
+
+	for _, tc := range tests {
+		p := server.EqualHeadersByValues(tc.h1, tc.h2)
+
+		assert.Equal(t, tc.result, p)
+	}
+}
