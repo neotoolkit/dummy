@@ -1,0 +1,20 @@
+{
+  "consumer": {
+    "name": "consumer"
+  },
+  "provider": {
+    "name": "dummy"
+  },
+  "interactions": [
+    {
+      "description": "",
+      "request": {
+        "method": "DELETE",
+        "path": "/users"
+      },
+      "response": {
+        "status": 204
+      }
+    }
+  ]
+}
