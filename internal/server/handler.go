@@ -193,6 +193,22 @@ func (h Handlers) Get(path, method string, queryParam url.Values, exampleHeader 
 									Response:   res,
 								}, true
 							}
+
+							if _, found := handler.Response.(map[string]interface{}); found {
+								var res map[string]interface{}
+
+								err := json.NewDecoder(body).Decode(&res)
+								if err != nil {
+									fmt.Println(err)
+								}
+
+								handler.Response = res
+
+								return Handler{
+									StatusCode: http.StatusCreated,
+									Response:   res,
+								}, true
+							}
 						}
 					}
 
