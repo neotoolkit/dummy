@@ -8,14 +8,14 @@ import (
 	"github.com/go-dummy/dummy/internal/openapi3"
 )
 
-func TestExamplesGetExamplesKeys(t *testing.T) {
+func TestExamplesGetKeys(t *testing.T) {
 	e := openapi3.Examples{
 		"first_example":  {},
 		"second_example": {},
 	}
 
 	keys := []string{"first_example", "second_example"}
-	res := e.GetExamplesKeys()
+	res := e.GetKeys()
 
 	require.Equal(t, len(e), len(res))
 	require.Equal(t, keys, res)

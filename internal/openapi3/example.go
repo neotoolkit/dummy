@@ -6,7 +6,7 @@ type Example struct {
 
 type Examples map[string]Example
 
-func (e Examples) GetExamplesKeys() []string {
+func (e Examples) GetKeys() []string {
 	keys := make([]string, len(e))
 	i := 0
 

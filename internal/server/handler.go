@@ -41,6 +41,10 @@ func (h Handlers) Init() error {
 		if err := h.Add(path, http.MethodPatch, method.Patch); err != nil {
 			return err
 		}
+
+		if err := h.Add(path, http.MethodDelete, method.Delete); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -78,18 +82,21 @@ func (h Handlers) Set(path, method string, o *openapi3.Operation) ([]Handler, er
 			return nil, err
 		}
 
-		content := resp.Content["application/json"]
+		content, found := resp.Content["application/json"]
+		if found {
+			examplesKeys := content.Examples.GetKeys()
 
-		examplesKeys := content.Examples.GetExamplesKeys()
+			if len(examplesKeys) > 0 {
+				res = append(res, h.set(path, method, queryParam, http.Header{}, statusCode, content.ResponseByExamplesKey(examplesKeys[0])))
 
-		if len(examplesKeys) > 0 {
-			res = append(res, h.set(path, method, queryParam, http.Header{}, statusCode, content.ResponseByExamplesKey(examplesKeys[0])))
-
-			for i := 0; i < len(examplesKeys); i++ {
-				res = append(res, h.set(path, method, queryParam, http.Header{"X-Example": []string{examplesKeys[i]}}, statusCode, content.ResponseByExamplesKey(examplesKeys[i])))
+				for i := 0; i < len(examplesKeys); i++ {
+					res = append(res, h.set(path, method, queryParam, http.Header{"X-Example": []string{examplesKeys[i]}}, statusCode, content.ResponseByExamplesKey(examplesKeys[i])))
+				}
+			} else {
+				res = append(res, h.set(path, method, queryParam, http.Header{}, statusCode, content.ResponseByExample()))
 			}
 		} else {
-			res = append(res, h.set(path, method, queryParam, http.Header{}, statusCode, content.ResponseByExample()))
+			res = append(res, h.set(path, method, queryParam, http.Header{}, statusCode, nil))
 		}
 	}
 
