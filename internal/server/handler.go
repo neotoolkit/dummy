@@ -14,7 +14,7 @@ type Handler struct {
 	Path       string
 	Method     string
 	QueryParam url.Values
-	Header     map[string]string
+	Header     http.Header
 	StatusCode int
 	Response   interface{}
 }
@@ -83,20 +83,20 @@ func (h Handlers) Set(path, method string, o *openapi3.Operation) ([]Handler, er
 		examplesKeys := content.Examples.GetExamplesKeys()
 
 		if len(examplesKeys) > 0 {
-			res = append(res, h.set(path, method, queryParam, map[string]string{}, statusCode, content.ResponseByExamplesKey(examplesKeys[0])))
+			res = append(res, h.set(path, method, queryParam, http.Header{}, statusCode, content.ResponseByExamplesKey(examplesKeys[0])))
 
 			for i := 0; i < len(examplesKeys); i++ {
-				res = append(res, h.set(path, method, queryParam, map[string]string{"X-Example": examplesKeys[i]}, statusCode, content.ResponseByExamplesKey(examplesKeys[i])))
+				res = append(res, h.set(path, method, queryParam, http.Header{"X-Example": []string{examplesKeys[i]}}, statusCode, content.ResponseByExamplesKey(examplesKeys[i])))
 			}
 		} else {
-			res = append(res, h.set(path, method, queryParam, map[string]string{}, statusCode, content.ResponseByExample()))
+			res = append(res, h.set(path, method, queryParam, http.Header{}, statusCode, content.ResponseByExample()))
 		}
 	}
 
 	return res, nil
 }
 
-func (h Handlers) set(path, method string, queryParam url.Values, header map[string]string, statusCode int, response interface{}) Handler {
+func (h Handlers) set(path, method string, queryParam url.Values, header http.Header, statusCode int, response interface{}) Handler {
 	return Handler{
 		Path:       path,
 		Method:     method,
@@ -107,21 +107,14 @@ func (h Handlers) set(path, method string, queryParam url.Values, header map[str
 	}
 }
 
-func (h Handlers) Get(path, method string, queryParam url.Values, exampleHeader string, body io.ReadCloser) (Handler, bool) {
+func (h Handlers) Get(path, method string, queryParam url.Values, header http.Header, body io.ReadCloser) (Handler, bool) {
 	for p, handlers := range h.Handlers {
 		if PathByParamDetect(path, p) {
 			for i := 0; i < len(handlers); i++ {
 				if handlers[i].Method == method {
-					header, ok := handlers[i].Header["X-Example"]
-					if ok && header == exampleHeader {
+					if EqualHeadersByValues(handlers[i].Header.Values("X-Example"), header.Values("X-Example")) {
 						return handlers[i], true
 					}
-				}
-			}
-
-			for i := 0; i < len(handlers); i++ {
-				if handlers[i].Method == method {
-					return handlers[i], true
 				}
 			}
 		}
@@ -190,4 +183,28 @@ func RefSplit(ref string) []string {
 	}
 
 	return nil
+}
+
+// EqualHeadersByValues - comparing two headers by values
+func EqualHeadersByValues(h1, h2 []string) bool {
+	if h1 == nil && h2 == nil {
+		return true
+	}
+
+	if len(h1) != len(h2) {
+		return false
+	}
+
+	exists := make(map[string]bool, len(h1))
+	for i := 0; i < len(h1); i++ {
+		exists[h1[i]] = true
+	}
+
+	for i := 0; i < len(h2); i++ {
+		if !exists[h2[i]] {
+			return false
+		}
+	}
+
+	return true
 }

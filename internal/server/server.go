@@ -53,7 +53,7 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
-	if h, ok := s.Handlers.Get(RemoveFragment(r.URL.Path), r.Method, r.URL.Query(), r.Header.Get("X-Example"), r.Body); ok {
+	if h, ok := s.Handlers.Get(RemoveFragment(r.URL.Path), r.Method, r.URL.Query(), r.Header, r.Body); ok {
 		w.WriteHeader(h.StatusCode)
 		bytes, _ := json.Marshal(h.Response)
 		_, _ = w.Write(bytes)
