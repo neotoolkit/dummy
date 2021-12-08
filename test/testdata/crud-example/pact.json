@@ -1,0 +1,117 @@
+{
+  "consumer": {
+    "name": "consumer"
+  },
+  "provider": {
+    "name": "dummy"
+  },
+  "interactions": [
+    {
+      "description": "Create",
+      "request": {
+        "method": "POST",
+        "path": "/users",
+        "body": {
+          "firstName": "Elon",
+          "id": "e1afccea-5168-4735-84d4-cb96f6fb5d25",
+          "lastName": "Musk"
+        }
+      },
+      "response": {
+        "status": 201,
+        "body": {
+          "firstName": "Elon",
+          "id": "e1afccea-5168-4735-84d4-cb96f6fb5d25",
+          "lastName": "Musk"
+        }
+      }
+    },
+    {
+      "description": "Read",
+      "request": {
+        "method": "GET",
+        "path": "/users"
+      },
+      "response": {
+        "status": 200,
+        "body": [
+          {
+            "firstName": "Elon",
+            "id": "e1afccea-5168-4735-84d4-cb96f6fb5d25",
+            "lastName": "Musk"
+          },
+          {
+            "firstName": "Sergey",
+            "id": "472063cc-4c83-11ec-81d3-0242ac130003",
+            "lastName": "Brin"
+          }
+        ]
+      }
+    },
+    {
+      "description": "Read",
+      "request": {
+        "method": "GET",
+        "path": "/users/e1afccea-5168-4735-84d4-cb96f6fb5d25"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "firstName": "Elon",
+          "id": "e1afccea-5168-4735-84d4-cb96f6fb5d25",
+          "lastName": "Musk"
+        }
+      }
+    },
+    {
+      "description": "Update",
+      "request": {
+        "method": "PUT",
+        "path": "/users/e1afccea-5168-4735-84d4-cb96f6fb5d25",
+        "body": {
+          "firstName": "Elon",
+          "id": "e1afccea-5168-4735-84d4-cb96f6fb5d25",
+          "lastName": "Musk"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "firstName": "Elon",
+          "id": "e1afccea-5168-4735-84d4-cb96f6fb5d25",
+          "lastName": "Musk"
+        }
+      }
+    },
+    {
+      "description": "Update",
+      "request": {
+        "method": "PATCH",
+        "path": "/users/e1afccea-5168-4735-84d4-cb96f6fb5d25",
+        "body": {
+          "firstName": "Elon",
+          "id": "e1afccea-5168-4735-84d4-cb96f6fb5d25",
+          "lastName": "Musk"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "firstName": "Elon",
+          "id": "e1afccea-5168-4735-84d4-cb96f6fb5d25",
+          "lastName": "Musk"
+        }
+      }
+    },
+    {
+      "description": "DELETE",
+      "request": {
+        "method": "DELETE",
+        "path": "/users/e1afccea-5168-4735-84d4-cb96f6fb5d25"
+      },
+      "response": {
+        "status": 204
+      }
+    }
+  ]
+}
