@@ -14,6 +14,6 @@ func TestIntBetween(t *testing.T) {
 	value := f.IntBetween(1, 100)
 
 	require.Equal(t, fmt.Sprintf("%T", value), "int")
-	require.Equal(t, true, value >= 1)
-	require.Equal(t, true, value <= 100)
+	require.True(t, value >= 1)
+	require.True(t, value <= 100)
 }
