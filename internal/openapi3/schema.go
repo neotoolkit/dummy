@@ -6,6 +6,7 @@ type Schema struct {
 	Format     string      `json:"format,omitempty" yaml:"format,omitempty"`
 	Default    interface{} `json:"default,omitempty" yaml:"default,omitempty"`
 	Example    interface{} `json:"example,omitempty" yaml:"example,omitempty"`
+	Faker      string      `json:"x-faker,omitempty" yaml:"x-faker,omitempty"`
 }
 
 type Schemas map[string]*Schema
