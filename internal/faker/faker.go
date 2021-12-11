@@ -6,10 +6,12 @@ import (
 )
 
 type Faker struct {
-	Generator       *rand.Rand
-	FirstNameMale   []string
-	FirstNameFemale []string
-	LastName        []string
+	Generator         *rand.Rand
+	FirstNameMale     []string
+	FirstNameFemale   []string
+	LastName          []string
+	MaleNameFormats   []string
+	FemaleNameFormats []string
 }
 
 func NewFaker() Faker {
@@ -53,6 +55,20 @@ func NewFaker() Faker {
 			"Pike",
 			"Smith",
 			"Walker", "Williams",
+		},
+		MaleNameFormats: []string{
+			"{{FirstNameMale}} {{LastName}}",
+			"{{FirstNameMale}} {{LastName}}",
+			"{{FirstNameMale}} {{LastName}}",
+			"{{FirstNameMale}} {{LastName}}",
+			"{{LastName}} {{FirstNameMale}}",
+		},
+		FemaleNameFormats: []string{
+			"{{FirstNameFemale}} {{LastName}}",
+			"{{FirstNameFemale}} {{LastName}}",
+			"{{FirstNameFemale}} {{LastName}}",
+			"{{FirstNameFemale}} {{LastName}}",
+			"{{LastName}} {{FirstNameFemale}}",
 		},
 	}
 }

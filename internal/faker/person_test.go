@@ -1,6 +1,7 @@
 package faker_test
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -21,4 +22,76 @@ func TestLastName(t *testing.T) {
 	lastName := p.LastName()
 
 	require.True(t, len(lastName) > 0)
+}
+
+func TestFirstNameMale(t *testing.T) {
+	f := faker.NewFaker()
+	firstNameMale := f.Person().FirstNameMale()
+
+	require.True(t, len(firstNameMale) > 0)
+}
+
+func TestFirstNameFemale(t *testing.T) {
+	f := faker.NewFaker()
+	p := f.Person()
+	firstNameFemale := p.FirstNameFemale()
+
+	require.True(t, len(firstNameFemale) > 0)
+}
+
+func TestName(t *testing.T) {
+	f := faker.NewFaker()
+	p := f.Person()
+	name := p.Name()
+
+	require.True(t, len(name) > 0)
+	require.False(t, strings.Contains(name, "{{FirstNameMale}}"))
+	require.False(t, strings.Contains(name, "{{FirstNameFemale}}"))
+	require.False(t, strings.Contains(name, "{{LastName}}"))
+}
+
+func TestNameMale(t *testing.T) {
+	f := faker.NewFaker()
+	p := f.Person()
+	nameMale := p.NameMale()
+
+	require.True(t, len(nameMale) > 0)
+}
+
+func TestNameFemale(t *testing.T) {
+	f := faker.NewFaker()
+	p := f.Person()
+	nameFemale := p.NameFemale()
+
+	require.True(t, len(nameFemale) > 0)
+}
+
+func TestGender(t *testing.T) {
+	f := faker.NewFaker()
+	p := f.Person()
+	gender := p.Gender()
+
+	require.Condition(t, func() bool {
+		return gender == "Male" || gender == "Female"
+	})
+}
+
+func TestGenderMale(t *testing.T) {
+	f := faker.NewFaker()
+	p := f.Person()
+	genderMale := p.GenderMale()
+
+	require.Condition(t, func() bool {
+		return genderMale == "Male"
+	})
+}
+
+func TestGenderFemale(t *testing.T) {
+	f := faker.NewFaker()
+	p := f.Person()
+	genderFemale := p.GenderFemale()
+
+	require.Condition(t, func() bool {
+		return genderFemale == "Female"
+	})
 }
