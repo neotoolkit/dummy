@@ -14,9 +14,7 @@ func TestExamplesGetKeys(t *testing.T) {
 		"second_example": {},
 	}
 
-	keys := []string{"first_example", "second_example"}
 	res := e.GetKeys()
 
 	require.Equal(t, len(e), len(res))
-	require.Equal(t, keys, res)
 }
