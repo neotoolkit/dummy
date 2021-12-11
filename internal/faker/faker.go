@@ -61,6 +61,10 @@ func (f Faker) Person() Person {
 	return Person{&f}
 }
 
+func (f Faker) Boolean() Boolean {
+	return Boolean{&f}
+}
+
 func (f Faker) UUID() UUID {
 	return UUID{&f}
 }
