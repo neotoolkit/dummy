@@ -1,6 +1,7 @@
 package faker_test
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -11,5 +12,5 @@ import (
 func TestBooleanBoolean(t *testing.T) {
 	f := faker.NewFaker().Boolean()
 
-	require.True(t, f.Boolean() == true || f.Boolean() == false)
+	require.Equal(t, "bool", reflect.TypeOf(f.Boolean()).String())
 }
