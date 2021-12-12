@@ -11,6 +11,7 @@ import (
 	"github.com/go-dummy/dummy/internal/openapi3"
 )
 
+// Handler -.
 type Handler struct {
 	Path       string
 	Method     string
@@ -20,12 +21,14 @@ type Handler struct {
 	Response   interface{}
 }
 
+// Handlers -.
 type Handlers struct {
 	OpenAPI  openapi3.OpenAPI
 	Handlers map[string][]Handler
 	Logger   *logger.Logger
 }
 
+// NewHandlers returns a new instance of Handlers
 func NewHandlers(openapi openapi3.OpenAPI, l *logger.Logger) Handlers {
 	return Handlers{
 		OpenAPI:  openapi,
@@ -34,6 +37,7 @@ func NewHandlers(openapi openapi3.OpenAPI, l *logger.Logger) Handlers {
 	}
 }
 
+// Init -
 func (h Handlers) Init() error {
 	for path, method := range h.OpenAPI.Paths {
 		if err := h.Add(path, http.MethodGet, method.Get); err != nil {
@@ -60,6 +64,7 @@ func (h Handlers) Init() error {
 	return nil
 }
 
+// Add -.
 func (h Handlers) Add(path, method string, o *openapi3.Operation) error {
 	if o != nil {
 		p := RemoveTrailingSlash(path)
@@ -75,6 +80,7 @@ func (h Handlers) Add(path, method string, o *openapi3.Operation) error {
 	return nil
 }
 
+// Set -.
 func (h Handlers) Set(path, method string, o *openapi3.Operation) ([]Handler, error) {
 	var res []Handler
 
@@ -124,6 +130,7 @@ func (h Handlers) set(path, method string, queryParam url.Values, header http.He
 	}
 }
 
+// Get -.
 func (h Handlers) Get(path, method string, queryParam url.Values, header http.Header, body io.ReadCloser) (Handler, bool) {
 	for p, handlers := range h.Handlers {
 		if PathByParamDetect(path, p) {
@@ -140,6 +147,7 @@ func (h Handlers) Get(path, method string, queryParam url.Values, header http.He
 	return Handler{}, false
 }
 
+// PathByParamDetect returns result of
 func PathByParamDetect(path, param string) bool {
 	p := strings.Split(path, "/")
 	m := strings.Split(param, "/")
@@ -161,24 +169,28 @@ func PathByParamDetect(path, param string) bool {
 	return true
 }
 
+// ParentPath returns parent path
 func ParentPath(path string) string {
 	p := strings.Split(path, "/")
 
 	return strings.Join(p[0:len(p)-1], "/")
 }
 
-func LastPathSegmentIsParam(path string) bool {
+// IsLastPathSegmentParam returns the result of checking whether last path segment is a param
+func IsLastPathSegmentParam(path string) bool {
 	p := strings.Split(path, "/")
 
 	return strings.HasPrefix(p[len(p)-1], "{") && strings.HasSuffix(p[len(p)-1], "}")
 }
 
+// GetLastPathSegment returns last path segment
 func GetLastPathSegment(path string) string {
 	p := strings.Split(path, "/")
 
 	return p[len(p)-1]
 }
 
+// RemoveTrailingSlash returns path without trailing slash
 func RemoveTrailingSlash(path string) string {
 	if len(path) > 0 && path[len(path)-1] == '/' {
 		return path[0 : len(path)-1]

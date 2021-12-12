@@ -92,7 +92,7 @@ func TestLastPathSegmentIsParam(t *testing.T) {
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
 			t.Parallel()
-			got := server.LastPathSegmentIsParam(tt.path)
+			got := server.IsLastPathSegmentParam(tt.path)
 			require.Equal(t, tt.want, got)
 		})
 	}
