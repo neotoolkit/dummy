@@ -1,17 +1,22 @@
 package faker
 
 import (
+	"fmt"
 	"math/rand"
+	"strings"
 	"time"
 )
 
 type Faker struct {
-	Generator         *rand.Rand
-	FirstNameMale     []string
-	FirstNameFemale   []string
-	LastName          []string
-	MaleNameFormats   []string
-	FemaleNameFormats []string
+	Generator        *rand.Rand
+	firstNameMale    []string
+	firstNameFemale  []string
+	lastName         []string
+	maleNameFormat   []string
+	femaleNameFormat []string
+	usernameFormat   []string
+	// Generic top-level domain
+	gTLD []string
 }
 
 func NewFaker() Faker {
@@ -19,7 +24,7 @@ func NewFaker() Faker {
 
 	return Faker{
 		Generator: rand.New(source),
-		FirstNameMale: []string{
+		firstNameMale: []string{
 			"Alexander", "Anthony",
 			"Daniel",
 			"Elon",
@@ -31,7 +36,7 @@ func NewFaker() Faker {
 			"Robert",
 			"Sergey",
 		},
-		FirstNameFemale: []string{
+		firstNameFemale: []string{
 			"Alice",
 			"Grace",
 			"Jennifer",
@@ -41,7 +46,7 @@ func NewFaker() Faker {
 			"Ruby",
 			"Willow",
 		},
-		LastName: []string{
+		lastName: []string{
 			"Adams", "Anderson",
 			"Brin", "Brown",
 			"Carter", "Clarke",
@@ -56,21 +61,37 @@ func NewFaker() Faker {
 			"Smith",
 			"Walker", "Williams",
 		},
-		MaleNameFormats: []string{
-			"{{FirstNameMale}} {{LastName}}",
-			"{{FirstNameMale}} {{LastName}}",
-			"{{FirstNameMale}} {{LastName}}",
-			"{{FirstNameMale}} {{LastName}}",
-			"{{LastName}} {{FirstNameMale}}",
+		maleNameFormat: []string{
+			"{{firstNameMale}} {{lastName}}",
+			"{{firstNameMale}} {{lastName}}",
+			"{{firstNameMale}} {{lastName}}",
+			"{{firstNameMale}} {{lastName}}",
+			"{{lastName}} {{firstNameMale}}",
 		},
-		FemaleNameFormats: []string{
-			"{{FirstNameFemale}} {{LastName}}",
-			"{{FirstNameFemale}} {{LastName}}",
-			"{{FirstNameFemale}} {{LastName}}",
-			"{{FirstNameFemale}} {{LastName}}",
-			"{{LastName}} {{FirstNameFemale}}",
+		femaleNameFormat: []string{
+			"{{firstNameFemale}} {{lastName}}",
+			"{{firstNameFemale}} {{lastName}}",
+			"{{firstNameFemale}} {{lastName}}",
+			"{{firstNameFemale}} {{lastName}}",
+			"{{lastName}} {{firstNameFemale}}",
+		},
+		usernameFormat: []string{
+			"{{lastName}}.{{firstName}}",
+			"{{firstName}}.{{lastName}}",
+			"{{firstName}}",
+			"{{lastName}}",
+		},
+		gTLD: []string{
+			"com",
+			"info",
+			"net",
+			"org",
 		},
 	}
+}
+
+func (f Faker) Internet() Internet {
+	return Internet{&f}
 }
 
 func (f Faker) Person() Person {
@@ -98,4 +119,19 @@ func (f Faker) IntBetween(min, max int) int {
 func (f Faker) RandomStringElement(s []string) string {
 	i := f.IntBetween(0, len(s)-1)
 	return s[i]
+}
+
+// Asciify returns string that replace all "*" characters with random ASCII values from a given string
+func (f Faker) Asciify(in string) string {
+	var out strings.Builder
+
+	for i := 0; i < len(in); i++ {
+		if in[i] == '*' {
+			out.WriteString(fmt.Sprintf("%c", f.IntBetween(97, 122)))
+		} else {
+			out.WriteByte(in[i])
+		}
+	}
+
+	return out.String()
 }

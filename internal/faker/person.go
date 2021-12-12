@@ -9,66 +9,66 @@ type Person struct {
 }
 
 func (p Person) FirstName() string {
-	names := make([]string, len(p.Faker.FirstNameMale)+len(p.Faker.FirstNameFemale))
+	firstName := make([]string, len(p.Faker.firstNameMale)+len(p.Faker.firstNameFemale))
 	i := 0
 
-	for j := 0; j < len(p.Faker.FirstNameMale); j++ {
-		names[i] = p.Faker.FirstNameMale[j]
+	for j := 0; j < len(p.Faker.firstNameMale); j++ {
+		firstName[i] = p.Faker.firstNameMale[j]
 		i++
 	}
 
-	for j := 0; j < len(p.Faker.FirstNameFemale); j++ {
-		names[i] = p.Faker.FirstNameFemale[j]
+	for j := 0; j < len(p.Faker.firstNameFemale); j++ {
+		firstName[i] = p.Faker.firstNameFemale[j]
 		i++
 	}
 
-	return p.Faker.RandomStringElement(names)
+	return p.Faker.RandomStringElement(firstName)
 }
 
 func (p Person) LastName() string {
-	i := p.Faker.IntBetween(0, len(p.Faker.LastName)-1)
-	return p.Faker.LastName[i]
+	i := p.Faker.IntBetween(0, len(p.Faker.lastName)-1)
+	return p.Faker.lastName[i]
 }
 
 func (p Person) FirstNameMale() string {
-	i := p.Faker.IntBetween(0, len(p.Faker.FirstNameMale)-1)
-	return p.Faker.FirstNameMale[i]
+	i := p.Faker.IntBetween(0, len(p.Faker.firstNameMale)-1)
+	return p.Faker.firstNameMale[i]
 }
 
 func (p Person) FirstNameFemale() string {
-	i := p.Faker.IntBetween(0, len(p.Faker.FirstNameFemale)-1)
-	return p.Faker.FirstNameFemale[i]
+	i := p.Faker.IntBetween(0, len(p.Faker.firstNameFemale)-1)
+	return p.Faker.firstNameFemale[i]
 }
 
 func (p Person) Name() string {
-	formats := make([]string, len(p.Faker.MaleNameFormats)+len(p.Faker.FemaleNameFormats))
+	format := make([]string, len(p.Faker.maleNameFormat)+len(p.Faker.femaleNameFormat))
 	i := 0
 
-	for j := 0; j < len(p.Faker.MaleNameFormats); j++ {
-		formats[i] = p.Faker.MaleNameFormats[j]
+	for j := 0; j < len(p.Faker.maleNameFormat); j++ {
+		format[i] = p.Faker.maleNameFormat[j]
 		i++
 	}
 
-	for j := 0; j < len(p.Faker.FemaleNameFormats); j++ {
-		formats[i] = p.Faker.FemaleNameFormats[j]
+	for j := 0; j < len(p.Faker.femaleNameFormat); j++ {
+		format[i] = p.Faker.femaleNameFormat[j]
 		i++
 	}
 
-	name := formats[p.Faker.IntBetween(0, len(formats)-1)]
+	name := format[p.Faker.IntBetween(0, len(format)-1)]
 
-	// {{FirstNameMale}}
-	if strings.Contains(name, "{{FirstNameMale}}") {
-		name = strings.ReplaceAll(name, "{{FirstNameMale}}", p.FirstNameMale())
+	// {{firstNameMale}}
+	if strings.Contains(name, "{{firstNameMale}}") {
+		name = strings.ReplaceAll(name, "{{firstNameMale}}", p.FirstNameMale())
 	}
 
-	// {{FirstNameFemale}}
-	if strings.Contains(name, "{{FirstNameFemale}}") {
-		name = strings.ReplaceAll(name, "{{FirstNameFemale}}", p.FirstNameFemale())
+	// {{firstNameFemale}}
+	if strings.Contains(name, "{{firstNameFemale}}") {
+		name = strings.ReplaceAll(name, "{{firstNameFemale}}", p.FirstNameFemale())
 	}
 
-	// {{LastName}}
-	if strings.Contains(name, "{{LastName}}") {
-		name = strings.ReplaceAll(name, "{{LastName}}", p.LastName())
+	// {{lastName}}
+	if strings.Contains(name, "{{lastName}}") {
+		name = strings.ReplaceAll(name, "{{lastName}}", p.LastName())
 	}
 
 	return name
