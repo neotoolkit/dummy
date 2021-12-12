@@ -4,10 +4,12 @@ import (
 	"strings"
 )
 
+// Person is struct for Person
 type Person struct {
 	Faker *Faker
 }
 
+// FirstName returns random first name
 func (p Person) FirstName() string {
 	firstName := make([]string, len(p.Faker.firstNameMale)+len(p.Faker.firstNameFemale))
 	i := 0
@@ -25,21 +27,25 @@ func (p Person) FirstName() string {
 	return p.Faker.RandomStringElement(firstName)
 }
 
+// LastName returns random last name
 func (p Person) LastName() string {
 	i := p.Faker.IntBetween(0, len(p.Faker.lastName)-1)
 	return p.Faker.lastName[i]
 }
 
+// FirstNameMale returns random male first name
 func (p Person) FirstNameMale() string {
 	i := p.Faker.IntBetween(0, len(p.Faker.firstNameMale)-1)
 	return p.Faker.firstNameMale[i]
 }
 
+// FirstNameFemale returns random female first name
 func (p Person) FirstNameFemale() string {
 	i := p.Faker.IntBetween(0, len(p.Faker.firstNameFemale)-1)
 	return p.Faker.firstNameFemale[i]
 }
 
+// Name returns random name
 func (p Person) Name() string {
 	format := make([]string, len(p.Faker.maleNameFormat)+len(p.Faker.femaleNameFormat))
 	i := 0
@@ -74,22 +80,27 @@ func (p Person) Name() string {
 	return name
 }
 
+// NameMale returns random male name
 func (p Person) NameMale() string {
 	return p.FirstNameMale() + " " + p.LastName()
 }
 
+// NameFemale returns random female name
 func (p Person) NameFemale() string {
 	return p.FirstNameFemale() + " " + p.LastName()
 }
 
+// Gender returns random gender
 func (p Person) Gender() string {
 	return p.Faker.RandomStringElement([]string{p.GenderMale(), p.GenderFemale()})
 }
 
+// GenderMale returns male gender
 func (p Person) GenderMale() string {
 	return "Male"
 }
 
+// GenderFemale returns female gender
 func (p Person) GenderFemale() string {
 	return "Female"
 }

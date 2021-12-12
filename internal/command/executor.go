@@ -6,6 +6,7 @@ import (
 	"github.com/go-dummy/dummy/internal/config"
 )
 
+// Executor is struct for Executor
 type Executor struct {
 	cfg     *config.Config
 	version string
@@ -15,6 +16,7 @@ type Executor struct {
 	versionCmd *cobra.Command
 }
 
+// NewExecutor returns a new instance of Executor instance
 func NewExecutor(version string) *Executor {
 	e := &Executor{
 		cfg: config.NewConfig(),
@@ -29,6 +31,7 @@ func NewExecutor(version string) *Executor {
 	return e
 }
 
+// Execute -.
 func (e *Executor) Execute() error {
 	return e.rootCmd.Execute()
 }

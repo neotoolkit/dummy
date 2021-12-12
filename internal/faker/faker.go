@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// Faker is struct for Faker
 type Faker struct {
 	Generator        *rand.Rand
 	firstNameMale    []string
@@ -19,6 +20,7 @@ type Faker struct {
 	gTLD []string
 }
 
+// NewFaker returns a new instance of Faker instance with a random seed
 func NewFaker() Faker {
 	source := rand.NewSource(time.Now().Unix())
 
@@ -90,22 +92,27 @@ func NewFaker() Faker {
 	}
 }
 
+// Internet returns Internet instance
 func (f Faker) Internet() Internet {
 	return Internet{&f}
 }
 
+// Person returns Person instance
 func (f Faker) Person() Person {
 	return Person{&f}
 }
 
+// Boolean returns Boolean instance
 func (f Faker) Boolean() Boolean {
 	return Boolean{&f}
 }
 
+// UUID returns UUID instance
 func (f Faker) UUID() UUID {
 	return UUID{&f}
 }
 
+// IntBetween returns a Int between a given minimum and maximum values
 func (f Faker) IntBetween(min, max int) int {
 	diff := max - min
 
@@ -116,6 +123,7 @@ func (f Faker) IntBetween(min, max int) int {
 	return f.Generator.Intn(diff+1) + min
 }
 
+// RandomStringElement returns a random string element from a given list of strings
 func (f Faker) RandomStringElement(s []string) string {
 	i := f.IntBetween(0, len(s)-1)
 	return s[i]

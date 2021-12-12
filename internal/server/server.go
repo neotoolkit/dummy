@@ -8,6 +8,7 @@ import (
 	"github.com/go-dummy/dummy/internal/logger"
 )
 
+// Server is struct for Server
 type Server struct {
 	Config   config.Server
 	Server   *http.Server
@@ -15,6 +16,7 @@ type Server struct {
 	Handlers Handlers
 }
 
+// NewServer returns a new instance of Server instance
 func NewServer(config config.Server, l *logger.Logger, h Handlers) *Server {
 	return &Server{
 		Config:   config,
@@ -23,6 +25,7 @@ func NewServer(config config.Server, l *logger.Logger, h Handlers) *Server {
 	}
 }
 
+// Run -.
 func (s *Server) Run() error {
 	if err := s.Handlers.Init(); err != nil {
 		return err
@@ -40,6 +43,7 @@ func (s *Server) Run() error {
 	return s.Server.ListenAndServe()
 }
 
+// Handler -.
 func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 	if r.Header.Get("X-Set-Status-Code") == "500" {
 		w.WriteHeader(http.StatusInternalServerError)
