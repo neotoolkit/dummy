@@ -10,6 +10,8 @@ import (
 )
 
 func TestFirstName(t *testing.T) {
+	t.Parallel()
+
 	f := faker.NewFaker()
 	firstName := f.Person().FirstName()
 
@@ -17,6 +19,8 @@ func TestFirstName(t *testing.T) {
 }
 
 func TestLastName(t *testing.T) {
+	t.Parallel()
+
 	f := faker.NewFaker()
 	p := f.Person()
 	lastName := p.LastName()
@@ -25,6 +29,8 @@ func TestLastName(t *testing.T) {
 }
 
 func TestFirstNameMale(t *testing.T) {
+	t.Parallel()
+
 	f := faker.NewFaker()
 	firstNameMale := f.Person().FirstNameMale()
 
@@ -32,6 +38,8 @@ func TestFirstNameMale(t *testing.T) {
 }
 
 func TestFirstNameFemale(t *testing.T) {
+	t.Parallel()
+
 	f := faker.NewFaker()
 	p := f.Person()
 	firstNameFemale := p.FirstNameFemale()
@@ -40,6 +48,8 @@ func TestFirstNameFemale(t *testing.T) {
 }
 
 func TestName(t *testing.T) {
+	t.Parallel()
+
 	f := faker.NewFaker()
 	p := f.Person()
 	name := p.Name()
@@ -51,6 +61,8 @@ func TestName(t *testing.T) {
 }
 
 func TestNameMale(t *testing.T) {
+	t.Parallel()
+
 	f := faker.NewFaker()
 	p := f.Person()
 	nameMale := p.NameMale()
@@ -59,6 +71,8 @@ func TestNameMale(t *testing.T) {
 }
 
 func TestNameFemale(t *testing.T) {
+	t.Parallel()
+
 	f := faker.NewFaker()
 	p := f.Person()
 	nameFemale := p.NameFemale()
@@ -67,6 +81,8 @@ func TestNameFemale(t *testing.T) {
 }
 
 func TestGender(t *testing.T) {
+	t.Parallel()
+
 	f := faker.NewFaker()
 	p := f.Person()
 	gender := p.Gender()
@@ -77,6 +93,8 @@ func TestGender(t *testing.T) {
 }
 
 func TestGenderMale(t *testing.T) {
+	t.Parallel()
+
 	f := faker.NewFaker()
 	p := f.Person()
 	genderMale := p.GenderMale()
@@ -87,6 +105,8 @@ func TestGenderMale(t *testing.T) {
 }
 
 func TestGenderFemale(t *testing.T) {
+	t.Parallel()
+
 	f := faker.NewFaker()
 	p := f.Person()
 	genderFemale := p.GenderFemale()
