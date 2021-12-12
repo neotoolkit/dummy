@@ -21,19 +21,19 @@ func TestGTLD(t *testing.T) {
 	i := faker.NewFaker().Internet()
 	gTLD := i.GTLD()
 
-	require.Equal(t, true, len(gTLD) > 0)
+	require.True(t, len(gTLD) > 0)
 }
 
 func TestDomain(t *testing.T) {
 	i := faker.NewFaker().Internet()
 	d := i.Domain()
 
-	require.Equal(t, true, len(d) > 0)
+	require.True(t, len(d) > 0)
 }
 
 func TestEmail(t *testing.T) {
 	i := faker.NewFaker().Internet()
 	e := i.Email()
 
-	require.Equal(t, true, len(e) > 0)
+	require.True(t, len(e) > 0)
 }
