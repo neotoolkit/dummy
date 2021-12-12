@@ -6,7 +6,6 @@ import (
 
 	"github.com/go-dummy/dummy/internal/config"
 	"github.com/go-dummy/dummy/internal/logger"
-	"github.com/go-dummy/dummy/internal/openapi3"
 )
 
 type Server struct {
@@ -16,14 +15,11 @@ type Server struct {
 	Handlers Handlers
 }
 
-func NewServer(config config.Server, openapi openapi3.OpenAPI) *Server {
+func NewServer(config config.Server, l *logger.Logger, h Handlers) *Server {
 	return &Server{
-		Config: config,
-		Logger: logger.NewLogger(),
-		Handlers: Handlers{
-			OpenAPI:  openapi,
-			Handlers: make(map[string][]Handler),
-		},
+		Config:   config,
+		Logger:   l,
+		Handlers: h,
 	}
 }
 

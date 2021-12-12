@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/go-dummy/dummy/internal/logger"
 	"github.com/go-dummy/dummy/internal/openapi3"
 )
 
@@ -22,6 +23,15 @@ type Handler struct {
 type Handlers struct {
 	OpenAPI  openapi3.OpenAPI
 	Handlers map[string][]Handler
+	Logger   *logger.Logger
+}
+
+func NewHandlers(openapi openapi3.OpenAPI, l *logger.Logger) Handlers {
+	return Handlers{
+		OpenAPI:  openapi,
+		Handlers: make(map[string][]Handler),
+		Logger:   l,
+	}
 }
 
 func (h Handlers) Init() error {
