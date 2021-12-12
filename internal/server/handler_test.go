@@ -3,12 +3,14 @@ package server_test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/go-dummy/dummy/internal/server"
 )
 
 func TestGetLastPathParam(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		path string
 		want string
@@ -27,15 +29,18 @@ func TestGetLastPathParam(t *testing.T) {
 		},
 	}
 
-	for i := 0; i < len(tests); i++ {
-		got := server.GetLastPathSegment(tests[i].path)
-		if tests[i].want != got {
-			t.Fatalf(`expected: "%s", got: "%s"`, tests[i].want, got)
-		}
+	for _, tt := range tests {
+		t.Run("", func(t *testing.T) {
+			t.Parallel()
+			got := server.GetLastPathSegment(tt.path)
+			require.Equal(t, tt.want, got)
+		})
 	}
 }
 
 func TestRemoveTrailingSlash(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		path string
 		want string
@@ -54,15 +59,18 @@ func TestRemoveTrailingSlash(t *testing.T) {
 		},
 	}
 
-	for i := 0; i < len(tests); i++ {
-		got := server.RemoveTrailingSlash(tests[i].path)
-		if tests[i].want != got {
-			t.Fatalf(`expected: "%s", got: "%s"`, tests[i].want, got)
-		}
+	for _, tt := range tests {
+		t.Run("", func(t *testing.T) {
+			t.Parallel()
+			got := server.RemoveTrailingSlash(tt.path)
+			require.Equal(t, tt.want, got)
+		})
 	}
 }
 
 func TestLastPathSegmentIsParam(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		path string
 		want bool
@@ -81,15 +89,18 @@ func TestLastPathSegmentIsParam(t *testing.T) {
 		},
 	}
 
-	for i := 0; i < len(tests); i++ {
-		got := server.LastPathSegmentIsParam(tests[i].path)
-		if tests[i].want != got {
-			t.Fatalf(`expected: "%v", got: "%v"`, tests[i].want, got)
-		}
+	for _, tt := range tests {
+		t.Run("", func(t *testing.T) {
+			t.Parallel()
+			got := server.LastPathSegmentIsParam(tt.path)
+			require.Equal(t, tt.want, got)
+		})
 	}
 }
 
 func TestParentPath(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		path string
 		want string
@@ -112,15 +123,18 @@ func TestParentPath(t *testing.T) {
 		},
 	}
 
-	for i := 0; i < len(tests); i++ {
-		got := server.ParentPath(tests[i].path)
-		if tests[i].want != got {
-			t.Fatalf(`expected: "%s", got: "%s"`, tests[i].want, got)
-		}
+	for _, tt := range tests {
+		t.Run("", func(t *testing.T) {
+			t.Parallel()
+			got := server.ParentPath(tt.path)
+			require.Equal(t, tt.want, got)
+		})
 	}
 }
 
 func TestPathByMaskDetect(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		path string
 		mask string
@@ -158,15 +172,18 @@ func TestPathByMaskDetect(t *testing.T) {
 		},
 	}
 
-	for i := 0; i < len(tests); i++ {
-		got := server.PathByParamDetect(tests[i].path, tests[i].mask)
-		if tests[i].want != got {
-			t.Fatalf(`expected: "%v", got: "%v"`, tests[i].want, got)
-		}
+	for _, tt := range tests {
+		t.Run("", func(t *testing.T) {
+			t.Parallel()
+			got := server.PathByParamDetect(tt.path, tt.mask)
+			require.Equal(t, tt.want, got)
+		})
 	}
 }
 
 func TestRemoveFragment(t *testing.T) {
+	t.Parallel()
+
 	type test struct {
 		request  string
 		response string
@@ -181,14 +198,18 @@ func TestRemoveFragment(t *testing.T) {
 		{"/user/#id,password", "/user"},
 	}
 
-	for _, tc := range tests {
-		p := server.RemoveFragment(tc.request)
-
-		assert.Equal(t, tc.response, p)
+	for _, tt := range tests {
+		t.Run("", func(t *testing.T) {
+			t.Parallel()
+			p := server.RemoveFragment(tt.request)
+			require.Equal(t, tt.response, p)
+		})
 	}
 }
 
 func TestRefSplit(t *testing.T) {
+	t.Parallel()
+
 	type test struct {
 		request  string
 		response []string
@@ -204,14 +225,18 @@ func TestRefSplit(t *testing.T) {
 		{"#/components/schemas/Users/", []string{"components", "schemas", "Users"}},
 	}
 
-	for _, tc := range tests {
-		p := server.RefSplit(tc.request)
-
-		assert.Equal(t, tc.response, p)
+	for _, tt := range tests {
+		t.Run("", func(t *testing.T) {
+			t.Parallel()
+			p := server.RefSplit(tt.request)
+			require.Equal(t, tt.response, p)
+		})
 	}
 }
 
 func TestEqualHeadersByValues(t *testing.T) {
+	t.Parallel()
+
 	type test struct {
 		h1     []string
 		h2     []string
@@ -226,9 +251,11 @@ func TestEqualHeadersByValues(t *testing.T) {
 		{[]string{"1"}, []string{"1", "2"}, false},
 	}
 
-	for _, tc := range tests {
-		p := server.EqualHeadersByValues(tc.h1, tc.h2)
-
-		assert.Equal(t, tc.result, p)
+	for _, tt := range tests {
+		t.Run("", func(t *testing.T) {
+			t.Parallel()
+			p := server.EqualHeadersByValues(tt.h1, tt.h2)
+			require.Equal(t, tt.result, p)
+		})
 	}
 }

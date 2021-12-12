@@ -10,6 +10,8 @@ import (
 )
 
 func TestUUIDv4(t *testing.T) {
+	t.Parallel()
+
 	f := faker.NewFaker()
 	value := f.UUID().V4()
 	match, err := regexp.MatchString("^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$", value)
@@ -19,6 +21,8 @@ func TestUUIDv4(t *testing.T) {
 }
 
 func TestUUIDV4UniqueInSequence(t *testing.T) {
+	t.Parallel()
+
 	f := faker.NewFaker()
 	last := f.UUID().V4()
 	current := f.UUID().V4()
