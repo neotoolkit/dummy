@@ -10,6 +10,8 @@ import (
 )
 
 func TestBooleanBoolean(t *testing.T) {
+	t.Parallel()
+
 	f := faker.NewFaker().Boolean()
 
 	require.Equal(t, "bool", reflect.TypeOf(f.Boolean()).String())

@@ -10,6 +10,8 @@ import (
 )
 
 func TestIntBetween(t *testing.T) {
+	t.Parallel()
+
 	f := faker.NewFaker()
 	value := f.IntBetween(1, 100)
 

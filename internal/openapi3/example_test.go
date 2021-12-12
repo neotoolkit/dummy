@@ -9,6 +9,8 @@ import (
 )
 
 func TestExamplesGetKeys(t *testing.T) {
+	t.Parallel()
+
 	e := openapi3.Examples{
 		"first_example":  {},
 		"second_example": {},
