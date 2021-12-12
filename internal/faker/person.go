@@ -9,20 +9,20 @@ type Person struct {
 }
 
 func (p Person) FirstName() string {
-	firstNames := make([]string, len(p.Faker.firstNameMale)+len(p.Faker.firstNameFemale))
+	firstName := make([]string, len(p.Faker.firstNameMale)+len(p.Faker.firstNameFemale))
 	i := 0
 
 	for j := 0; j < len(p.Faker.firstNameMale); j++ {
-		firstNames[i] = p.Faker.firstNameMale[j]
+		firstName[i] = p.Faker.firstNameMale[j]
 		i++
 	}
 
 	for j := 0; j < len(p.Faker.firstNameFemale); j++ {
-		firstNames[i] = p.Faker.firstNameFemale[j]
+		firstName[i] = p.Faker.firstNameFemale[j]
 		i++
 	}
 
-	return p.Faker.RandomStringElement(firstNames)
+	return p.Faker.RandomStringElement(firstName)
 }
 
 func (p Person) LastName() string {
@@ -41,20 +41,20 @@ func (p Person) FirstNameFemale() string {
 }
 
 func (p Person) Name() string {
-	formats := make([]string, len(p.Faker.maleNameFormat)+len(p.Faker.femaleNameFormat))
+	format := make([]string, len(p.Faker.maleNameFormat)+len(p.Faker.femaleNameFormat))
 	i := 0
 
 	for j := 0; j < len(p.Faker.maleNameFormat); j++ {
-		formats[i] = p.Faker.maleNameFormat[j]
+		format[i] = p.Faker.maleNameFormat[j]
 		i++
 	}
 
 	for j := 0; j < len(p.Faker.femaleNameFormat); j++ {
-		formats[i] = p.Faker.femaleNameFormat[j]
+		format[i] = p.Faker.femaleNameFormat[j]
 		i++
 	}
 
-	name := formats[p.Faker.IntBetween(0, len(formats)-1)]
+	name := format[p.Faker.IntBetween(0, len(format)-1)]
 
 	// {{firstNameMale}}
 	if strings.Contains(name, "{{firstNameMale}}") {
