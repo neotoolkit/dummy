@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/go-dummy/dummy/internal/exitcode"
+	"github.com/go-dummy/dummy/internal/logger"
 	"github.com/go-dummy/dummy/internal/openapi3"
 	"github.com/go-dummy/dummy/internal/server"
 )
@@ -37,7 +38,9 @@ func (e *Executor) executeServer(_ *cobra.Command, args []string) {
 		os.Exit(exitcode.Failure)
 	}
 
-	s := server.NewServer(e.cfg.Server, openapi)
+	l := logger.NewLogger()
+	h := server.NewHandlers(openapi, l)
+	s := server.NewServer(e.cfg.Server, l, h)
 
 	if err := s.Run(); err != nil {
 		fmt.Fprintf(os.Stderr, "server run error: %v\n", err)
