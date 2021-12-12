@@ -11,29 +11,37 @@ import (
 func TestGetLastPathParam(t *testing.T) {
 	t.Parallel()
 
-	tests := []struct {
+	type test struct {
+		name string
 		path string
 		want string
-	}{
+	}
+
+	tests := []test{
 		{
+			name: "",
 			path: "",
 			want: "",
 		},
 		{
+			name: "",
 			path: "/path",
 			want: "path",
 		},
 		{
+			name: "",
 			path: "/path/{path}",
 			want: "{path}",
 		},
 	}
 
-	for _, tt := range tests {
-		t.Run("", func(t *testing.T) {
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			got := server.GetLastPathSegment(tt.path)
-			require.Equal(t, tt.want, got)
+
+			got := server.GetLastPathSegment(tc.path)
+
+			require.Equal(t, tc.want, got)
 		})
 	}
 }
@@ -41,59 +49,75 @@ func TestGetLastPathParam(t *testing.T) {
 func TestRemoveTrailingSlash(t *testing.T) {
 	t.Parallel()
 
-	tests := []struct {
+	type test struct {
+		name string
 		path string
 		want string
-	}{
+	}
+
+	tests := []test{
 		{
+			name: "",
 			path: "",
 			want: "",
 		},
 		{
+			name: "",
 			path: "/",
 			want: "",
 		},
 		{
+			name: "",
 			path: "/path/",
 			want: "/path",
 		},
 	}
 
-	for _, tt := range tests {
-		t.Run("", func(t *testing.T) {
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			got := server.RemoveTrailingSlash(tt.path)
-			require.Equal(t, tt.want, got)
+
+			got := server.RemoveTrailingSlash(tc.path)
+
+			require.Equal(t, tc.want, got)
 		})
 	}
 }
 
-func TestLastPathSegmentIsParam(t *testing.T) {
+func TestIsLastPathSegmentParam(t *testing.T) {
 	t.Parallel()
 
-	tests := []struct {
+	type test struct {
+		name string
 		path string
 		want bool
-	}{
+	}
+
+	tests := []test{
 		{
+			name: "",
 			path: "",
 			want: false,
 		},
 		{
+			name: "",
 			path: "/path",
 			want: false,
 		},
 		{
+			name: "",
 			path: "/path/{path}",
 			want: true,
 		},
 	}
 
-	for _, tt := range tests {
-		t.Run("", func(t *testing.T) {
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			got := server.IsLastPathSegmentParam(tt.path)
-			require.Equal(t, tt.want, got)
+
+			got := server.IsLastPathSegmentParam(tc.path)
+
+			require.Equal(t, tc.want, got)
 		})
 	}
 }
@@ -101,82 +125,102 @@ func TestLastPathSegmentIsParam(t *testing.T) {
 func TestParentPath(t *testing.T) {
 	t.Parallel()
 
-	tests := []struct {
+	type test struct {
+		name string
 		path string
 		want string
-	}{
+	}
+
+	tests := []test{
 		{
+			name: "",
 			path: "",
 			want: "",
 		},
 		{
+			name: "",
 			path: "/",
 			want: "",
 		},
 		{
+			name: "",
 			path: "/path/",
 			want: "/path",
 		},
 		{
+			name: "",
 			path: "/path/path",
 			want: "/path",
 		},
 	}
 
-	for _, tt := range tests {
-		t.Run("", func(t *testing.T) {
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			got := server.ParentPath(tt.path)
-			require.Equal(t, tt.want, got)
+
+			got := server.ParentPath(tc.path)
+
+			require.Equal(t, tc.want, got)
 		})
 	}
 }
 
-func TestPathByMaskDetect(t *testing.T) {
+func TestPathByParamDetect(t *testing.T) {
 	t.Parallel()
 
-	tests := []struct {
-		path string
-		mask string
-		want bool
-	}{
+	type test struct {
+		name  string
+		path  string
+		param string
+		want  bool
+	}
+
+	tests := []test{
 		{
-			path: "",
-			mask: "",
-			want: true,
+			name:  "",
+			path:  "",
+			param: "",
+			want:  true,
 		},
 		{
-			path: "/path",
-			mask: "/path",
-			want: true,
+			name:  "",
+			path:  "/path",
+			param: "/path",
+			want:  true,
 		},
 		{
-			path: "/path/1",
-			mask: "/path/{1}",
-			want: true,
+			name:  "",
+			path:  "/path/1",
+			param: "/path/{1}",
+			want:  true,
 		},
 		{
-			path: "/path/1/path/1",
-			mask: "/path/{1}/path",
-			want: false,
+			name:  "",
+			path:  "/path/1/path/1",
+			param: "/path/{1}/path",
+			want:  false,
 		},
 		{
-			path: "/path/1/path/1",
-			mask: "/path/{1}/path/{1}",
-			want: true,
+			name:  "",
+			path:  "/path/1/path/1",
+			param: "/path/{1}/path/{1}",
+			want:  true,
 		},
 		{
-			path: "/path/1/path/1",
-			mask: "/path/{1}/path/{1}",
-			want: true,
+			name:  "",
+			path:  "/path/1/path/1",
+			param: "/path/{1}/path/{1}",
+			want:  true,
 		},
 	}
 
-	for _, tt := range tests {
-		t.Run("", func(t *testing.T) {
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			got := server.PathByParamDetect(tt.path, tt.mask)
-			require.Equal(t, tt.want, got)
+
+			got := server.PathByParamDetect(tc.path, tc.param)
+
+			require.Equal(t, tc.want, got)
 		})
 	}
 }
@@ -185,24 +229,51 @@ func TestRemoveFragment(t *testing.T) {
 	t.Parallel()
 
 	type test struct {
-		request  string
-		response string
+		name string
+		path string
+		want string
 	}
 
 	tests := []test{
-		{"", ""},
-		{"/", ""},
-		{"/user", "/user"},
-		{"/user#id", "/user"},
-		{"/user#id,password", "/user"},
-		{"/user/#id,password", "/user"},
+		{
+			name: "",
+			path: "",
+			want: "",
+		},
+		{
+			name: "",
+			path: "/",
+			want: "",
+		},
+		{
+			name: "",
+			path: "/user",
+			want: "/user",
+		},
+		{
+			name: "",
+			path: "/user#id",
+			want: "/user",
+		},
+		{
+			name: "",
+			path: "/user#id,password",
+			want: "/user",
+		},
+		{
+			name: "",
+			path: "/user/#id,password",
+			want: "/user",
+		},
 	}
 
-	for _, tt := range tests {
-		t.Run("", func(t *testing.T) {
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			p := server.RemoveFragment(tt.request)
-			require.Equal(t, tt.response, p)
+
+			got := server.RemoveFragment(tc.path)
+
+			require.Equal(t, tc.want, got)
 		})
 	}
 }
@@ -211,25 +282,56 @@ func TestRefSplit(t *testing.T) {
 	t.Parallel()
 
 	type test struct {
-		request  string
-		response []string
+		name string
+		ref  string
+		want []string
 	}
 
 	tests := []test{
-		{"", nil},
-		{"/", nil},
-		{"#/", nil},
-		{"#/components", []string{"components"}},
-		{"#/components/schemas/User", []string{"components", "schemas", "User"}},
-		{"#/components/schemas/Users", []string{"components", "schemas", "Users"}},
-		{"#/components/schemas/Users/", []string{"components", "schemas", "Users"}},
+		{
+			name: "",
+			ref:  "",
+			want: nil,
+		},
+		{
+			name: "",
+			ref:  "/",
+			want: nil,
+		},
+		{
+			name: "",
+			ref:  "#/",
+			want: nil,
+		},
+		{
+			name: "",
+			ref:  "#/components",
+			want: []string{"components"},
+		},
+		{
+			name: "",
+			ref:  "#/components/schemas/User",
+			want: []string{"components", "schemas", "User"},
+		},
+		{
+			name: "",
+			ref:  "#/components/schemas/Users",
+			want: []string{"components", "schemas", "Users"},
+		},
+		{
+			name: "",
+			ref:  "#/components/schemas/Users/",
+			want: []string{"components", "schemas", "Users"},
+		},
 	}
 
-	for _, tt := range tests {
-		t.Run("", func(t *testing.T) {
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			p := server.RefSplit(tt.request)
-			require.Equal(t, tt.response, p)
+
+			got := server.RefSplit(tc.ref)
+
+			require.Equal(t, tc.want, got)
 		})
 	}
 }
@@ -238,24 +340,52 @@ func TestEqualHeadersByValues(t *testing.T) {
 	t.Parallel()
 
 	type test struct {
-		h1     []string
-		h2     []string
-		result bool
+		name string
+		h1   []string
+		h2   []string
+		want bool
 	}
 
 	tests := []test{
-		{nil, nil, true},
-		{[]string{"1"}, nil, false},
-		{nil, []string{"1"}, false},
-		{[]string{"1"}, []string{"1"}, true},
-		{[]string{"1"}, []string{"1", "2"}, false},
+		{
+			name: "",
+			h1:   nil,
+			h2:   nil,
+			want: true,
+		},
+		{
+			name: "",
+			h1:   []string{"1"},
+			h2:   nil,
+			want: false,
+		},
+		{
+			name: "",
+			h1:   nil,
+			h2:   []string{"1"},
+			want: false,
+		},
+		{
+			name: "",
+			h1:   []string{"1"},
+			h2:   []string{"1"},
+			want: true,
+		},
+		{
+			name: "",
+			h1:   []string{"1"},
+			h2:   []string{"1", "2"},
+			want: false,
+		},
 	}
 
-	for _, tt := range tests {
-		t.Run("", func(t *testing.T) {
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			p := server.EqualHeadersByValues(tt.h1, tt.h2)
-			require.Equal(t, tt.result, p)
+
+			got := server.EqualHeadersByValues(tc.h1, tc.h2)
+
+			require.Equal(t, tc.want, got)
 		})
 	}
 }

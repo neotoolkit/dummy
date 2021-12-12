@@ -87,9 +87,7 @@ func TestGender(t *testing.T) {
 	p := f.Person()
 	gender := p.Gender()
 
-	require.Condition(t, func() bool {
-		return gender == "Male" || gender == "Female"
-	})
+	require.True(t, gender == "Male" || gender == "Female")
 }
 
 func TestGenderMale(t *testing.T) {
@@ -99,9 +97,7 @@ func TestGenderMale(t *testing.T) {
 	p := f.Person()
 	genderMale := p.GenderMale()
 
-	require.Condition(t, func() bool {
-		return genderMale == "Male"
-	})
+	require.True(t, genderMale == "Male")
 }
 
 func TestGenderFemale(t *testing.T) {
@@ -111,7 +107,5 @@ func TestGenderFemale(t *testing.T) {
 	p := f.Person()
 	genderFemale := p.GenderFemale()
 
-	require.Condition(t, func() bool {
-		return genderFemale == "Female"
-	})
+	require.True(t, genderFemale == "Female")
 }
