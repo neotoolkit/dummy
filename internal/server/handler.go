@@ -135,10 +135,8 @@ func (h Handlers) Get(path, method string, queryParam url.Values, header http.He
 	for p, handlers := range h.Handlers {
 		if PathByParamDetect(path, p) {
 			for i := 0; i < len(handlers); i++ {
-				if handlers[i].Method == method {
-					if EqualHeadersByValues(handlers[i].Header.Values("X-Example"), header.Values("X-Example")) {
-						return handlers[i], true
-					}
+				if handlers[i].Method == method && EqualHeadersByValues(handlers[i].Header.Values("X-Example"), header.Values("X-Example")) {
+					return handlers[i], true
 				}
 			}
 		}
@@ -149,19 +147,19 @@ func (h Handlers) Get(path, method string, queryParam url.Values, header http.He
 
 // PathByParamDetect returns result of
 func PathByParamDetect(path, param string) bool {
-	p := strings.Split(path, "/")
-	m := strings.Split(param, "/")
+	splitPath := strings.Split(path, "/")
+	splitParam := strings.Split(param, "/")
 
-	if len(p) != len(m) {
+	if len(splitPath) != len(splitParam) {
 		return false
 	}
 
-	for i := 0; i < len(p); i++ {
-		if strings.HasPrefix(m[i], "{") && strings.HasSuffix(m[i], "}") {
+	for i := 0; i < len(splitPath); i++ {
+		if strings.HasPrefix(splitParam[i], "{") && strings.HasSuffix(splitParam[i], "}") {
 			continue
 		}
 
-		if p[i] != m[i] {
+		if splitPath[i] != splitParam[i] {
 			return false
 		}
 	}
@@ -208,6 +206,7 @@ func RemoveFragment(path string) string {
 func RefSplit(ref string) []string {
 	if len(ref) > 2 && ref[:2] == "#/" {
 		r := RemoveTrailingSlash(ref[2:])
+
 		return strings.Split(r, "/")
 	}
 
