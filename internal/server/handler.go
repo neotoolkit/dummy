@@ -236,3 +236,12 @@ func EqualHeadersByValues(h1, h2 []string) bool {
 
 	return true
 }
+
+// GetPathParamName - removing parentheses {}
+func GetPathParamName(param string) string {
+	if strings.HasPrefix(param, "{") && strings.HasSuffix(param, "}") {
+		return param[1 : len(param)-1]
+	}
+
+	return ""
+}
