@@ -232,3 +232,21 @@ func TestEqualHeadersByValues(t *testing.T) {
 		assert.Equal(t, tc.result, p)
 	}
 }
+
+func TestGetPathParamName(t *testing.T) {
+	type test struct {
+		input, result string
+	}
+
+	tests := []test{
+		{"{some string}", "some string"},
+		{"{some string", ""},
+		{"some string}", ""},
+		{"some string", ""},
+	}
+
+	for _, tc := range tests {
+		p := server.GetPathParamName(tc.input)
+		assert.Equal(t, tc.result, p)
+	}
+}
