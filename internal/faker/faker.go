@@ -92,6 +92,11 @@ func NewFaker() Faker {
 	}
 }
 
+// Boolean returns Boolean instance
+func (f Faker) Boolean() Boolean {
+	return Boolean{&f}
+}
+
 // Internet returns Internet instance
 func (f Faker) Internet() Internet {
 	return Internet{&f}
@@ -100,11 +105,6 @@ func (f Faker) Internet() Internet {
 // Person returns Person instance
 func (f Faker) Person() Person {
 	return Person{&f}
-}
-
-// Boolean returns Boolean instance
-func (f Faker) Boolean() Boolean {
-	return Boolean{&f}
 }
 
 // UUID returns UUID instance
@@ -142,4 +142,48 @@ func (f Faker) Asciify(in string) string {
 	}
 
 	return out.String()
+}
+
+// Faker returns random data by faker
+func (f Faker) Faker(faker string) interface{} {
+	switch faker {
+	// Boolean
+	case "Boolean":
+		return f.Boolean().Boolean()
+	// Internet
+	case "Username":
+		return f.Internet().Username()
+	case "GTLD":
+		return f.Internet().GTLD()
+	case "Domain":
+		return f.Internet().Domain()
+	case "Email":
+		return f.Internet().Email()
+	// Person
+	case "Person.FirstName":
+		return f.Person().FirstName()
+	case "Person.LastName":
+		return f.Person().LastName()
+	case "Person.FirstNameMale":
+		return f.Person().FirstNameMale()
+	case "Person.FirstNameFemale":
+		return f.Person().FirstNameFemale()
+	case "Person.Name":
+		return f.Person().Name()
+	case "Person.NameMale":
+		return f.Person().NameMale()
+	case "Person.NameFemale":
+		return f.Person().NameFemale()
+	case "Person.Gender":
+		return f.Person().Gender()
+	case "Person.GenderMale":
+		return f.Person().GenderMale()
+	case "Person.GenderFemale":
+		return f.Person().GenderFemale()
+	// UUID
+	case "UUID":
+		return f.UUID().V4()
+	default:
+		return nil
+	}
 }
