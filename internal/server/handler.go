@@ -147,19 +147,19 @@ func (h Handlers) Get(path, method string, queryParam url.Values, header http.He
 
 // PathByParamDetect returns result of
 func PathByParamDetect(path, param string) bool {
-	pth := strings.Split(path, "/")
-	prm := strings.Split(param, "/")
+	splitPath := strings.Split(path, "/")
+	splitParam := strings.Split(param, "/")
 
-	if len(pth) != len(prm) {
+	if len(splitPath) != len(splitParam) {
 		return false
 	}
 
-	for i := 0; i < len(pth); i++ {
-		if strings.HasPrefix(prm[i], "{") && strings.HasSuffix(prm[i], "}") {
+	for i := 0; i < len(splitPath); i++ {
+		if strings.HasPrefix(splitParam[i], "{") && strings.HasSuffix(splitParam[i], "}") {
 			continue
 		}
 
-		if pth[i] != prm[i] {
+		if splitPath[i] != splitParam[i] {
 			return false
 		}
 	}
