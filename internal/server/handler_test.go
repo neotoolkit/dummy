@@ -392,22 +392,56 @@ func TestEqualHeadersByValues(t *testing.T) {
 
 func TestGetPathParamName(t *testing.T) {
 	type test struct {
-		input, result string
+		name  string
+		param string
+		want  string
 	}
 
 	tests := []test{
-		{"{some-string}", "some-string"},
-		{"{some-string", ""},
-		{"some-string}", ""},
-		{"some-string", ""},
-		{"", ""},
-		{"{", ""},
-		{"}", ""},
+		{
+			name:  "",
+			param: "{some-string}",
+			want:  "some-string",
+		},
+		{
+			name:  "",
+			param: "{some-string",
+			want:  "",
+		},
+		{
+			name:  "",
+			param: "some-string}",
+			want:  "",
+		},
+		{
+			name:  "",
+			param: "some-string",
+			want:  "",
+		},
+		{
+			name:  "",
+			param: "",
+			want:  "",
+		},
+		{
+			name:  "",
+			param: "{",
+			want:  "",
+		},
+		{
+			name:  "",
+			param: "}",
+			want:  "",
+		},
 	}
 
 	for _, tc := range tests {
-		p := server.GetPathParamName(tc.input)
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
 
-		assert.Equal(t, tc.result, p)
+			got := server.GetPathParamName(tc.param)
+
+			require.Equal(t, tc.want, got)
+		})
 	}
 }
