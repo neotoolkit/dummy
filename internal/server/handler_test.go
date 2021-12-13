@@ -239,14 +239,18 @@ func TestGetPathParamName(t *testing.T) {
 	}
 
 	tests := []test{
-		{"{some string}", "some string"},
-		{"{some string", ""},
-		{"some string}", ""},
-		{"some string", ""},
+		{"{some-string}", "some-string"},
+		{"{some-string", ""},
+		{"some-string}", ""},
+		{"some-string", ""},
+		{"", ""},
+		{"{", ""},
+		{"}", ""},
 	}
 
 	for _, tc := range tests {
 		p := server.GetPathParamName(tc.input)
+
 		assert.Equal(t, tc.result, p)
 	}
 }
