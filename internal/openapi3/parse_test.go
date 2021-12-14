@@ -6,6 +6,10 @@ import (
 )
 
 var expected = OpenAPI{
+	Info: Info{
+		Title:   "Users dummy API",
+		Version: "0.1.0",
+	},
 	Paths: Paths{
 		"/users": &Path{
 			Post: &Operation{
