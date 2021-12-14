@@ -20,7 +20,7 @@ func TestIntBetween(t *testing.T) {
 	require.True(t, value <= 100)
 }
 
-func TestFaker(t *testing.T) {
+func TestByName(t *testing.T) {
 	t.Parallel()
 
 	type test struct {
@@ -30,7 +30,7 @@ func TestFaker(t *testing.T) {
 
 	tests := []test{
 		{
-			name:  "Boolean",
+			name:  "",
 			faker: "Boolean",
 		},
 		{
@@ -102,8 +102,7 @@ func TestFaker(t *testing.T) {
 			t.Parallel()
 
 			f := faker.NewFaker()
-			got := f.Faker(tc.faker)
-			fmt.Println(tc.name, got)
+			got := f.ByName(tc.faker)
 
 			require.True(t, got != nil)
 		})
