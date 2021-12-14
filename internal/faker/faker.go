@@ -144,8 +144,8 @@ func (f Faker) Asciify(in string) string {
 	return out.String()
 }
 
-// Faker returns random data by faker
-func (f Faker) Faker(faker string) interface{} {
+// ByName returns random data by faker
+func (f Faker) ByName(faker string) interface{} {
 	switch faker {
 	// Boolean
 	case "Boolean":
