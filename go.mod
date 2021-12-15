@@ -7,7 +7,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/pact-foundation/pact-go v1.6.6
 	github.com/rs/zerolog v1.26.0
-	github.com/spf13/cobra v1.2.1
+	github.com/spf13/cobra v1.3.0
 	github.com/stretchr/testify v1.7.0
 )
 
