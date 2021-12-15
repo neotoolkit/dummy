@@ -1,8 +1,9 @@
 package openapi3_test
 
 import (
-	"github.com/go-dummy/dummy/internal/openapi3"
 	"testing"
+
+	"github.com/go-dummy/dummy/internal/openapi3"
 
 	"github.com/stretchr/testify/require"
 )
@@ -16,26 +17,31 @@ func TestParse_Yaml(t *testing.T) {
 		Paths: openapi3.Paths{
 			"/users": &openapi3.Path{
 				Post: &openapi3.Operation{
-					Parameters: nil,
 					Responses: openapi3.Responses{
 						"201": &openapi3.Response{
 							Description: ptrStr(""),
 							Content: openapi3.Content{
 								"application/json": &openapi3.MediaType{
-									Example:  nil,
-									Examples: nil,
+									Schema: openapi3.Schema{
+										Reference: "#/components/schemas/User",
+									},
 								},
 							},
 						},
 					},
 				},
 				Get: &openapi3.Operation{
-					Parameters: nil,
 					Responses: openapi3.Responses{
 						"200": &openapi3.Response{
 							Description: ptrStr(""),
 							Content: openapi3.Content{
 								"application/json": &openapi3.MediaType{
+									Schema: openapi3.Schema{
+										Type: "array",
+										Items: &openapi3.Schema{
+											Reference: "#/components/schemas/User",
+										},
+									},
 									Example: []any{
 										map[any]any{
 											"id":        "e1afccea-5168-4735-84d4-cb96f6fb5d25",
@@ -48,7 +54,6 @@ func TestParse_Yaml(t *testing.T) {
 											"lastName":  "Brin",
 										},
 									},
-									Examples: nil,
 								},
 							},
 						},
@@ -71,7 +76,11 @@ func TestParse_Yaml(t *testing.T) {
 						"200": &openapi3.Response{
 							Description: ptrStr(""),
 							Content: openapi3.Content{
-								"application/json": &openapi3.MediaType{},
+								"application/json": &openapi3.MediaType{
+									Schema: openapi3.Schema{
+										Reference: "#/components/schemas/User",
+									},
+								},
 							},
 						},
 					},
@@ -83,14 +92,17 @@ func TestParse_Yaml(t *testing.T) {
 				"User": &openapi3.Schema{
 					Properties: openapi3.Schemas{
 						"id": &openapi3.Schema{
-							Type:   "string",
-							Format: "uuid",
+							Type:    "string",
+							Format:  "uuid",
+							Example: "380ed0b7-eb21-4ad4-acd0-efa90cf69c6a",
 						},
 						"firstName": &openapi3.Schema{
-							Type: "string",
+							Type:    "string",
+							Example: "Larry",
 						},
 						"lastName": &openapi3.Schema{
-							Type: "string",
+							Type:    "string",
+							Example: "Page",
 						},
 					},
 					Type: "object",
