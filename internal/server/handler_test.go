@@ -14,6 +14,8 @@ func FuzzGetLastPathParam(f *testing.F) {
 	f.Add("/path/{path}", "{path}")
 
 	f.Fuzz(func(t *testing.T, path, want string) {
+		t.Parallel()
+
 		got := server.GetLastPathSegment(path)
 
 		if got != want {
@@ -28,6 +30,8 @@ func FuzzRemoveTrailingSlash(f *testing.F) {
 	f.Add("/path/", "/path")
 
 	f.Fuzz(func(t *testing.T, path, want string) {
+		t.Parallel()
+
 		got := server.RemoveTrailingSlash(path)
 
 		if got != want {
@@ -42,6 +46,8 @@ func FuzzIsLastPathSegmentParam(f *testing.F) {
 	f.Add("/path/{path}", true)
 
 	f.Fuzz(func(t *testing.T, path string, want bool) {
+		t.Parallel()
+
 		got := server.IsLastPathSegmentParam(path)
 
 		if got != want {
@@ -57,6 +63,8 @@ func FuzzParentPath(f *testing.F) {
 	f.Add("/path/path", "/path")
 
 	f.Fuzz(func(t *testing.T, path, want string) {
+		t.Parallel()
+
 		got := server.ParentPath(path)
 
 		if got != want {
@@ -72,6 +80,8 @@ func FuzzPathByParamDetect(f *testing.F) {
 	f.Add("/path/1/path/2", "/path/{1}/path/{2}", true)
 
 	f.Fuzz(func(t *testing.T, path, param string, want bool) {
+		t.Parallel()
+
 		got := server.PathByParamDetect(path, param)
 
 		if got != want {
@@ -91,6 +101,8 @@ func FuzzRemoveFragment(f *testing.F) {
 	f.Add("", "")
 
 	f.Fuzz(func(t *testing.T, path, want string) {
+		t.Parallel()
+
 		got := server.RemoveFragment(path)
 
 		if got != want {
@@ -170,6 +182,8 @@ func FuzzGetPathParamName(f *testing.F) {
 	f.Add("{some-string}", "some-string")
 
 	f.Fuzz(func(t *testing.T, param, want string) {
+		t.Parallel()
+
 		got := server.GetPathParamName(param)
 
 		if got != want {
