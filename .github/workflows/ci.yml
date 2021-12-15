@@ -10,7 +10,7 @@ jobs:
       - uses: golangci/golangci-lint-action@v2
         with:
           version: latest
-    continue-on-error: true
+      continue-on-error: true
 
   tests:
     runs-on: ubuntu-latest
