@@ -8,286 +8,107 @@ import (
 	"github.com/go-dummy/dummy/internal/server"
 )
 
-func TestGetLastPathParam(t *testing.T) {
-	t.Parallel()
+func FuzzGetLastPathParam(f *testing.F) {
+	f.Add("", "")
+	f.Add("/path", "path")
+	f.Add("/path/{path}", "{path}")
 
-	type test struct {
-		name string
-		path string
-		want string
-	}
+	f.Fuzz(func(t *testing.T, path, want string) {
+		t.Parallel()
 
-	tests := []test{
-		{
-			name: "",
-			path: "",
-			want: "",
-		},
-		{
-			name: "",
-			path: "/path",
-			want: "path",
-		},
-		{
-			name: "",
-			path: "/path/{path}",
-			want: "{path}",
-		},
-	}
+		got := server.GetLastPathSegment(path)
 
-	for _, tc := range tests {
-		tc := tc
-
-		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
-
-			got := server.GetLastPathSegment(tc.path)
-
-			require.Equal(t, tc.want, got)
-		})
-	}
+		if got != want {
+			t.Fatalf("got %s, want %s", got, want)
+		}
+	})
 }
 
-func TestRemoveTrailingSlash(t *testing.T) {
-	t.Parallel()
+func FuzzRemoveTrailingSlash(f *testing.F) {
+	f.Add("", "")
+	f.Add("/", "")
+	f.Add("/path/", "/path")
 
-	type test struct {
-		name string
-		path string
-		want string
-	}
+	f.Fuzz(func(t *testing.T, path, want string) {
+		t.Parallel()
 
-	tests := []test{
-		{
-			name: "",
-			path: "",
-			want: "",
-		},
-		{
-			name: "",
-			path: "/",
-			want: "",
-		},
-		{
-			name: "",
-			path: "/path/",
-			want: "/path",
-		},
-	}
+		got := server.RemoveTrailingSlash(path)
 
-	for _, tc := range tests {
-		tc := tc
-
-		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
-
-			got := server.RemoveTrailingSlash(tc.path)
-
-			require.Equal(t, tc.want, got)
-		})
-	}
+		if got != want {
+			t.Fatalf("got %s, want %s", got, want)
+		}
+	})
 }
 
-func TestIsLastPathSegmentParam(t *testing.T) {
-	t.Parallel()
+func FuzzIsLastPathSegmentParam(f *testing.F) {
+	f.Add("", false)
+	f.Add("/path", false)
+	f.Add("/path/{path}", true)
 
-	type test struct {
-		name string
-		path string
-		want bool
-	}
+	f.Fuzz(func(t *testing.T, path string, want bool) {
+		t.Parallel()
 
-	tests := []test{
-		{
-			name: "",
-			path: "",
-			want: false,
-		},
-		{
-			name: "",
-			path: "/path",
-			want: false,
-		},
-		{
-			name: "",
-			path: "/path/{path}",
-			want: true,
-		},
-	}
+		got := server.IsLastPathSegmentParam(path)
 
-	for _, tc := range tests {
-		tc := tc
-
-		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
-
-			got := server.IsLastPathSegmentParam(tc.path)
-
-			require.Equal(t, tc.want, got)
-		})
-	}
+		if got != want {
+			t.Fatalf("got %v, want %v", got, want)
+		}
+	})
 }
 
-func TestParentPath(t *testing.T) {
-	t.Parallel()
+func FuzzParentPath(f *testing.F) {
+	f.Add("", "")
+	f.Add("/", "")
+	f.Add("/path/", "/path")
+	f.Add("/path/path", "/path")
 
-	type test struct {
-		name string
-		path string
-		want string
-	}
+	f.Fuzz(func(t *testing.T, path, want string) {
+		t.Parallel()
 
-	tests := []test{
-		{
-			name: "",
-			path: "",
-			want: "",
-		},
-		{
-			name: "",
-			path: "/",
-			want: "",
-		},
-		{
-			name: "",
-			path: "/path/",
-			want: "/path",
-		},
-		{
-			name: "",
-			path: "/path/path",
-			want: "/path",
-		},
-	}
+		got := server.ParentPath(path)
 
-	for _, tc := range tests {
-		tc := tc
-
-		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
-
-			got := server.ParentPath(tc.path)
-
-			require.Equal(t, tc.want, got)
-		})
-	}
+		if got != want {
+			t.Fatalf("got %s, want %s", got, want)
+		}
+	})
 }
 
-func TestPathByParamDetect(t *testing.T) {
-	t.Parallel()
+func FuzzPathByParamDetect(f *testing.F) {
+	f.Add("", "", true)
+	f.Add("/path", "/path", true)
+	f.Add("/path/1", "/path/{1}", true)
+	f.Add("/path/1/path/2", "/path/{1}/path/{2}", true)
 
-	type test struct {
-		name  string
-		path  string
-		param string
-		want  bool
-	}
+	f.Fuzz(func(t *testing.T, path, param string, want bool) {
+		t.Parallel()
 
-	tests := []test{
-		{
-			name:  "",
-			path:  "",
-			param: "",
-			want:  true,
-		},
-		{
-			name:  "",
-			path:  "/path",
-			param: "/path",
-			want:  true,
-		},
-		{
-			name:  "",
-			path:  "/path/1",
-			param: "/path/{1}",
-			want:  true,
-		},
-		{
-			name:  "",
-			path:  "/path/1/path/1",
-			param: "/path/{1}/path",
-			want:  false,
-		},
-		{
-			name:  "",
-			path:  "/path/1/path/1",
-			param: "/path/{1}/path/{1}",
-			want:  true,
-		},
-		{
-			name:  "",
-			path:  "/path/1/path/1",
-			param: "/path/{1}/path/{1}",
-			want:  true,
-		},
-	}
+		got := server.PathByParamDetect(path, param)
 
-	for _, tc := range tests {
-		tc := tc
-
-		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
-
-			got := server.PathByParamDetect(tc.path, tc.param)
-
-			require.Equal(t, tc.want, got)
-		})
-	}
+		if got != want {
+			t.Fatalf("got %v, want %v", got, want)
+		}
+	})
 }
 
-func TestRemoveFragment(t *testing.T) {
-	t.Parallel()
+func FuzzRemoveFragment(f *testing.F) {
+	f.Add("", "")
+	f.Add("/", "")
+	f.Add("/user", "/user")
+	f.Add("/user#id", "/user")
+	f.Add("/user#id,password", "/user")
+	f.Add("/user/#id,password", "/user")
+	f.Add("", "")
+	f.Add("", "")
 
-	type test struct {
-		name string
-		path string
-		want string
-	}
+	f.Fuzz(func(t *testing.T, path, want string) {
+		t.Parallel()
 
-	tests := []test{
-		{
-			name: "",
-			path: "",
-			want: "",
-		},
-		{
-			name: "",
-			path: "/",
-			want: "",
-		},
-		{
-			name: "",
-			path: "/user",
-			want: "/user",
-		},
-		{
-			name: "",
-			path: "/user#id",
-			want: "/user",
-		},
-		{
-			name: "",
-			path: "/user#id,password",
-			want: "/user",
-		},
-		{
-			name: "",
-			path: "/user/#id,password",
-			want: "/user",
-		},
-	}
+		got := server.RemoveFragment(path)
 
-	for _, tc := range tests {
-		tc := tc
-
-		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
-
-			got := server.RemoveFragment(tc.path)
-
-			require.Equal(t, tc.want, got)
-		})
-	}
+		if got != want {
+			t.Fatalf("got %v, want %v", got, want)
+		}
+	})
 }
 
 func TestRefSplit(t *testing.T) {
@@ -350,116 +171,23 @@ func TestRefSplit(t *testing.T) {
 	}
 }
 
-func TestEqualHeadersByValues(t *testing.T) {
-	t.Parallel()
+func FuzzGetPathParamName(f *testing.F) {
+	f.Add("", "")
+	f.Add("{", "")
+	f.Add("}", "")
+	f.Add("{}", "")
+	f.Add("some-string", "")
+	f.Add("{some-string", "")
+	f.Add("some-string}", "")
+	f.Add("{some-string}", "some-string")
 
-	type test struct {
-		name string
-		h1   []string
-		h2   []string
-		want bool
-	}
+	f.Fuzz(func(t *testing.T, param, want string) {
+		t.Parallel()
 
-	tests := []test{
-		{
-			name: "",
-			h1:   nil,
-			h2:   nil,
-			want: true,
-		},
-		{
-			name: "",
-			h1:   []string{"1"},
-			h2:   nil,
-			want: false,
-		},
-		{
-			name: "",
-			h1:   nil,
-			h2:   []string{"1"},
-			want: false,
-		},
-		{
-			name: "",
-			h1:   []string{"1"},
-			h2:   []string{"1"},
-			want: true,
-		},
-		{
-			name: "",
-			h1:   []string{"1"},
-			h2:   []string{"1", "2"},
-			want: false,
-		},
-	}
+		got := server.GetPathParamName(param)
 
-	for _, tc := range tests {
-		tc := tc
-
-		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
-
-			got := server.EqualHeadersByValues(tc.h1, tc.h2)
-
-			require.Equal(t, tc.want, got)
-		})
-	}
-}
-
-func TestGetPathParamName(t *testing.T) {
-	type test struct {
-		name  string
-		param string
-		want  string
-	}
-
-	tests := []test{
-		{
-			name:  "",
-			param: "{some-string}",
-			want:  "some-string",
-		},
-		{
-			name:  "",
-			param: "{some-string",
-			want:  "",
-		},
-		{
-			name:  "",
-			param: "some-string}",
-			want:  "",
-		},
-		{
-			name:  "",
-			param: "some-string",
-			want:  "",
-		},
-		{
-			name:  "",
-			param: "",
-			want:  "",
-		},
-		{
-			name:  "",
-			param: "{",
-			want:  "",
-		},
-		{
-			name:  "",
-			param: "}",
-			want:  "",
-		},
-	}
-
-	for _, tc := range tests {
-		tc := tc
-
-		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
-
-			got := server.GetPathParamName(tc.param)
-
-			require.Equal(t, tc.want, got)
-		})
-	}
+		if got != want {
+			t.Fatalf(`got "%s", want "%s"`, got, want)
+		}
+	})
 }

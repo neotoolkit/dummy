@@ -4,6 +4,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"reflect"
 	"strconv"
 	"strings"
 
@@ -18,18 +19,18 @@ type Handler struct {
 	QueryParam url.Values
 	Header     http.Header
 	StatusCode int
-	Response   interface{}
+	Response   any
 }
 
 // Handlers -.
 type Handlers struct {
-	OpenAPI  openapi3.OpenAPI
+	OpenAPI  *openapi3.OpenAPI
 	Handlers map[string][]Handler
 	Logger   *logger.Logger
 }
 
 // NewHandlers returns a new instance of Handlers
-func NewHandlers(openapi openapi3.OpenAPI, l *logger.Logger) Handlers {
+func NewHandlers(openapi *openapi3.OpenAPI, l *logger.Logger) Handlers {
 	return Handlers{
 		OpenAPI:  openapi,
 		Handlers: make(map[string][]Handler),
@@ -119,7 +120,7 @@ func (h Handlers) Set(path, method string, o *openapi3.Operation) ([]Handler, er
 	return res, nil
 }
 
-func (h Handlers) set(path, method string, queryParam url.Values, header http.Header, statusCode int, response interface{}) Handler {
+func (h Handlers) set(path, method string, queryParam url.Values, header http.Header, statusCode int, response any) Handler {
 	return Handler{
 		Path:       path,
 		Method:     method,
@@ -135,7 +136,7 @@ func (h Handlers) Get(path, method string, queryParam url.Values, header http.He
 	for p, handlers := range h.Handlers {
 		if PathByParamDetect(path, p) {
 			for i := 0; i < len(handlers); i++ {
-				if handlers[i].Method == method && EqualHeadersByValues(handlers[i].Header.Values("X-Example"), header.Values("X-Example")) {
+				if handlers[i].Method == method && reflect.DeepEqual(handlers[i].Header.Values("X-Example"), header.Values("X-Example")) {
 					return handlers[i], true
 				}
 			}
@@ -211,30 +212,6 @@ func RefSplit(ref string) []string {
 	}
 
 	return nil
-}
-
-// EqualHeadersByValues - comparing two headers by values
-func EqualHeadersByValues(h1, h2 []string) bool {
-	if h1 == nil && h2 == nil {
-		return true
-	}
-
-	if len(h1) != len(h2) {
-		return false
-	}
-
-	exists := make(map[string]bool, len(h1))
-	for i := 0; i < len(h1); i++ {
-		exists[h1[i]] = true
-	}
-
-	for i := 0; i < len(h2); i++ {
-		if !exists[h2[i]] {
-			return false
-		}
-	}
-
-	return true
 }
 
 // GetPathParamName - removing parentheses {}

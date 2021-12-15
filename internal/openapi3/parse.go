@@ -8,17 +8,19 @@ import (
 	"github.com/go-yaml/yaml"
 )
 
-func Parse(path string) (res OpenAPI, err error) {
+func Parse(path string) (*OpenAPI, error) {
 	file, err := read(path)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	if err = yaml.Unmarshal(file, &res); err != nil {
-		return
+	var res OpenAPI
+
+	if err := yaml.Unmarshal(file, &res); err != nil {
+		return nil, err
 	}
 
-	return
+	return &res, nil
 }
 
 func read(path string) ([]byte, error) {
