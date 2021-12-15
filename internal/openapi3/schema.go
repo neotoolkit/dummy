@@ -1,12 +1,12 @@
 package openapi3
 
 type Schema struct {
-	Properties Schemas     `json:"properties,omitempty" yaml:"properties,omitempty"`
-	Type       string      `json:"type,omitempty" yaml:"type,omitempty"`
-	Format     string      `json:"format,omitempty" yaml:"format,omitempty"`
-	Default    interface{} `json:"default,omitempty" yaml:"default,omitempty"`
-	Example    interface{} `json:"example,omitempty" yaml:"example,omitempty"`
-	Faker      string      `json:"x-faker,omitempty" yaml:"x-faker,omitempty"`
+	Properties Schemas `json:"properties,omitempty" yaml:"properties,omitempty"`
+	Type       string  `json:"type,omitempty" yaml:"type,omitempty"`
+	Format     string  `json:"format,omitempty" yaml:"format,omitempty"`
+	Default    any     `json:"default,omitempty" yaml:"default,omitempty"`
+	Example    any     `json:"example,omitempty" yaml:"example,omitempty"`
+	Faker      string  `json:"x-faker,omitempty" yaml:"x-faker,omitempty"`
 }
 
 type Schemas map[string]*Schema

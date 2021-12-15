@@ -8,124 +8,46 @@ import (
 	"github.com/go-dummy/dummy/internal/server"
 )
 
-func TestGetLastPathParam(t *testing.T) {
-	t.Parallel()
+func FuzzGetLastPathParam(f *testing.F) {
+	f.Add("", "")
+	f.Add("/path", "path")
+	f.Add("/path/{path}", "{path}")
 
-	type test struct {
-		name string
-		path string
-		want string
-	}
+	f.Fuzz(func(t *testing.T, path, want string) {
+		got := server.GetLastPathSegment(path)
 
-	tests := []test{
-		{
-			name: "",
-			path: "",
-			want: "",
-		},
-		{
-			name: "",
-			path: "/path",
-			want: "path",
-		},
-		{
-			name: "",
-			path: "/path/{path}",
-			want: "{path}",
-		},
-	}
-
-	for _, tc := range tests {
-		tc := tc
-
-		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
-
-			got := server.GetLastPathSegment(tc.path)
-
-			require.Equal(t, tc.want, got)
-		})
-	}
+		if got != want {
+			t.Fatalf("got %s, want %s", got, want)
+		}
+	})
 }
 
-func TestRemoveTrailingSlash(t *testing.T) {
-	t.Parallel()
+func FuzzRemoveTrailingSlash(f *testing.F) {
+	f.Add("", "")
+	f.Add("/", "")
+	f.Add("/path/", "/path")
 
-	type test struct {
-		name string
-		path string
-		want string
-	}
+	f.Fuzz(func(t *testing.T, path, want string) {
+		got := server.RemoveTrailingSlash(path)
 
-	tests := []test{
-		{
-			name: "",
-			path: "",
-			want: "",
-		},
-		{
-			name: "",
-			path: "/",
-			want: "",
-		},
-		{
-			name: "",
-			path: "/path/",
-			want: "/path",
-		},
-	}
-
-	for _, tc := range tests {
-		tc := tc
-
-		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
-
-			got := server.RemoveTrailingSlash(tc.path)
-
-			require.Equal(t, tc.want, got)
-		})
-	}
+		if got != want {
+			t.Fatalf("got %s, want %s", got, want)
+		}
+	})
 }
 
-func TestIsLastPathSegmentParam(t *testing.T) {
-	t.Parallel()
+func FuzzIsLastPathSegmentParam(f *testing.F) {
+	f.Add("", false)
+	f.Add("/path", false)
+	f.Add("/path/{path}", true)
 
-	type test struct {
-		name string
-		path string
-		want bool
-	}
+	f.Fuzz(func(t *testing.T, path string, want bool) {
+		got := server.IsLastPathSegmentParam(path)
 
-	tests := []test{
-		{
-			name: "",
-			path: "",
-			want: false,
-		},
-		{
-			name: "",
-			path: "/path",
-			want: false,
-		},
-		{
-			name: "",
-			path: "/path/{path}",
-			want: true,
-		},
-	}
-
-	for _, tc := range tests {
-		tc := tc
-
-		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
-
-			got := server.IsLastPathSegmentParam(tc.path)
-
-			require.Equal(t, tc.want, got)
-		})
-	}
+		if got != want {
+			t.Fatalf("got %v, want %v", got, want)
+		}
+	})
 }
 
 func TestParentPath(t *testing.T) {

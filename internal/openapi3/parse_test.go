@@ -1,8 +1,9 @@
 package openapi3
 
 import (
-	"github.com/stretchr/testify/require"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 var expected = OpenAPI{
@@ -33,13 +34,13 @@ var expected = OpenAPI{
 						Description: ptrStr(""),
 						Content: Content{
 							"application/json": &MediaType{
-								Example: []interface{}{
-									map[interface{}]interface{}{
+								Example: []any{
+									map[any]any{
 										"id":        "e1afccea-5168-4735-84d4-cb96f6fb5d25",
 										"firstName": "Elon",
 										"lastName":  "Musk",
 									},
-									map[interface{}]interface{}{
+									map[any]any{
 										"id":        "472063cc-4c83-11ec-81d3-0242ac130003",
 										"firstName": "Sergey",
 										"lastName":  "Brin",

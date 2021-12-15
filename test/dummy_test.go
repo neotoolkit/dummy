@@ -15,15 +15,21 @@ import (
 	"github.com/go-dummy/dummy/internal/server"
 )
 
-func TestDummy(t *testing.T) {
+func FuzzDummy(f *testing.F) {
 	testdata, err := ioutil.ReadDir("testdata")
 	if err != nil {
-		t.Fatal(err)
+		f.Fatal(err)
 	}
 
-	for _, c := range testdata {
-		path := "testdata/" + c.Name() + "/openapi3.yml"
+	for i := 0; i < len(testdata); i++ {
+		f.Add(
+			"testdata/"+testdata[i].Name()+"/openapi3.yml",
+			"testdata/"+testdata[i].Name(),
+			"testdata/"+testdata[i].Name()+"/pact.json",
+		)
+	}
 
+	f.Fuzz(func(t *testing.T, path, pactDir, pactURL string) {
 		openapi, err := openapi3.Parse(path)
 		if err != nil {
 			t.Fatal(err)
@@ -47,15 +53,15 @@ func TestDummy(t *testing.T) {
 		pact := dsl.Pact{
 			Consumer:                 "consumer",
 			Provider:                 "dummy",
-			PactDir:                  "testdata/" + c.Name(),
+			PactDir:                  pactDir,
 			DisableToolValidityCheck: true,
 		}
 
 		if _, err := pact.VerifyProvider(t, types.VerifyRequest{
 			ProviderBaseURL: newServer.URL,
-			PactURLs:        []string{"testdata/" + c.Name() + "/pact.json"},
+			PactURLs:        []string{pactURL},
 		}); err != nil {
 			t.Fatal(err)
 		}
-	}
+	})
 }
