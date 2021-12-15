@@ -13,11 +13,6 @@ jobs:
 
   tests:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        golang:
-          - 1.17.x
-          - 1.18.0-beta1
     steps:
       - uses: actions/checkout@v2
       - uses: ruby/setup-ruby@v1
@@ -25,7 +20,7 @@ jobs:
           ruby-version: 2.6
       - uses: actions/setup-go@v2
         with:
-          go-version: ${{ matrix.golang }}
+          go-version: 1.18.0-beta1
           stable: false
       - name: Tests
         run: |
