@@ -18,7 +18,7 @@ type Handler struct {
 	QueryParam url.Values
 	Header     http.Header
 	StatusCode int
-	Response   interface{}
+	Response   any
 }
 
 // Handlers -.
@@ -119,7 +119,7 @@ func (h Handlers) Set(path, method string, o *openapi3.Operation) ([]Handler, er
 	return res, nil
 }
 
-func (h Handlers) set(path, method string, queryParam url.Values, header http.Header, statusCode int, response interface{}) Handler {
+func (h Handlers) set(path, method string, queryParam url.Values, header http.Header, statusCode int, response any) Handler {
 	return Handler{
 		Path:       path,
 		Method:     method,
