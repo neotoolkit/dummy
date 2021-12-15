@@ -1,0 +1,27 @@
+{
+  "consumer": {
+    "name": "consumer"
+  },
+  "provider": {
+    "name": "dummy"
+  },
+  "interactions": [
+    {
+      "description": "Example is object",
+      "request": {
+        "method": "GET",
+        "path": "/users"
+      },
+      "response": {
+        "status": 200,
+        "body": [
+          {
+            "firstName": "Elon",
+            "id": "e1afccea-5168-4735-84d4-cb96f6fb5d25",
+            "lastName": "Musk"
+          }
+        ]
+      }
+    }
+  ]
+}

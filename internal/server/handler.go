@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -103,14 +104,22 @@ func (h Handlers) Set(path, method string, o *openapi3.Operation) ([]Handler, er
 		if found {
 			examplesKeys := content.Examples.GetKeys()
 
-			if len(examplesKeys) > 0 {
+			switch {
+			case len(examplesKeys) > 0:
 				res = append(res, h.set(path, method, queryParam, http.Header{}, statusCode, content.ResponseByExamplesKey(examplesKeys[0])))
 
 				for i := 0; i < len(examplesKeys); i++ {
 					res = append(res, h.set(path, method, queryParam, http.Header{"X-Example": []string{examplesKeys[i]}}, statusCode, content.ResponseByExamplesKey(examplesKeys[i])))
 				}
-			} else {
+			case content.Example != nil:
 				res = append(res, h.set(path, method, queryParam, http.Header{}, statusCode, content.ResponseByExample()))
+			default:
+				schemaResp, err := content.Schema.ResponseByExample(h.OpenAPI)
+				if err != nil {
+					return nil, fmt.Errorf("response from schema: %w", err)
+				}
+
+				res = append(res, h.set(path, method, queryParam, http.Header{}, statusCode, schemaResp))
 			}
 		} else {
 			res = append(res, h.set(path, method, queryParam, http.Header{}, statusCode, nil))

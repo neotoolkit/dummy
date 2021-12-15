@@ -3,7 +3,7 @@ package openapi3
 // Media Type Object
 // See specification https://swagger.io/specification/#media-type-object
 type MediaType struct {
-	Schema   Schema      `json:"schema" yaml:"schema"`
+	Schema   Schema   `json:"schema" yaml:"schema"`
 	Example  any      `json:"example,omitempty" yaml:"example,omitempty"`
 	Examples Examples `json:"examples,omitempty" yaml:"examples,omitempty"`
 }
