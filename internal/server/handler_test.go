@@ -16,7 +16,9 @@ func FuzzGetLastPathParam(f *testing.F) {
 	f.Fuzz(func(t *testing.T, path, want string) {
 		got := server.GetLastPathSegment(path)
 
-		require.Equal(t, want, got)
+		if got != want {
+			t.Fatalf("got %s, want %s", got, want)
+		}
 	})
 }
 
@@ -28,7 +30,9 @@ func FuzzRemoveTrailingSlash(f *testing.F) {
 	f.Fuzz(func(t *testing.T, path, want string) {
 		got := server.RemoveTrailingSlash(path)
 
-		require.Equal(t, want, got)
+		if got != want {
+			t.Fatalf("got %s, want %s", got, want)
+		}
 	})
 }
 
@@ -40,7 +44,9 @@ func FuzzIsLastPathSegmentParam(f *testing.F) {
 	f.Fuzz(func(t *testing.T, path string, want bool) {
 		got := server.IsLastPathSegmentParam(path)
 
-		require.Equal(t, want, got)
+		if got != want {
+			t.Fatalf("got %v, want %v", got, want)
+		}
 	})
 }
 
