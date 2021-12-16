@@ -21,7 +21,7 @@ type schemaContext interface {
 	LookupByReference(ref string) (Schema, error)
 }
 
-func (s Schema) ResponseByExample(schemaContext schemaContext) (interface{}, error) {
+func (s Schema) ResponseByExample(schemaContext schemaContext) (any, error) {
 	if s.Reference != "" {
 		schema, err := schemaContext.LookupByReference(s.Reference)
 		if err != nil {
@@ -32,31 +32,13 @@ func (s Schema) ResponseByExample(schemaContext schemaContext) (interface{}, err
 	}
 
 	if s.Example != nil {
-		return s.example(s.Example), nil
+		return ExampleToResponse(s.Example), nil
 	}
 
 	return s.propertiesExamples(schemaContext)
 }
 
-func (s Schema) example(i interface{}) interface{} {
-	switch data := i.(type) {
-	case map[any]any:
-		return parseExample(data)
-	case []any:
-		res := make([]map[string]any, len(data))
-		for k, v := range data {
-			res[k] = parseExample(v.(map[any]any))
-		}
-
-		return res
-	case string:
-		return data
-	}
-
-	return nil
-}
-
-func (s Schema) propertiesExamples(schemaContext schemaContext) (interface{}, error) {
+func (s Schema) propertiesExamples(schemaContext schemaContext) (any, error) {
 	if s.Items != nil {
 		resp, err := s.Items.ResponseByExample(schemaContext)
 
@@ -64,13 +46,13 @@ func (s Schema) propertiesExamples(schemaContext schemaContext) (interface{}, er
 			return nil, fmt.Errorf("response from items: %w", err)
 		}
 
-		var res []interface{}
+		var res []any
 		res = append(res, resp)
 
 		return res, nil
 	}
 
-	res := make(map[string]interface{}, len(s.Properties))
+	res := make(map[string]any, len(s.Properties))
 
 	for key, prop := range s.Properties {
 		propResp, err := prop.ResponseByExample(schemaContext)
