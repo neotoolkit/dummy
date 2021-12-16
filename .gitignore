@@ -19,3 +19,6 @@ vendor/
 
 # Pact logs
 test/log/pact.log
+
+# macOS
+.DS_Store
