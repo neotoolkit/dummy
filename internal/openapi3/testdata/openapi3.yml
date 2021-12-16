@@ -65,7 +65,10 @@ components:
         id:
           type: string
           format: uuid
+          example: 380ed0b7-eb21-4ad4-acd0-efa90cf69c6a
         firstName:
           type: string
+          example: Larry
         lastName:
           type: string
+          example: Page
