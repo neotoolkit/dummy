@@ -17,11 +17,11 @@ type Schema struct {
 
 type Schemas map[string]*Schema
 
-type schemaContext interface {
+type SchemaContext interface {
 	LookupByReference(ref string) (Schema, error)
 }
 
-func (s Schema) ResponseByExample(schemaContext schemaContext) (any, error) {
+func (s Schema) ResponseByExample(schemaContext SchemaContext) (any, error) {
 	if s.Reference != "" {
 		schema, err := schemaContext.LookupByReference(s.Reference)
 		if err != nil {
@@ -38,10 +38,9 @@ func (s Schema) ResponseByExample(schemaContext schemaContext) (any, error) {
 	return s.propertiesExamples(schemaContext)
 }
 
-func (s Schema) propertiesExamples(schemaContext schemaContext) (any, error) {
+func (s Schema) propertiesExamples(schemaContext SchemaContext) (any, error) {
 	if s.Items != nil {
 		resp, err := s.Items.ResponseByExample(schemaContext)
-
 		if err != nil {
 			return nil, fmt.Errorf("response from items: %w", err)
 		}
