@@ -41,7 +41,6 @@ func (s Schema) ResponseByExample(schemaContext SchemaContext) (any, error) {
 func (s Schema) propertiesExamples(schemaContext SchemaContext) (any, error) {
 	if s.Items != nil {
 		resp, err := s.Items.ResponseByExample(schemaContext)
-
 		if err != nil {
 			return nil, fmt.Errorf("response from items: %w", err)
 		}
