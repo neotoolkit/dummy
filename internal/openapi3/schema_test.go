@@ -8,8 +8,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var (
-	userSchema = openapi3.Schema{
+type schemaContextStub struct{}
+
+func (s schemaContextStub) LookupByReference(ref string) (openapi3.Schema, error) {
+	userSchema := openapi3.Schema{
 		Properties: openapi3.Schemas{
 			"id": &openapi3.Schema{
 				Type:    "string",
@@ -28,16 +30,12 @@ var (
 		Type: "object",
 	}
 
-	uuidSchema = openapi3.Schema{
+	uuidSchema := openapi3.Schema{
 		Type:    "string",
 		Format:  "uuid",
 		Example: "380ed0b7-eb21-4ad4-acd0-efa90cf69c6a",
 	}
-)
 
-type schemaContextStub struct{}
-
-func (s schemaContextStub) LookupByReference(ref string) (openapi3.Schema, error) {
 	switch ref {
 	case "#/components/schemas/User":
 		return userSchema, nil
