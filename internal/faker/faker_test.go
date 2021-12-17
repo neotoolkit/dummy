@@ -51,7 +51,15 @@ func TestByName(t *testing.T) {
 		},
 		{
 			name:  "",
+			faker: "firstname",
+		},
+		{
+			name:  "",
 			faker: "Person.FirstName",
+		},
+		{
+			name:  "",
+			faker: "lastname",
 		},
 		{
 			name:  "",
@@ -59,7 +67,15 @@ func TestByName(t *testing.T) {
 		},
 		{
 			name:  "",
+			faker: "firstname male",
+		},
+		{
+			name:  "",
 			faker: "Person.FirstNameMale",
+		},
+		{
+			name:  "",
+			faker: "firstname female",
 		},
 		{
 			name:  "",
@@ -67,7 +83,15 @@ func TestByName(t *testing.T) {
 		},
 		{
 			name:  "",
+			faker: "name",
+		},
+		{
+			name:  "",
 			faker: "Person.Name",
+		},
+		{
+			name:  "",
+			faker: "name male",
 		},
 		{
 			name:  "",
@@ -75,7 +99,15 @@ func TestByName(t *testing.T) {
 		},
 		{
 			name:  "",
+			faker: "name female",
+		},
+		{
+			name:  "",
 			faker: "Person.NameFemale",
+		},
+		{
+			name:  "",
+			faker: "gender",
 		},
 		{
 			name:  "",
@@ -83,7 +115,15 @@ func TestByName(t *testing.T) {
 		},
 		{
 			name:  "",
+			faker: "gender male",
+		},
+		{
+			name:  "",
 			faker: "Person.GenderMale",
+		},
+		{
+			name:  "",
+			faker: "gender female",
 		},
 		{
 			name:  "",

@@ -146,42 +146,42 @@ func (f Faker) Asciify(in string) string {
 
 // ByName returns random data by faker
 func (f Faker) ByName(faker string) any {
-	switch faker {
+	switch strings.ToLower(faker) {
 	// Boolean
-	case "Boolean":
+	case "boolean":
 		return f.Boolean().Boolean()
 	// Internet
-	case "Username":
+	case "username":
 		return f.Internet().Username()
-	case "GTLD":
+	case "gtld":
 		return f.Internet().GTLD()
-	case "Domain":
+	case "domain":
 		return f.Internet().Domain()
-	case "Email":
+	case "email":
 		return f.Internet().Email()
 	// Person
-	case "Person.FirstName":
+	case "firstname", "person.firstname":
 		return f.Person().FirstName()
-	case "Person.LastName":
+	case "lastname", "person.lastname":
 		return f.Person().LastName()
-	case "Person.FirstNameMale":
+	case "firstname male", "person.firstnamemale":
 		return f.Person().FirstNameMale()
-	case "Person.FirstNameFemale":
+	case "firstname female", "person.firstnamefemale":
 		return f.Person().FirstNameFemale()
-	case "Person.Name":
+	case "name", "person.name":
 		return f.Person().Name()
-	case "Person.NameMale":
+	case "name male", "person.namemale":
 		return f.Person().NameMale()
-	case "Person.NameFemale":
+	case "name female", "person.namefemale":
 		return f.Person().NameFemale()
-	case "Person.Gender":
+	case "gender", "person.gender":
 		return f.Person().Gender()
-	case "Person.GenderMale":
+	case "gender male", "person.gendermale":
 		return f.Person().GenderMale()
-	case "Person.GenderFemale":
+	case "gender female", "person.genderfemale":
 		return f.Person().GenderFemale()
 	// UUID
-	case "UUID":
+	case "uuid":
 		return f.UUID().V4()
 	default:
 		return nil
