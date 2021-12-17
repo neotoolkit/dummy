@@ -5,6 +5,7 @@ linters:
     - deadcode
     - dupl
     - errcheck
+    - gochecknoglobals
     - gocritic
     - gocyclo
     - gosimple
