@@ -12,8 +12,8 @@ func TestExamplesGetKeys(t *testing.T) {
 	t.Parallel()
 
 	e := openapi3.Examples{
-		"first_example":  {},
-		"second_example": {},
+		"first_example":  openapi3.Example{},
+		"second_example": openapi3.Example{},
 	}
 
 	res := e.GetKeys()
