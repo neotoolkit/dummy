@@ -27,10 +27,6 @@ func NewServer(config config.Server, l *logger.Logger, h Handlers) *Server {
 
 // Run -.
 func (s *Server) Run() error {
-	if err := s.Handlers.Init(); err != nil {
-		return err
-	}
-
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/", s.Handler)
@@ -53,10 +49,16 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
-	if h, ok := s.Handlers.Get(RemoveFragment(r.URL.Path), r.Method, r.URL.Query(), r.Header, r.Body); ok {
-		w.WriteHeader(h.StatusCode)
-		bytes, _ := json.Marshal(h.Response)
-		_, _ = w.Write(bytes)
+	if response, ok := s.Handlers.Get(RemoveFragment(r.URL.Path), r.Method, r.URL.Query(), r.Header, r.Body); ok {
+		w.WriteHeader(response.StatusCode)
+		bytes, err := json.Marshal(response.ExampleValue(r.Header.Get("X-Example")))
+		if err != nil {
+			s.Logger.Error().Err(err).Msg("serialize response")
+		}
+		_, err = w.Write(bytes)
+		if err != nil {
+			s.Logger.Error().Err(err).Msg("write response")
+		}
 
 		return
 	}

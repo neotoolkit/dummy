@@ -30,7 +30,7 @@ func FuzzDummy(f *testing.F) {
 	}
 
 	f.Fuzz(func(t *testing.T, path, pactDir, pactURL string) {
-		openapi, err := openapi3.Parse(path)
+		api, err := openapi3.Parse(path)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -38,13 +38,9 @@ func FuzzDummy(f *testing.F) {
 		s := new(server.Server)
 		conf := config.NewConfig()
 		s.Config = conf.Server
-		s.Handlers.OpenAPI = openapi
+		s.Handlers.API = api
 		s.Logger = logger.NewLogger()
 		s.Handlers.Handlers = make(map[string][]server.Handler)
-
-		if err := s.Handlers.Init(); err != nil {
-			t.Fatal(err)
-		}
 
 		mux := http.NewServeMux()
 		mux.HandleFunc("/", s.Handler)
