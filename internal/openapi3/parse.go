@@ -2,6 +2,7 @@ package openapi3
 
 import (
 	"fmt"
+	"github.com/go-dummy/dummy/internal/faker"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -24,7 +25,9 @@ func Parse(path string) (apischema.API, error) {
 		return apischema.API{}, err
 	}
 
-	b := &builder{openapi: openapi}
+	f := faker.NewFaker()
+
+	b := &builder{openapi: openapi, faker: f}
 	return b.Build()
 }
 
@@ -63,6 +66,7 @@ func readFromFile(path string) ([]byte, error) {
 type builder struct {
 	openapi    OpenAPI
 	operations []apischema.Operation
+	faker      faker.Faker
 }
 
 func (b *builder) Build() (apischema.API, error) {
@@ -163,6 +167,10 @@ func (b *builder) convertSchema(s Schema) (apischema.Schema, error) {
 		s = schema
 	}
 
+	if s.Faker != "" {
+		return apischema.FakerSchema{Example: b.faker.ByName(s.Faker)}, nil
+	}
+
 	switch s.Type {
 	case "boolean":
 		val, _ := s.Example.(bool)
@@ -177,11 +185,11 @@ func (b *builder) convertSchema(s Schema) (apischema.Schema, error) {
 		val, _ := s.Example.(string)
 		return apischema.StringSchema{Example: val}, nil
 	case "array":
-		itemSchema, err := b.convertSchema(*s.Items)
+		itemsSchema, err := b.convertSchema(*s.Items)
 		if err != nil {
 			return nil, err
 		}
-		return apischema.ArraySchema{Type: itemSchema, Example: parseArrayExample(s.Example)}, nil
+		return apischema.ArraySchema{Type: itemsSchema, Example: parseArrayExample(s.Example)}, nil
 	case "object":
 		obj := apischema.ObjectSchema{Properties: make(map[string]apischema.Schema, len(s.Properties))}
 

@@ -9,6 +9,8 @@ import (
 )
 
 func TestSchema_ExampleValue(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name   string
 		schema apischema.Schema
@@ -82,14 +84,21 @@ func TestSchema_ExampleValue(t *testing.T) {
 	}
 
 	for _, tc := range tests {
+		tc := tc
+
 		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+
 			got := tc.schema.ExampleValue()
+
 			require.Equal(t, tc.want, got)
 		})
 	}
 }
 
 func TestResponse_ExampleValue(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name     string
 		response apischema.Response
@@ -144,8 +153,13 @@ func TestResponse_ExampleValue(t *testing.T) {
 	}
 
 	for _, tc := range tests {
+		tc := tc
+
 		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+
 			got := tc.response.ExampleValue(tc.key)
+
 			require.Equal(t, tc.want, got)
 		})
 	}
