@@ -2,8 +2,9 @@ package openapi3_test
 
 import (
 	"fmt"
-	"github.com/go-dummy/dummy/internal/openapi3"
 	"testing"
+
+	"github.com/go-dummy/dummy/internal/openapi3"
 
 	"github.com/stretchr/testify/require"
 )
