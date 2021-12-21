@@ -101,3 +101,11 @@ func (o ObjectSchema) ExampleValue() any {
 
 	return example
 }
+
+type FakerSchema struct {
+	Example any
+}
+
+func (f FakerSchema) ExampleValue() any {
+	return f.Example
+}

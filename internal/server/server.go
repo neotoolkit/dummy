@@ -51,7 +51,11 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 
 	if response, ok := s.Handlers.Get(RemoveFragment(r.URL.Path), r.Method, r.URL.Query(), r.Header, r.Body); ok {
 		w.WriteHeader(response.StatusCode)
-		bytes, err := json.Marshal(response.ExampleValue(r.Header.Get("X-Example")))
+		resp := response.ExampleValue(r.Header.Get("X-Example"))
+		if resp == nil {
+			return
+		}
+		bytes, err := json.Marshal(resp)
 		if err != nil {
 			s.Logger.Error().Err(err).Msg("serialize response")
 		}
