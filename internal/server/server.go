@@ -41,9 +41,7 @@ func (s *Server) Run() error {
 
 // Handler -.
 func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
-	if r.Header.Get("X-Set-Status-Code") == "500" {
-		w.WriteHeader(http.StatusInternalServerError)
-
+	if setStatusCode(w, r.Header.Get("X-Set-Status-Code")) {
 		return
 	}
 
@@ -68,4 +66,15 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusNotFound)
+}
+
+func setStatusCode(w http.ResponseWriter, statusCode string) bool {
+	switch statusCode {
+	case "500":
+		w.WriteHeader(http.StatusInternalServerError)
+
+		return true
+	default:
+		return false
+	}
 }
