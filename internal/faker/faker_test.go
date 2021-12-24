@@ -10,8 +10,6 @@ import (
 )
 
 func TestIntBetween(t *testing.T) {
-	t.Parallel()
-
 	f := faker.NewFaker()
 	value := f.IntBetween(1, 100)
 
@@ -21,8 +19,6 @@ func TestIntBetween(t *testing.T) {
 }
 
 func TestByName(t *testing.T) {
-	t.Parallel()
-
 	type test struct {
 		name  string
 		faker string
@@ -136,11 +132,7 @@ func TestByName(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		tc := tc
-
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
-
 			f := faker.NewFaker()
 			got := f.ByName(tc.faker)
 
