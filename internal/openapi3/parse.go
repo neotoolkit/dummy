@@ -2,7 +2,6 @@ package openapi3
 
 import (
 	"fmt"
-	"github.com/go-dummy/dummy/internal/faker"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -11,6 +10,7 @@ import (
 	"github.com/go-yaml/yaml"
 
 	"github.com/go-dummy/dummy/internal/apischema"
+	"github.com/go-dummy/dummy/internal/faker"
 )
 
 func Parse(path string) (apischema.API, error) {
