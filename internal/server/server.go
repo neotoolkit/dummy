@@ -36,7 +36,14 @@ func (s *Server) Run() error {
 		Handler: mux,
 	}
 
-	return s.Server.ListenAndServe()
+	s.Logger.Info().Msgf("Running mock server on %s port", s.Config.Port)
+
+	err := s.Server.ListenAndServe()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // Handler -.
@@ -47,7 +54,9 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
-	if response, ok := s.Handlers.Get(RemoveFragment(r.URL.Path), r.Method, r.URL.Query(), r.Header, r.Body); ok {
+	path := RemoveFragment(r.URL.Path)
+
+	if response, ok := s.Handlers.Get(path, r.Method, r.URL.Query(), r.Header, r.Body); ok {
 		w.WriteHeader(response.StatusCode)
 		resp := response.ExampleValue(r.Header.Get("X-Example"))
 		if resp == nil {

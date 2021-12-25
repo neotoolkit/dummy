@@ -42,7 +42,8 @@ func (e *Executor) executeServer(_ *cobra.Command, args []string) {
 	h := server.NewHandlers(openapi, l)
 	s := server.NewServer(e.cfg.Server, l, h)
 
-	if err := s.Run(); err != nil {
+	err = s.Run()
+	if err != nil {
 		fmt.Fprintf(os.Stderr, "server run error: %v\n", err)
 		os.Exit(exitcode.Failure)
 	}
