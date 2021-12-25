@@ -51,12 +51,12 @@ func TestParse_Yaml(t *testing.T) {
 							Example: []any{},
 						},
 						Example: []map[string]any{
-							map[string]any{
+							{
 								"id":        "e1afccea-5168-4735-84d4-cb96f6fb5d25",
 								"firstName": "Elon",
 								"lastName":  "Musk",
 							},
-							map[string]any{
+							{
 								"id":        "472063cc-4c83-11ec-81d3-0242ac130003",
 								"firstName": "Sergey",
 								"lastName":  "Brin",

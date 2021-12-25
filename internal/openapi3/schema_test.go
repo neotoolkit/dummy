@@ -48,8 +48,6 @@ func (s schemaContextStub) LookupByReference(ref string) (openapi3.Schema, error
 }
 
 func TestSchema_ResponseByExample(t *testing.T) {
-	t.Parallel()
-
 	type fields struct {
 		Properties openapi3.Schemas
 		Type       string
@@ -168,11 +166,7 @@ func TestSchema_ResponseByExample(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		tc := tc
-
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
-
 			s := openapi3.Schema{
 				Properties: tc.fields.Properties,
 				Type:       tc.fields.Type,
