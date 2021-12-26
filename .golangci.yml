@@ -10,7 +10,6 @@ linters:
     - gocyclo
     - gosimple
     - govet
-    - ifshort
     - ineffassign
     - makezero
     - misspell
