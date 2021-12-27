@@ -20,6 +20,7 @@ func (e *Executor) initServer() {
 	}
 
 	e.serverCmd.Flags().StringVarP(&e.cfg.Server.Port, "port", "p", "8080", "")
+	e.serverCmd.Flags().StringVarP(&e.cfg.Logger.Level, "logger-level", "ll", "INFO", "")
 
 	e.rootCmd.AddCommand(e.serverCmd)
 }
