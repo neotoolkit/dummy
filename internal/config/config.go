@@ -3,6 +3,7 @@ package config
 // Config is struct for Config
 type Config struct {
 	Server Server
+	Logger Logger
 }
 
 // NewConfig returns a new instance of Config instance
