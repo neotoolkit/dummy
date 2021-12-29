@@ -39,7 +39,7 @@ func (e *Executor) executeServer(_ *cobra.Command, args []string) {
 		os.Exit(exitcode.Failure)
 	}
 
-	l := logger.NewLogger()
+	l := logger.NewLogger(e.cfg.Logger.Level)
 	h := server.NewHandlers(openapi, l)
 	s := server.NewServer(e.cfg.Server, l, h)
 
