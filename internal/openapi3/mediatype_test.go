@@ -10,10 +10,10 @@ import (
 
 func TestMediaTypeResponseByExample(t *testing.T) {
 	m := openapi3.MediaType{
-		Example: []any{},
+		Example: []interface{}{},
 	}
 
-	require.IsType(t, []map[string]any{}, m.ResponseByExample())
+	require.IsType(t, []map[string]interface{}{}, m.ResponseByExample())
 }
 
 func TestMediaTypeResponseByExamplesKey(t *testing.T) {
@@ -22,12 +22,12 @@ func TestMediaTypeResponseByExamplesKey(t *testing.T) {
 	m := openapi3.MediaType{
 		Examples: openapi3.Examples{
 			key: openapi3.Example{
-				Value: map[any]any{
+				Value: map[interface{}]interface{}{
 					"key": "value",
 				},
 			},
 		},
 	}
 
-	require.IsType(t, map[string]any{"key": "value"}, m.ResponseByExamplesKey(key))
+	require.IsType(t, map[string]interface{}{"key": "value"}, m.ResponseByExamplesKey(key))
 }

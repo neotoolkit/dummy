@@ -14,11 +14,11 @@ type Response struct {
 	StatusCode int
 	MediaType  string
 	Schema     Schema
-	Example    any
-	Examples   map[string]any
+	Example    interface{}
+	Examples   map[string]interface{}
 }
 
-func (r Response) ExampleValue(key string) any {
+func (r Response) ExampleValue(key string) interface{} {
 	if r.Schema == nil {
 		return nil
 	}
@@ -35,14 +35,14 @@ func (r Response) ExampleValue(key string) any {
 }
 
 type Schema interface {
-	ExampleValue() any
+	ExampleValue() interface{}
 }
 
 type BooleanSchema struct {
 	Example bool
 }
 
-func (b BooleanSchema) ExampleValue() any {
+func (b BooleanSchema) ExampleValue() interface{} {
 	return b.Example
 }
 
@@ -50,7 +50,7 @@ type IntSchema struct {
 	Example int64
 }
 
-func (i IntSchema) ExampleValue() any {
+func (i IntSchema) ExampleValue() interface{} {
 	return i.Example
 }
 
@@ -58,7 +58,7 @@ type FloatSchema struct {
 	Example float64
 }
 
-func (f FloatSchema) ExampleValue() any {
+func (f FloatSchema) ExampleValue() interface{} {
 	return f.Example
 }
 
@@ -66,34 +66,34 @@ type StringSchema struct {
 	Example string
 }
 
-func (s StringSchema) ExampleValue() any {
+func (s StringSchema) ExampleValue() interface{} {
 	return s.Example
 }
 
 type ArraySchema struct {
 	Type    Schema
-	Example []any
+	Example []interface{}
 }
 
-func (a ArraySchema) ExampleValue() any {
+func (a ArraySchema) ExampleValue() interface{} {
 	if len(a.Example) > 0 {
 		return a.Example
 	}
 
-	return []any{a.Type.ExampleValue()}
+	return []interface{}{a.Type.ExampleValue()}
 }
 
 type ObjectSchema struct {
 	Properties map[string]Schema
-	Example    map[string]any
+	Example    map[string]interface{}
 }
 
-func (o ObjectSchema) ExampleValue() any {
+func (o ObjectSchema) ExampleValue() interface{} {
 	if len(o.Example) > 0 {
 		return o.Example
 	}
 
-	example := make(map[string]any, len(o.Properties))
+	example := make(map[string]interface{}, len(o.Properties))
 
 	for key, propSchema := range o.Properties {
 		example[key] = propSchema.ExampleValue()
@@ -103,9 +103,9 @@ func (o ObjectSchema) ExampleValue() any {
 }
 
 type FakerSchema struct {
-	Example any
+	Example interface{}
 }
 
-func (f FakerSchema) ExampleValue() any {
+func (f FakerSchema) ExampleValue() interface{} {
 	return f.Example
 }

@@ -28,6 +28,7 @@ func Parse(path string) (apischema.API, error) {
 	f := faker.NewFaker()
 
 	b := &builder{openapi: openapi, faker: f}
+
 	return b.Build()
 }
 
@@ -127,16 +128,19 @@ func (b *builder) Set(path, method string, o *Operation) (apischema.Operation, e
 			operation.Responses = append(operation.Responses, apischema.Response{
 				StatusCode: statusCode,
 			})
+
 			continue
 		}
 
 		example := ExampleToResponse(content.Example)
 
-		examples := make(map[string]any, len(content.Examples)+1)
+		examples := make(map[string]interface{}, len(content.Examples)+1)
+
 		if len(content.Examples) > 0 {
 			for key, example := range content.Examples {
 				examples[key] = ExampleToResponse(example.Value)
 			}
+
 			examples[""] = ExampleToResponse(content.Examples[content.Examples.GetKeys()[0]].Value)
 		}
 
@@ -189,6 +193,7 @@ func (b *builder) convertSchema(s Schema) (apischema.Schema, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		return apischema.ArraySchema{Type: itemsSchema, Example: parseArrayExample(s.Example)}, nil
 	case "object":
 		obj := apischema.ObjectSchema{Properties: make(map[string]apischema.Schema, len(s.Properties))}
@@ -198,6 +203,7 @@ func (b *builder) convertSchema(s Schema) (apischema.Schema, error) {
 			if err != nil {
 				return nil, err
 			}
+
 			obj.Properties[key] = propSchema
 		}
 
@@ -209,15 +215,15 @@ func (b *builder) convertSchema(s Schema) (apischema.Schema, error) {
 	}
 }
 
-func parseArrayExample(data any) []any {
+func parseArrayExample(data interface{}) []interface{} {
 	if data == nil {
-		return []any{}
+		return []interface{}{}
 	}
 
-	if data, ok := data.([]any); ok {
-		res := make([]any, len(data))
+	if data, ok := data.([]interface{}); ok {
+		res := make([]interface{}, len(data))
 		for k, v := range data {
-			res[k] = parseExample(v.(map[any]any))
+			res[k] = parseExample(v.(map[interface{}]interface{}))
 		}
 
 		return res
@@ -226,12 +232,12 @@ func parseArrayExample(data any) []any {
 	panic(fmt.Sprintf("unpredicted type for example %T", data))
 }
 
-func parseObjectExample(data any) map[string]any {
+func parseObjectExample(data interface{}) map[string]interface{} {
 	if data == nil {
-		return map[string]any{}
+		return map[string]interface{}{}
 	}
 
-	if data, ok := data.(map[any]any); ok {
+	if data, ok := data.(map[interface{}]interface{}); ok {
 		return parseExample(data)
 	}
 

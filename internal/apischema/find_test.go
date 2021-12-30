@@ -1,8 +1,12 @@
+//go:build go1.18
+// +build go1.18
+
 package apischema_test
 
 import (
-	"github.com/stretchr/testify/require"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 
 	"github.com/go-dummy/dummy/internal/apischema"
 )
