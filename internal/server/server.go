@@ -59,13 +59,16 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 	if response, ok := s.Handlers.Get(path, r.Method, r.URL.Query(), r.Header, r.Body); ok {
 		w.WriteHeader(response.StatusCode)
 		resp := response.ExampleValue(r.Header.Get("X-Example"))
+
 		if resp == nil {
 			return
 		}
+
 		bytes, err := json.Marshal(resp)
 		if err != nil {
 			s.Logger.Error().Err(err).Msg("serialize response")
 		}
+
 		_, err = w.Write(bytes)
 		if err != nil {
 			s.Logger.Error().Err(err).Msg("write response")

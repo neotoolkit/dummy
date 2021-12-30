@@ -12,7 +12,7 @@ func TestSchema_ExampleValue(t *testing.T) {
 	tests := []struct {
 		name   string
 		schema apischema.Schema
-		want   any
+		want   interface{}
 	}{
 		{
 			name:   "boolean: default",
@@ -57,27 +57,27 @@ func TestSchema_ExampleValue(t *testing.T) {
 		{
 			name:   "array: default",
 			schema: apischema.ArraySchema{Type: apischema.StringSchema{}},
-			want:   []any{""},
+			want:   []interface{}{""},
 		},
 		{
 			name:   "array: with int example",
-			schema: apischema.ArraySchema{Example: []any{4, 2}},
-			want:   []any{4, 2},
+			schema: apischema.ArraySchema{Example: []interface{}{4, 2}},
+			want:   []interface{}{4, 2},
 		},
 		{
 			name:   "array: with string example",
-			schema: apischema.ArraySchema{Example: []any{"4", "2"}},
-			want:   []any{"4", "2"},
+			schema: apischema.ArraySchema{Example: []interface{}{"4", "2"}},
+			want:   []interface{}{"4", "2"},
 		},
 		{
 			name:   "object: default",
 			schema: apischema.ObjectSchema{},
-			want:   map[string]any{},
+			want:   map[string]interface{}{},
 		},
 		{
 			name:   "object: with example",
-			schema: apischema.ObjectSchema{Example: map[string]any{"a": "4", "b": "2"}},
-			want:   map[string]any{"a": "4", "b": "2"},
+			schema: apischema.ObjectSchema{Example: map[string]interface{}{"a": "4", "b": "2"}},
+			want:   map[string]interface{}{"a": "4", "b": "2"},
 		},
 	}
 
@@ -95,52 +95,52 @@ func TestResponse_ExampleValue(t *testing.T) {
 		name     string
 		response apischema.Response
 		key      string
-		want     any
+		want     interface{}
 	}{
 		{
 			name:     "boolean examples",
-			response: apischema.Response{Schema: apischema.BooleanSchema{}, Examples: map[string]any{"first": false, "second": true}},
+			response: apischema.Response{Schema: apischema.BooleanSchema{}, Examples: map[string]interface{}{"first": false, "second": true}},
 			key:      "first",
 			want:     false,
 		},
 		{
 			name:     "int examples",
-			response: apischema.Response{Schema: apischema.IntSchema{}, Examples: map[string]any{"first": int64(4), "second": int64(2)}},
+			response: apischema.Response{Schema: apischema.IntSchema{}, Examples: map[string]interface{}{"first": int64(4), "second": int64(2)}},
 			key:      "first",
 			want:     int64(4),
 		},
 		{
 			name:     "float examples",
-			response: apischema.Response{Schema: apischema.FloatSchema{}, Examples: map[string]any{"first": 4.0, "second": 2.0}},
+			response: apischema.Response{Schema: apischema.FloatSchema{}, Examples: map[string]interface{}{"first": 4.0, "second": 2.0}},
 			key:      "first",
 			want:     4.0,
 		},
 		{
 			name:     "string examples",
-			response: apischema.Response{Schema: apischema.StringSchema{}, Examples: map[string]any{"first": "abc", "second": "xyz"}},
+			response: apischema.Response{Schema: apischema.StringSchema{}, Examples: map[string]interface{}{"first": "abc", "second": "xyz"}},
 			key:      "first",
 			want:     "abc",
 		},
 		{
 			name:     "array examples",
-			response: apischema.Response{Schema: apischema.ArraySchema{}, Examples: map[string]any{"first": []int64{4, 2}, "second": []int64{0, 0}}},
+			response: apischema.Response{Schema: apischema.ArraySchema{}, Examples: map[string]interface{}{"first": []int64{4, 2}, "second": []int64{0, 0}}},
 			key:      "first",
 			want:     []int64{4, 2},
 		},
 		{
 			name:     "object examples",
-			response: apischema.Response{Schema: apischema.ObjectSchema{}, Examples: map[string]any{"first": map[string]any{"first": "abc"}, "second": map[string]any{"first": "xyz"}}},
+			response: apischema.Response{Schema: apischema.ObjectSchema{}, Examples: map[string]interface{}{"first": map[string]interface{}{"first": "abc"}, "second": map[string]interface{}{"first": "xyz"}}},
 			key:      "first",
-			want:     map[string]any{"first": "abc"},
+			want:     map[string]interface{}{"first": "abc"},
 		},
 		{
 			name: "use schema example",
-			response: apischema.Response{Examples: map[string]any{"first": map[string]any{"first": "abc"}, "second": map[string]any{"first": "xyz"}},
+			response: apischema.Response{Examples: map[string]interface{}{"first": map[string]interface{}{"first": "abc"}, "second": map[string]interface{}{"first": "xyz"}},
 				Schema: apischema.ObjectSchema{
-					Example: map[string]any{"first": "schema variant"},
+					Example: map[string]interface{}{"first": "schema variant"},
 				}},
 			key:  "third",
-			want: map[string]any{"first": "schema variant"},
+			want: map[string]interface{}{"first": "schema variant"},
 		},
 	}
 

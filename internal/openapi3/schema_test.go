@@ -52,8 +52,8 @@ func TestSchema_ResponseByExample(t *testing.T) {
 		Properties openapi3.Schemas
 		Type       string
 		Format     string
-		Default    any
-		Example    any
+		Default    interface{}
+		Example    interface{}
 		Faker      string
 		Items      *openapi3.Schema
 		Reference  string
@@ -67,7 +67,7 @@ func TestSchema_ResponseByExample(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		wantRes any
+		wantRes interface{}
 		wantErr bool
 	}{
 		{
@@ -93,7 +93,7 @@ func TestSchema_ResponseByExample(t *testing.T) {
 			args: args{
 				schemaContext: schemaContextStub{},
 			},
-			wantRes: map[string]any{
+			wantRes: map[string]interface{}{
 				"id":        "380ed0b7-eb21-4ad4-acd0-efa90cf69c6a",
 				"firstName": "Larry",
 				"lastName":  "Page",
@@ -108,7 +108,7 @@ func TestSchema_ResponseByExample(t *testing.T) {
 			args: args{
 				schemaContext: schemaContextStub{},
 			},
-			wantRes: map[string]any{
+			wantRes: map[string]interface{}{
 				"id":        "380ed0b7-eb21-4ad4-acd0-efa90cf69c6a",
 				"firstName": "Larry",
 				"lastName":  "Page",
@@ -126,8 +126,8 @@ func TestSchema_ResponseByExample(t *testing.T) {
 			args: args{
 				schemaContext: schemaContextStub{},
 			},
-			wantRes: []any{
-				map[string]any{
+			wantRes: []interface{}{
+				map[string]interface{}{
 					"id":        "380ed0b7-eb21-4ad4-acd0-efa90cf69c6a",
 					"firstName": "Larry",
 					"lastName":  "Page",
@@ -156,7 +156,7 @@ func TestSchema_ResponseByExample(t *testing.T) {
 			args: args{
 				schemaContext: schemaContextStub{},
 			},
-			wantRes: map[string]any{
+			wantRes: map[string]interface{}{
 				"id":        "380ed0b7-eb21-4ad4-acd0-efa90cf69c6a",
 				"firstName": "Larry",
 				"lastName":  "Page",

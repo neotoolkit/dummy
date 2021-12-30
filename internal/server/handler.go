@@ -17,7 +17,7 @@ type Handler struct {
 	QueryParam url.Values
 	Header     http.Header
 	StatusCode int
-	Response   any
+	Response   interface{}
 }
 
 // Handlers -.
