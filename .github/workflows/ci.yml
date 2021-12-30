@@ -3,15 +3,6 @@ name: CI
 on: pull_request
 
 jobs:
-  lints:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: golangci/golangci-lint-action@v2
-        with:
-          version: latest
-    continue-on-error: true
-
   tests:
     runs-on: ubuntu-latest
     steps:
