@@ -22,17 +22,15 @@ type Handler struct {
 
 // Handlers -.
 type Handlers struct {
-	API      apischema.API
-	Handlers map[string][]Handler
-	Logger   *logger.Logger
+	API    apischema.API
+	Logger *logger.Logger
 }
 
 // NewHandlers returns a new instance of Handlers
 func NewHandlers(api apischema.API, l *logger.Logger) Handlers {
 	return Handlers{
-		API:      api,
-		Handlers: make(map[string][]Handler),
-		Logger:   l,
+		API:    api,
+		Logger: l,
 	}
 }
 

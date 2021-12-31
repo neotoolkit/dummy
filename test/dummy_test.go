@@ -43,7 +43,6 @@ func FuzzDummy(f *testing.F) {
 		s.Config = conf.Server
 		s.Handlers.API = api
 		s.Logger = logger.NewLogger(conf.Logger.Level)
-		s.Handlers.Handlers = make(map[string][]server.Handler)
 
 		mux := http.NewServeMux()
 		mux.HandleFunc("/", s.Handler)
