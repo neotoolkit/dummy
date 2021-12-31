@@ -8,7 +8,7 @@ import (
 	"github.com/go-dummy/dummy/internal/openapi3"
 )
 
-func TestExamplesGetKeys(t *testing.T) {
+func TestExamples_GetKeys(t *testing.T) {
 	e := openapi3.Examples{
 		"first_example":  openapi3.Example{},
 		"second_example": openapi3.Example{},

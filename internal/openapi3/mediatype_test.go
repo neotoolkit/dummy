@@ -8,7 +8,7 @@ import (
 	"github.com/go-dummy/dummy/internal/openapi3"
 )
 
-func TestMediaTypeResponseByExample(t *testing.T) {
+func TestMediaType_ResponseByExample(t *testing.T) {
 	m := openapi3.MediaType{
 		Example: []interface{}{},
 	}
@@ -16,7 +16,7 @@ func TestMediaTypeResponseByExample(t *testing.T) {
 	require.IsType(t, []map[string]interface{}{}, m.ResponseByExample())
 }
 
-func TestMediaTypeResponseByExamplesKey(t *testing.T) {
+func TestMediaType_ResponseByExamplesKey(t *testing.T) {
 	const key = "key"
 
 	m := openapi3.MediaType{

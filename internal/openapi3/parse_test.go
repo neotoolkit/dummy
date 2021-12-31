@@ -10,7 +10,7 @@ import (
 	"github.com/go-dummy/dummy/internal/openapi3"
 )
 
-func TestParse_Yaml(t *testing.T) {
+func TestParse_YAML(t *testing.T) {
 	expected := apischema.API{
 		Operations: []apischema.Operation{
 			{

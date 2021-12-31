@@ -9,14 +9,14 @@ import (
 	"github.com/go-dummy/dummy/internal/faker"
 )
 
-func TestFirstName(t *testing.T) {
+func TestPerson_FirstName(t *testing.T) {
 	f := faker.NewFaker()
 	firstName := f.Person().FirstName()
 
 	require.True(t, len(firstName) > 0)
 }
 
-func TestLastName(t *testing.T) {
+func TestPerson_LastName(t *testing.T) {
 	f := faker.NewFaker()
 	p := f.Person()
 	lastName := p.LastName()
@@ -24,14 +24,14 @@ func TestLastName(t *testing.T) {
 	require.True(t, len(lastName) > 0)
 }
 
-func TestFirstNameMale(t *testing.T) {
+func TestPerson_FirstNameMale(t *testing.T) {
 	f := faker.NewFaker()
 	firstNameMale := f.Person().FirstNameMale()
 
 	require.True(t, len(firstNameMale) > 0)
 }
 
-func TestFirstNameFemale(t *testing.T) {
+func TestPerson_FirstNameFemale(t *testing.T) {
 	f := faker.NewFaker()
 	p := f.Person()
 	firstNameFemale := p.FirstNameFemale()
@@ -39,7 +39,7 @@ func TestFirstNameFemale(t *testing.T) {
 	require.True(t, len(firstNameFemale) > 0)
 }
 
-func TestName(t *testing.T) {
+func TestPerson_Name(t *testing.T) {
 	f := faker.NewFaker()
 	p := f.Person()
 	name := p.Name()
@@ -50,7 +50,7 @@ func TestName(t *testing.T) {
 	require.False(t, strings.Contains(name, "{{LastName}}"))
 }
 
-func TestNameMale(t *testing.T) {
+func TestPerson_NameMale(t *testing.T) {
 	f := faker.NewFaker()
 	p := f.Person()
 	nameMale := p.NameMale()
@@ -58,7 +58,7 @@ func TestNameMale(t *testing.T) {
 	require.True(t, len(nameMale) > 0)
 }
 
-func TestNameFemale(t *testing.T) {
+func TestPerson_NameFemale(t *testing.T) {
 	f := faker.NewFaker()
 	p := f.Person()
 	nameFemale := p.NameFemale()
@@ -66,7 +66,7 @@ func TestNameFemale(t *testing.T) {
 	require.True(t, len(nameFemale) > 0)
 }
 
-func TestGender(t *testing.T) {
+func TestPerson_Gender(t *testing.T) {
 	f := faker.NewFaker()
 	p := f.Person()
 	gender := p.Gender()
@@ -74,7 +74,7 @@ func TestGender(t *testing.T) {
 	require.True(t, gender == "Male" || gender == "Female")
 }
 
-func TestGenderMale(t *testing.T) {
+func TestPerson_GenderMale(t *testing.T) {
 	f := faker.NewFaker()
 	p := f.Person()
 	genderMale := p.GenderMale()
@@ -82,7 +82,7 @@ func TestGenderMale(t *testing.T) {
 	require.True(t, genderMale == "Male")
 }
 
-func TestGenderFemale(t *testing.T) {
+func TestPerson_GenderFemale(t *testing.T) {
 	f := faker.NewFaker()
 	p := f.Person()
 	genderFemale := p.GenderFemale()

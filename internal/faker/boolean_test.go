@@ -9,7 +9,7 @@ import (
 	"github.com/go-dummy/dummy/internal/faker"
 )
 
-func TestBooleanBoolean(t *testing.T) {
+func TestBoolean_Boolean(t *testing.T) {
 	f := faker.NewFaker().Boolean()
 
 	require.Equal(t, "bool", reflect.TypeOf(f.Boolean()).String())
