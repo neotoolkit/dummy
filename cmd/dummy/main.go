@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/go-dummy/dummy/internal/config"
-	"github.com/go-dummy/dummy/internal/exitcode"
 	"github.com/go-dummy/dummy/internal/logger"
 	"github.com/go-dummy/dummy/internal/openapi3"
 	"github.com/go-dummy/dummy/internal/server"
+
+	"github.com/go-dummy/dummy/internal/config"
+	"github.com/go-dummy/dummy/internal/exitcode"
 )
 
 const version = "0.0.0"
@@ -26,35 +27,37 @@ func run() {
 - version - show version and exit`)
 	}
 
-	flag.Parse()
-
 	cfg := config.NewConfig()
 
 	flag.StringVar(&cfg.Server.Port, "port", "8080", "")
 	flag.StringVar(&cfg.Logger.Level, "logger-level", "INFO", "")
 
-	if len(flag.Args()) == 2 && flag.Args()[0] == "server" {
-		cfg.Server.Path = flag.Args()[1]
+	flag.Parse()
 
-		openapi, err := openapi3.Parse(cfg.Server.Path)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "specification parse error: %v\n", err)
-			os.Exit(exitcode.Failure)
+	for i := 0; i < len(flag.Args()); i++ {
+		if flag.Args()[i] == "server" {
+			cfg.Server.Path = flag.Args()[i+1]
+
+			openapi, err := openapi3.Parse(cfg.Server.Path)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "specification parse error: %v\n", err)
+				os.Exit(exitcode.Failure)
+			}
+
+			l := logger.NewLogger(cfg.Logger.Level)
+			h := server.NewHandlers(openapi, l)
+			s := server.NewServer(cfg.Server, l, h)
+
+			err = s.Run()
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "server run error: %v\n", err)
+				os.Exit(exitcode.Failure)
+			}
 		}
 
-		l := logger.NewLogger(cfg.Logger.Level)
-		h := server.NewHandlers(openapi, l)
-		s := server.NewServer(cfg.Server, l, h)
-
-		err = s.Run()
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "server run error: %v\n", err)
-			os.Exit(exitcode.Failure)
+		if flag.Args()[i] == "version" {
+			fmt.Println(version)
+			os.Exit(exitcode.Success)
 		}
-	}
-
-	if len(flag.Args()) > 0 && flag.Args()[0] == "version" {
-		fmt.Println(version)
-		os.Exit(exitcode.Success)
 	}
 }
