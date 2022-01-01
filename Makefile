@@ -22,7 +22,3 @@ lint:
 .PHONY: test
 test:
 	go test ./...
-
-.PHONY: coverage
-coverage:
-	@./go.coverage.sh
