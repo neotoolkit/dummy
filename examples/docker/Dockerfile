@@ -8,4 +8,4 @@ WORKDIR ./dummy
 
 RUN go mod download
 
-CMD ["go", "run", "./cmd/dummy", "server", "openapi3.yml", "--port", "8080"]
+CMD ["go", "run", "./cmd/dummy", "-port=8080", "server", "openapi3.yml"]

@@ -1,7 +1,9 @@
 openapi: 3.0.3
+
 info:
   title: Users dummy API
   version: 0.1.0
+
 paths:
   /users:
     post:
@@ -11,6 +13,7 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/User"
+
       responses:
         '201':
           description: ''
@@ -18,6 +21,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+
     get:
       responses:
         '200':
@@ -45,6 +49,7 @@ paths:
           required: true
           schema:
             type: string
+
       responses:
         '200':
           description: ''

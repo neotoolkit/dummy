@@ -5,12 +5,11 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/go-dummy/dummy/internal/config"
+	"github.com/go-dummy/dummy/internal/exitcode"
 	"github.com/go-dummy/dummy/internal/logger"
 	"github.com/go-dummy/dummy/internal/openapi3"
 	"github.com/go-dummy/dummy/internal/server"
-
-	"github.com/go-dummy/dummy/internal/config"
-	"github.com/go-dummy/dummy/internal/exitcode"
 )
 
 const version = "0.0.0"
