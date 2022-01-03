@@ -1,9 +1,17 @@
 package apischema
 
 import (
-	"fmt"
 	"strings"
 )
+
+type FindResponseError struct {
+	method string
+	path   string
+}
+
+func (e *FindResponseError) Error() string {
+	return "not specified operation: " + e.method + " " + e.path
+}
 
 type FindResponseParams struct {
 	Path      string
@@ -14,7 +22,10 @@ type FindResponseParams struct {
 func (a API) FindResponse(params FindResponseParams) (Response, error) {
 	operation, found := a.findOperation(params)
 	if !found {
-		return Response{}, fmt.Errorf("not specified operation %q", params.Method+" "+params.Path)
+		return Response{}, &FindResponseError{
+			method: params.Method,
+			path:   params.Path,
+		}
 	}
 
 	response, found := operation.findResponse(params)

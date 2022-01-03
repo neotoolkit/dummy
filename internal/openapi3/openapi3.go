@@ -1,9 +1,16 @@
 package openapi3
 
 import (
-	"fmt"
 	"strings"
 )
+
+type SchemaError struct {
+	ref string
+}
+
+func (e *SchemaError) Error() string {
+	return "unknown schema " + e.ref
+}
 
 // OpenAPI Object
 // See specification https://swagger.io/specification/#openapi-object
@@ -16,7 +23,9 @@ type OpenAPI struct {
 func (api OpenAPI) LookupByReference(ref string) (Schema, error) {
 	schema := api.Components.Schemas[schemaKey(ref)]
 	if schema == nil {
-		return Schema{}, fmt.Errorf("unknown schema %q", schema.Reference)
+		return Schema{}, &SchemaError{
+			ref: schema.Reference,
+		}
 	}
 
 	return *schema, nil
