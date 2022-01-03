@@ -64,6 +64,14 @@ func readFromFile(path string) ([]byte, error) {
 	return file, nil
 }
 
+type SchemaTypeError struct {
+	schemaType string
+}
+
+func (e *SchemaTypeError) Error() string {
+	return "unknown type " + e.schemaType
+}
+
 type builder struct {
 	openapi    OpenAPI
 	operations []apischema.Operation
@@ -194,7 +202,15 @@ func (b *builder) convertSchema(s Schema) (apischema.Schema, error) {
 			return nil, err
 		}
 
-		return apischema.ArraySchema{Type: itemsSchema, Example: parseArrayExample(s.Example)}, nil
+		arrExample, err := parseArrayExample(s.Example)
+		if err != nil {
+			return nil, err
+		}
+
+		return apischema.ArraySchema{
+			Type:    itemsSchema,
+			Example: arrExample,
+		}, nil
 	case "object":
 		obj := apischema.ObjectSchema{Properties: make(map[string]apischema.Schema, len(s.Properties))}
 
@@ -207,17 +223,32 @@ func (b *builder) convertSchema(s Schema) (apischema.Schema, error) {
 			obj.Properties[key] = propSchema
 		}
 
-		obj.Example = parseObjectExample(s.Example)
+		objExample, err := parseObjectExample(s.Example)
+		if err != nil {
+			return nil, err
+		}
+
+		obj.Example = objExample
 
 		return obj, nil
 	default:
-		panic(fmt.Sprintf("unknown type %q", s.Type))
+		return nil, &SchemaTypeError{
+			schemaType: s.Type,
+		}
 	}
 }
 
-func parseArrayExample(data interface{}) []interface{} {
+type ArrayExampleError struct {
+	data interface{}
+}
+
+func (e *ArrayExampleError) Error() string {
+	return fmt.Sprintf("unpredicted type for example %T", e.data)
+}
+
+func parseArrayExample(data interface{}) ([]interface{}, error) {
 	if data == nil {
-		return []interface{}{}
+		return []interface{}{}, nil
 	}
 
 	if data, ok := data.([]interface{}); ok {
@@ -226,22 +257,34 @@ func parseArrayExample(data interface{}) []interface{} {
 			res[k] = v.(map[string]interface{})
 		}
 
-		return res
+		return res, nil
 	}
 
-	panic(fmt.Sprintf("unpredicted type for example %T", data))
+	return nil, &ArrayExampleError{
+		data: data,
+	}
 }
 
-func parseObjectExample(data interface{}) map[string]interface{} {
+type ObjectExampleError struct {
+	data interface{}
+}
+
+func (e *ObjectExampleError) Error() string {
+	return fmt.Sprintf("unpredicted type for example %T", e.data)
+}
+
+func parseObjectExample(data interface{}) (map[string]interface{}, error) {
 	if data == nil {
-		return map[string]interface{}{}
+		return map[string]interface{}{}, nil
 	}
 
 	if data, ok := data.(map[string]interface{}); ok {
-		return data
+		return data, nil
 	}
 
-	panic(fmt.Sprintf("unpredicted type for example %T", data))
+	return nil, &ObjectExampleError{
+		data: data,
+	}
 }
 
 // RemoveTrailingSlash returns path without trailing slash
