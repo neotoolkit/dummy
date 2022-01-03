@@ -22,7 +22,7 @@ func TestMediaType_ResponseByExamplesKey(t *testing.T) {
 	m := openapi3.MediaType{
 		Examples: openapi3.Examples{
 			key: openapi3.Example{
-				Value: map[interface{}]interface{}{
+				Value: map[string]interface{}{
 					"key": "value",
 				},
 			},

@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/go-yaml/yaml"
+	"gopkg.in/yaml.v3"
 
 	"github.com/go-dummy/dummy/internal/apischema"
 	"github.com/go-dummy/dummy/internal/faker"
@@ -223,7 +223,7 @@ func parseArrayExample(data interface{}) []interface{} {
 	if data, ok := data.([]interface{}); ok {
 		res := make([]interface{}, len(data))
 		for k, v := range data {
-			res[k] = parseExample(v.(map[interface{}]interface{}))
+			res[k] = v.(map[string]interface{})
 		}
 
 		return res
@@ -237,8 +237,8 @@ func parseObjectExample(data interface{}) map[string]interface{} {
 		return map[string]interface{}{}
 	}
 
-	if data, ok := data.(map[interface{}]interface{}); ok {
-		return parseExample(data)
+	if data, ok := data.(map[string]interface{}); ok {
+		return data
 	}
 
 	panic(fmt.Sprintf("unpredicted type for example %T", data))
