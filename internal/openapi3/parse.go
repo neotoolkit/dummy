@@ -232,9 +232,7 @@ func (b *builder) convertSchema(s Schema) (apischema.Schema, error) {
 
 		return obj, nil
 	default:
-		return nil, &SchemaTypeError{
-			schemaType: s.Type,
-		}
+		return nil, &SchemaTypeError{schemaType: s.Type}
 	}
 }
 
@@ -260,9 +258,7 @@ func parseArrayExample(data interface{}) ([]interface{}, error) {
 		return res, nil
 	}
 
-	return nil, &ArrayExampleError{
-		data: data,
-	}
+	return nil, &ArrayExampleError{data: data}
 }
 
 type ObjectExampleError struct {
@@ -282,9 +278,7 @@ func parseObjectExample(data interface{}) (map[string]interface{}, error) {
 		return data, nil
 	}
 
-	return nil, &ObjectExampleError{
-		data: data,
-	}
+	return nil, &ObjectExampleError{data: data}
 }
 
 // RemoveTrailingSlash returns path without trailing slash

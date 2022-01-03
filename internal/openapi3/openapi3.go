@@ -23,9 +23,7 @@ type OpenAPI struct {
 func (api OpenAPI) LookupByReference(ref string) (Schema, error) {
 	schema := api.Components.Schemas[schemaKey(ref)]
 	if schema == nil {
-		return Schema{}, &SchemaError{
-			ref: schema.Reference,
-		}
+		return Schema{}, &SchemaError{ref: schema.Reference}
 	}
 
 	return *schema, nil
