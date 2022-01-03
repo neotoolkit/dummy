@@ -19,7 +19,7 @@ type Response struct {
 }
 
 func (r Response) ExampleValue(key string) interface{} {
-	if r.Schema == nil {
+	if nil == r.Schema {
 		return nil
 	}
 

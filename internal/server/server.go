@@ -63,7 +63,7 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(response.StatusCode)
 		resp := response.ExampleValue(r.Header.Get("X-Example"))
 
-		if resp == nil {
+		if nil == resp {
 			return
 		}
 
