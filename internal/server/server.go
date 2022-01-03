@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-dummy/dummy/internal/config"
 	"github.com/go-dummy/dummy/internal/logger"
+	"github.com/go-dummy/dummy/internal/middleware"
 )
 
 // Server is struct for Server
@@ -31,9 +32,11 @@ func (s *Server) Run() error {
 
 	mux.HandleFunc("/", s.Handler)
 
+	handler := middleware.Logging(mux, s.Logger)
+
 	s.Server = &http.Server{
 		Addr:    ":" + s.Config.Port,
-		Handler: mux,
+		Handler: handler,
 	}
 
 	s.Logger.Info().Msgf("Running mock server on %s port", s.Config.Port)
