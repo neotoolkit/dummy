@@ -20,12 +20,12 @@ func (e Examples) GetKeys() []string {
 
 func ExampleToResponse(data interface{}) interface{} {
 	switch data := data.(type) {
-	case map[interface{}]interface{}:
-		return parseExample(data)
+	case map[string]interface{}:
+		return data
 	case []interface{}:
 		res := make([]map[string]interface{}, len(data))
 		for k, v := range data {
-			res[k] = parseExample(v.(map[interface{}]interface{}))
+			res[k] = v.(map[string]interface{})
 		}
 
 		return res
@@ -34,13 +34,4 @@ func ExampleToResponse(data interface{}) interface{} {
 	}
 
 	return nil
-}
-
-func parseExample(example map[interface{}]interface{}) map[string]interface{} {
-	res := make(map[string]interface{}, len(example))
-	for k, v := range example {
-		res[k.(string)] = v
-	}
-
-	return res
 }
