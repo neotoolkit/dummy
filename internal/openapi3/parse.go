@@ -245,7 +245,7 @@ func (e *ArrayExampleError) Error() string {
 }
 
 func parseArrayExample(data interface{}) ([]interface{}, error) {
-	if data == nil {
+	if nil == data {
 		return []interface{}{}, nil
 	}
 
@@ -270,7 +270,7 @@ func (e *ObjectExampleError) Error() string {
 }
 
 func parseObjectExample(data interface{}) (map[string]interface{}, error) {
-	if data == nil {
+	if nil == data {
 		return map[string]interface{}{}, nil
 	}
 
