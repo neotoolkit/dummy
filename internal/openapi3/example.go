@@ -19,18 +19,18 @@ func (e Examples) GetKeys() []string {
 }
 
 func ExampleToResponse(data interface{}) interface{} {
-	switch data := data.(type) {
+	switch d := data.(type) {
 	case map[string]interface{}:
-		return data
+		return d
 	case []interface{}:
-		res := make([]map[string]interface{}, len(data))
-		for k, v := range data {
+		res := make([]map[string]interface{}, len(d))
+		for k, v := range d {
 			res[k] = v.(map[string]interface{})
 		}
 
 		return res
 	case string:
-		return data
+		return d
 	}
 
 	return nil
