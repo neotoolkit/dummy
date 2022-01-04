@@ -145,8 +145,8 @@ func (b *builder) Set(path, method string, o *Operation) (apischema.Operation, e
 		examples := make(map[string]interface{}, len(content.Examples)+1)
 
 		if len(content.Examples) > 0 {
-			for key, example := range content.Examples {
-				examples[key] = ExampleToResponse(example.Value)
+			for key, e := range content.Examples {
+				examples[key] = ExampleToResponse(e.Value)
 			}
 
 			examples[""] = ExampleToResponse(content.Examples[content.Examples.GetKeys()[0]].Value)
@@ -249,9 +249,9 @@ func parseArrayExample(data interface{}) ([]interface{}, error) {
 		return []interface{}{}, nil
 	}
 
-	if data, ok := data.([]interface{}); ok {
-		res := make([]interface{}, len(data))
-		for k, v := range data {
+	if d, ok := data.([]interface{}); ok {
+		res := make([]interface{}, len(d))
+		for k, v := range d {
 			res[k] = v.(map[string]interface{})
 		}
 
@@ -274,8 +274,8 @@ func parseObjectExample(data interface{}) (map[string]interface{}, error) {
 		return map[string]interface{}{}, nil
 	}
 
-	if data, ok := data.(map[string]interface{}); ok {
-		return data, nil
+	if d, ok := data.(map[string]interface{}); ok {
+		return d, nil
 	}
 
 	return nil, &ObjectExampleError{data: data}
