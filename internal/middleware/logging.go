@@ -26,19 +26,19 @@ func (rw *responseWriter) WriteHeader(code int) {
 }
 
 func Logging(next http.Handler, logger *logger.Logger) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-		start := time.Now()
-
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		logger.Info().
-			Str("path", req.URL.Path).
-			Str("method", req.Method).
-			Interface("header", req.Header).
-			Interface("body", req.Body).
+			Str("path", r.URL.Path).
+			Str("method", r.Method).
+			Interface("header", r.Header).
+			Interface("body", r.Body).
 			Msg("request")
 
 		wrapped := wrapResponseWriter(w)
 
-		next.ServeHTTP(wrapped, req)
+		start := time.Now()
+
+		next.ServeHTTP(wrapped, r)
 
 		logger.Info().
 			Int("status-code", wrapped.Status()).
