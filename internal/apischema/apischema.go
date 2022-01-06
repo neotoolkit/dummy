@@ -23,7 +23,8 @@ func (r Response) ExampleValue(key string) interface{} {
 		return nil
 	}
 
-	if example, found := r.Examples[key]; found {
+	example, ok := r.Examples[key]
+	if ok {
 		return example
 	}
 

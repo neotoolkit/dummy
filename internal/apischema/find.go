@@ -20,16 +20,16 @@ type FindResponseParams struct {
 }
 
 func (a API) FindResponse(params FindResponseParams) (Response, error) {
-	operation, found := a.findOperation(params)
-	if !found {
+	operation, ok := a.findOperation(params)
+	if !ok {
 		return Response{}, &FindResponseError{
 			method: params.Method,
 			path:   params.Path,
 		}
 	}
 
-	response, found := operation.findResponse(params)
-	if !found {
+	response, ok := operation.findResponse(params)
+	if !ok {
 		return operation.Responses[0], nil
 	}
 

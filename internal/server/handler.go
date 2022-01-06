@@ -10,16 +10,6 @@ import (
 	"github.com/go-dummy/dummy/internal/logger"
 )
 
-// Handler -.
-type Handler struct {
-	Path       string
-	Method     string
-	QueryParam url.Values
-	Header     http.Header
-	StatusCode int
-	Response   interface{}
-}
-
 // Handlers -.
 type Handlers struct {
 	API    apischema.API

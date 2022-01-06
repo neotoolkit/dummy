@@ -134,8 +134,8 @@ func (b *builder) Set(path, method string, o *Operation) (apischema.Operation, e
 			return apischema.Operation{}, err
 		}
 
-		content, found := resp.Content["application/json"]
-		if !found {
+		content, ok := resp.Content["application/json"]
+		if !ok {
 			operation.Responses = append(operation.Responses, apischema.Response{
 				StatusCode: statusCode,
 			})
@@ -256,7 +256,8 @@ func parseArrayExample(data interface{}) ([]interface{}, error) {
 		return []interface{}{}, nil
 	}
 
-	if d, ok := data.([]interface{}); ok {
+	d, ok := data.([]interface{})
+	if ok {
 		res := make([]interface{}, len(d))
 		for k, v := range d {
 			res[k] = v.(map[string]interface{})
