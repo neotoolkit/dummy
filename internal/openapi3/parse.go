@@ -1,6 +1,7 @@
 package openapi3
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -71,6 +72,8 @@ type SchemaTypeError struct {
 func (e *SchemaTypeError) Error() string {
 	return "unknown type " + e.schemaType
 }
+
+var EmptyItemsErr = errors.New("empty items in array")
 
 type builder struct {
 	openapi    OpenAPI
@@ -197,6 +200,10 @@ func (b *builder) convertSchema(s Schema) (apischema.Schema, error) {
 		val, _ := s.Example.(string)
 		return apischema.StringSchema{Example: val}, nil
 	case "array":
+		if nil == s.Items {
+			return nil, EmptyItemsErr
+		}
+
 		itemsSchema, err := b.convertSchema(*s.Items)
 		if err != nil {
 			return nil, err
@@ -274,7 +281,8 @@ func parseObjectExample(data interface{}) (map[string]interface{}, error) {
 		return map[string]interface{}{}, nil
 	}
 
-	if d, ok := data.(map[string]interface{}); ok {
+	d, ok := data.(map[string]interface{})
+	if ok {
 		return d, nil
 	}
 
