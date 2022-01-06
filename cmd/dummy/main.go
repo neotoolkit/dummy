@@ -33,9 +33,10 @@ func run() {
 
 	flag.Parse()
 
-	for i := 0; i < len(flag.Args()); i++ {
-		if flag.Args()[i] == "server" {
-			cfg.Server.Path = flag.Args()[i+1]
+	for i := 0; i < flag.NArg(); i++ {
+		switch flag.Arg(i) {
+		case "server":
+			cfg.Server.Path = flag.Arg(i + 1)
 
 			openapi, err := openapi3.Parse(cfg.Server.Path)
 			if err != nil {
@@ -52,9 +53,7 @@ func run() {
 				fmt.Fprintf(os.Stderr, "server run error: %v\n", err)
 				os.Exit(exitcode.Failure)
 			}
-		}
-
-		if flag.Args()[i] == "version" {
+		case "version":
 			fmt.Println(version)
 			os.Exit(exitcode.Success)
 		}
