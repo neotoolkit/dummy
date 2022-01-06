@@ -20,7 +20,7 @@ func main() {
 
 func run() {
 	flag.Usage = func() {
-		fmt.Println(`usage: dummy [flags] [path]
+		fmt.Println(`usage: dummy [arg]
 
 - server [path] - run mock server
 - version - show version and exit`)
