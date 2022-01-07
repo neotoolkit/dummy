@@ -6,8 +6,13 @@ on:
       - v*
     branches:
       - main
+    paths-ignore:
+      - 'examples/**'
+      - '**.md'
   pull_request:
-  workflow_dispatch:
+    paths-ignore:
+      - 'examples/**'
+      - '**.md'
 
 jobs:
   golangci-lint:
