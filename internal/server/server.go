@@ -59,7 +59,7 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 
 	path := RemoveFragment(r.URL.Path)
 
-	response, ok := s.Handlers.Get(path, r.Method, r.URL.Query(), r.Header, r.Body)
+	response, ok := s.Handlers.Get(path, r.Method)
 	if ok {
 		w.WriteHeader(response.StatusCode)
 		resp := response.ExampleValue(r.Header.Get("X-Example"))

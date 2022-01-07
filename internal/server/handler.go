@@ -1,9 +1,6 @@
 package server
 
 import (
-	"io"
-	"net/http"
-	"net/url"
 	"strings"
 
 	"github.com/go-dummy/dummy/internal/apischema"
@@ -25,7 +22,7 @@ func NewHandlers(api apischema.API, l *logger.Logger) Handlers {
 }
 
 // Get -.
-func (h Handlers) Get(path, method string, queryParam url.Values, header http.Header, body io.ReadCloser) (apischema.Response, bool) {
+func (h Handlers) Get(path, method string) (apischema.Response, bool) {
 	response, err := h.API.FindResponse(apischema.FindResponseParams{
 		Path:   path,
 		Method: method,
