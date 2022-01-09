@@ -1,7 +1,9 @@
 openapi: 3.0.3
+
 info:
   title: Users dummy API
   version: 0.1.0
+
 paths:
   /users:
     post:
@@ -22,6 +24,7 @@ paths:
                 id: e1afccea-5168-4735-84d4-cb96f6fb5d25
                 firstName: Elon
                 lastName: Musk
+
 components:
   schemas:
     User:
