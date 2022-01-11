@@ -1,6 +1,8 @@
 package server
 
 import (
+	"encoding/json"
+	"net/http"
 	"strings"
 
 	"github.com/go-dummy/dummy/internal/apischema"
@@ -21,6 +23,41 @@ func NewHandlers(api apischema.API, l *logger.Logger) Handlers {
 	}
 }
 
+// Handler -.
+func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
+	if setStatusCode(w, r.Header.Get("X-Set-Status-Code")) {
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	path := RemoveFragment(r.URL.Path)
+
+	response, ok := s.Handlers.Get(path, r.Method)
+	if ok {
+		w.WriteHeader(response.StatusCode)
+		resp := response.ExampleValue(r.Header.Get("X-Example"))
+
+		if nil == resp {
+			return
+		}
+
+		bytes, err := json.Marshal(resp)
+		if err != nil {
+			s.Logger.Error().Err(err).Msg("serialize response")
+		}
+
+		_, err = w.Write(bytes)
+		if err != nil {
+			s.Logger.Error().Err(err).Msg("write response")
+		}
+
+		return
+	}
+
+	w.WriteHeader(http.StatusNotFound)
+}
+
 // Get -.
 func (h Handlers) Get(path, method string) (apischema.Response, bool) {
 	response, err := h.API.FindResponse(apischema.FindResponseParams{
@@ -32,6 +69,17 @@ func (h Handlers) Get(path, method string) (apischema.Response, bool) {
 	}
 
 	return response, true
+}
+
+func setStatusCode(w http.ResponseWriter, statusCode string) bool {
+	switch statusCode {
+	case "500":
+		w.WriteHeader(http.StatusInternalServerError)
+
+		return true
+	default:
+		return false
+	}
 }
 
 // RemoveTrailingSlash returns path without trailing slash
