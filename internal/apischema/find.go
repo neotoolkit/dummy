@@ -1,6 +1,9 @@
 package apischema
 
 import (
+	"encoding/json"
+	"errors"
+	"io"
 	"strings"
 )
 
@@ -16,6 +19,7 @@ func (e *FindResponseError) Error() string {
 type FindResponseParams struct {
 	Path      string
 	Method    string
+	Body      io.ReadCloser
 	MediaType string
 }
 
@@ -25,6 +29,20 @@ func (a API) FindResponse(params FindResponseParams) (Response, error) {
 		return Response{}, &FindResponseError{
 			method: params.Method,
 			path:   params.Path,
+		}
+	}
+
+	var body map[string]interface{}
+
+	err := json.NewDecoder(params.Body).Decode(&body)
+	if err != nil {
+		return Response{}, err
+	}
+
+	for k, v := range operation.Body {
+		_, ok := body[k]
+		if !ok && v.Required {
+			return Response{}, errors.New("required field")
 		}
 	}
 

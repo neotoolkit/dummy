@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"io"
 	"net/http"
 	"strings"
 
@@ -33,7 +34,7 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 
 	path := RemoveFragment(r.URL.Path)
 
-	response, ok := s.Handlers.Get(path, r.Method)
+	response, ok := s.Handlers.Get(path, r.Method, r.Body)
 	if ok {
 		w.WriteHeader(response.StatusCode)
 		resp := response.ExampleValue(r.Header.Get("X-Example"))
@@ -59,10 +60,11 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Get -.
-func (h Handlers) Get(path, method string) (apischema.Response, bool) {
+func (h Handlers) Get(path, method string, body io.ReadCloser) (apischema.Response, bool) {
 	response, err := h.API.FindResponse(apischema.FindResponseParams{
 		Path:   path,
 		Method: method,
+		Body:   body,
 	})
 	if err != nil {
 		return apischema.Response{}, false

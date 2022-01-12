@@ -9,6 +9,7 @@ type Schema struct {
 	Default    interface{} `json:"default,omitempty" yaml:"default,omitempty"`
 	Example    interface{} `json:"example,omitempty" yaml:"example,omitempty"`
 	Faker      string      `json:"x-faker,omitempty" yaml:"x-faker,omitempty"`
+	Required   []string    `json:"required,omitempty" yaml:"required,omitempty"`
 
 	Items *Schema `json:"items,omitempty" yaml:"items,omitempty"`
 
