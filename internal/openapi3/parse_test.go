@@ -16,6 +16,20 @@ func TestParse_YAML(t *testing.T) {
 			{
 				Method: "POST",
 				Path:   "/users",
+				Body: map[string]apischema.FieldType{
+					"id": {
+						Required: true,
+						Type:     "string",
+					},
+					"firstName": {
+						Required: true,
+						Type:     "string",
+					},
+					"lastName": {
+						Required: true,
+						Type:     "string",
+					},
+				},
 				Responses: []apischema.Response{
 					{
 						StatusCode: 201,
@@ -35,6 +49,7 @@ func TestParse_YAML(t *testing.T) {
 			{
 				Method: "GET",
 				Path:   "/users",
+				Body:   map[string]apischema.FieldType{},
 				Responses: []apischema.Response{
 					{
 						StatusCode: 200,
@@ -69,6 +84,7 @@ func TestParse_YAML(t *testing.T) {
 			{
 				Method: "GET",
 				Path:   "/users/{userId}",
+				Body:   map[string]apischema.FieldType{},
 				Responses: []apischema.Response{
 					{
 						StatusCode: 200,

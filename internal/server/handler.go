@@ -2,6 +2,8 @@ package server
 
 import (
 	"encoding/json"
+	"errors"
+	"io"
 	"net/http"
 	"strings"
 
@@ -33,8 +35,14 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 
 	path := RemoveFragment(r.URL.Path)
 
-	response, ok := s.Handlers.Get(path, r.Method)
+	response, ok, err := s.Handlers.Get(path, r.Method, r.Body)
 	if ok {
+		if _, ok := err.(*json.SyntaxError); ok || errors.Is(err, apischema.ErrEmptyRequireField) {
+			w.WriteHeader(http.StatusBadRequest)
+
+			return
+		}
+
 		w.WriteHeader(response.StatusCode)
 		resp := response.ExampleValue(r.Header.Get("X-Example"))
 
@@ -59,16 +67,25 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Get -.
-func (h Handlers) Get(path, method string) (apischema.Response, bool) {
+func (h Handlers) Get(path, method string, body io.ReadCloser) (apischema.Response, bool, error) {
 	response, err := h.API.FindResponse(apischema.FindResponseParams{
 		Path:   path,
 		Method: method,
+		Body:   body,
 	})
 	if err != nil {
-		return apischema.Response{}, false
+		if errors.Is(err, apischema.ErrEmptyRequireField) {
+			return apischema.Response{}, true, err
+		}
+
+		if _, ok := err.(*json.SyntaxError); ok {
+			return apischema.Response{}, true, err
+		}
+
+		return apischema.Response{}, false, err
 	}
 
-	return response, true
+	return response, true, nil
 }
 
 func setStatusCode(w http.ResponseWriter, statusCode string) bool {

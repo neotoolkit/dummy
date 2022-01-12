@@ -7,7 +7,13 @@ type API struct {
 type Operation struct {
 	Method    string
 	Path      string
+	Body      map[string]FieldType
 	Responses []Response
+}
+
+type FieldType struct {
+	Required bool
+	Type     string
 }
 
 type Response struct {

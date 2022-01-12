@@ -73,7 +73,7 @@ func (e *SchemaTypeError) Error() string {
 	return "unknown type " + e.schemaType
 }
 
-var EmptyItemsErr = errors.New("empty items in array")
+var ErrEmptyItems = errors.New("empty items in array")
 
 type builder struct {
 	openapi    OpenAPI
@@ -126,6 +126,36 @@ func (b *builder) Set(path, method string, o *Operation) (apischema.Operation, e
 	operation := apischema.Operation{
 		Method: method,
 		Path:   path,
+		Body:   make(map[string]apischema.FieldType),
+	}
+
+	body, ok := o.RequestBody.Content["application/json"]
+	if ok {
+		var s Schema
+
+		if body.Schema.Reference != "" {
+			schema, err := b.openapi.LookupByReference(body.Schema.Reference)
+			if err != nil {
+				return apischema.Operation{}, fmt.Errorf("resolve reference: %w", err)
+			}
+
+			s = schema
+		} else {
+			s = body.Schema
+		}
+
+		for _, v := range s.Required {
+			operation.Body[v] = apischema.FieldType{
+				Required: true,
+			}
+		}
+
+		for k, v := range s.Properties {
+			operation.Body[k] = apischema.FieldType{
+				Required: operation.Body[k].Required,
+				Type:     v.Type,
+			}
+		}
 	}
 
 	for code, resp := range o.Responses {
@@ -201,7 +231,7 @@ func (b *builder) convertSchema(s Schema) (apischema.Schema, error) {
 		return apischema.StringSchema{Example: val}, nil
 	case "array":
 		if nil == s.Items {
-			return nil, EmptyItemsErr
+			return nil, ErrEmptyItems
 		}
 
 		itemsSchema, err := b.convertSchema(*s.Items)
