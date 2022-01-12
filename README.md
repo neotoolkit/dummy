@@ -15,3 +15,11 @@ go install github.com/go-dummy/dummy/cmd/dummy
 dummy server ./openapi.yml
 ```
 More usage [examples](examples)
+
+## ♥️ Sponsors
+<p>
+  <a href="https://evrone.com/?utm_source=github&utm_campaign=dotenv-linter">
+    <img src="https://www.mgrachev.com/assets/static/sponsored_by_evrone.svg?sanitize=true"
+      alt="Sponsored by Evrone">
+  </a>
+</p>
