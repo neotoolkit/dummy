@@ -23,6 +23,8 @@ type FindResponseParams struct {
 	MediaType string
 }
 
+var ErrEmptyRequireField = errors.New("empty require field")
+
 func (a API) FindResponse(params FindResponseParams) (Response, error) {
 	operation, ok := a.findOperation(params)
 	if !ok {
@@ -42,7 +44,7 @@ func (a API) FindResponse(params FindResponseParams) (Response, error) {
 	for k, v := range operation.Body {
 		_, ok := body[k]
 		if !ok && v.Required {
-			return Response{}, errors.New("required field")
+			return Response{}, ErrEmptyRequireField
 		}
 	}
 

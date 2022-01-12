@@ -73,7 +73,7 @@ func (e *SchemaTypeError) Error() string {
 	return "unknown type " + e.schemaType
 }
 
-var EmptyItemsErr = errors.New("empty items in array")
+var ErrEmptyItems = errors.New("empty items in array")
 
 type builder struct {
 	openapi    OpenAPI
@@ -132,6 +132,7 @@ func (b *builder) Set(path, method string, o *Operation) (apischema.Operation, e
 	body, ok := o.RequestBody.Content["application/json"]
 	if ok {
 		var s Schema
+
 		if body.Schema.Reference != "" {
 			schema, err := b.openapi.LookupByReference(body.Schema.Reference)
 			if err != nil {
@@ -230,7 +231,7 @@ func (b *builder) convertSchema(s Schema) (apischema.Schema, error) {
 		return apischema.StringSchema{Example: val}, nil
 	case "array":
 		if nil == s.Items {
-			return nil, EmptyItemsErr
+			return nil, ErrEmptyItems
 		}
 
 		itemsSchema, err := b.convertSchema(*s.Items)

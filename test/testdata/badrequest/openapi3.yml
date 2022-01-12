@@ -25,38 +25,6 @@ paths:
                 firstName: Elon
                 lastName: Musk
 
-  /users1:
-    post:
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - id1
-                - firstName
-                - lastName
-              properties:
-                id1:
-                  type: string
-                  format: uuid
-                firstName:
-                  type: string
-                lastName:
-                  type: string
-      responses:
-        '201':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-              example:
-                id: e1afccea-5168-4735-84d4-cb96f6fb5d25
-                firstName: Elon
-                lastName: Musk
-
 components:
   schemas:
     User:
