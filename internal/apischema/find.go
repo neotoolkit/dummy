@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"net/http"
 	"strings"
 )
 
@@ -34,17 +35,20 @@ func (a API) FindResponse(params FindResponseParams) (Response, error) {
 		}
 	}
 
-	var body map[string]interface{}
+	switch params.Method {
+	case http.MethodPost, http.MethodPut, http.MethodPatch:
+		var body map[string]interface{}
 
-	err := json.NewDecoder(params.Body).Decode(&body)
-	if err != nil {
-		return Response{}, err
-	}
+		err := json.NewDecoder(params.Body).Decode(&body)
+		if err != nil {
+			return Response{}, err
+		}
 
-	for k, v := range operation.Body {
-		_, ok := body[k]
-		if !ok && v.Required {
-			return Response{}, ErrEmptyRequireField
+		for k, v := range operation.Body {
+			_, ok := body[k]
+			if !ok && v.Required {
+				return Response{}, ErrEmptyRequireField
+			}
 		}
 	}
 
