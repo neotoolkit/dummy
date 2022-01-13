@@ -10,20 +10,20 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/go-dummy/dummy/internal/apischema"
+	"github.com/go-dummy/dummy/internal/api"
 	"github.com/go-dummy/dummy/internal/faker"
 )
 
-func Parse(path string) (apischema.API, error) {
+func Parse(path string) (api.API, error) {
 	file, err := read(path)
 	if err != nil {
-		return apischema.API{}, err
+		return api.API{}, err
 	}
 
 	var openapi OpenAPI
 
 	if err := yaml.Unmarshal(file, &openapi); err != nil {
-		return apischema.API{}, err
+		return api.API{}, err
 	}
 
 	f := faker.NewFaker()
@@ -77,34 +77,34 @@ var ErrEmptyItems = errors.New("empty items in array")
 
 type builder struct {
 	openapi    OpenAPI
-	operations []apischema.Operation
+	operations []api.Operation
 	faker      faker.Faker
 }
 
-func (b *builder) Build() (apischema.API, error) {
+func (b *builder) Build() (api.API, error) {
 	for path, method := range b.openapi.Paths {
 		if err := b.Add(path, http.MethodGet, method.Get); err != nil {
-			return apischema.API{}, err
+			return api.API{}, err
 		}
 
 		if err := b.Add(path, http.MethodPost, method.Post); err != nil {
-			return apischema.API{}, err
+			return api.API{}, err
 		}
 
 		if err := b.Add(path, http.MethodPut, method.Put); err != nil {
-			return apischema.API{}, err
+			return api.API{}, err
 		}
 
 		if err := b.Add(path, http.MethodPatch, method.Patch); err != nil {
-			return apischema.API{}, err
+			return api.API{}, err
 		}
 
 		if err := b.Add(path, http.MethodDelete, method.Delete); err != nil {
-			return apischema.API{}, err
+			return api.API{}, err
 		}
 	}
 
-	return apischema.API{Operations: b.operations}, nil
+	return api.API{Operations: b.operations}, nil
 }
 
 func (b *builder) Add(path, method string, o *Operation) error {
@@ -122,11 +122,11 @@ func (b *builder) Add(path, method string, o *Operation) error {
 	return nil
 }
 
-func (b *builder) Set(path, method string, o *Operation) (apischema.Operation, error) {
-	operation := apischema.Operation{
+func (b *builder) Set(path, method string, o *Operation) (api.Operation, error) {
+	operation := api.Operation{
 		Method: method,
 		Path:   path,
-		Body:   make(map[string]apischema.FieldType),
+		Body:   make(map[string]api.FieldType),
 	}
 
 	body, ok := o.RequestBody.Content["application/json"]
@@ -136,7 +136,7 @@ func (b *builder) Set(path, method string, o *Operation) (apischema.Operation, e
 		if body.Schema.Reference != "" {
 			schema, err := b.openapi.LookupByReference(body.Schema.Reference)
 			if err != nil {
-				return apischema.Operation{}, fmt.Errorf("resolve reference: %w", err)
+				return api.Operation{}, fmt.Errorf("resolve reference: %w", err)
 			}
 
 			s = schema
@@ -145,13 +145,13 @@ func (b *builder) Set(path, method string, o *Operation) (apischema.Operation, e
 		}
 
 		for _, v := range s.Required {
-			operation.Body[v] = apischema.FieldType{
+			operation.Body[v] = api.FieldType{
 				Required: true,
 			}
 		}
 
 		for k, v := range s.Properties {
-			operation.Body[k] = apischema.FieldType{
+			operation.Body[k] = api.FieldType{
 				Required: operation.Body[k].Required,
 				Type:     v.Type,
 			}
@@ -161,12 +161,12 @@ func (b *builder) Set(path, method string, o *Operation) (apischema.Operation, e
 	for code, resp := range o.Responses {
 		statusCode, err := strconv.Atoi(code)
 		if err != nil {
-			return apischema.Operation{}, err
+			return api.Operation{}, err
 		}
 
 		content, ok := resp.Content["application/json"]
 		if !ok {
-			operation.Responses = append(operation.Responses, apischema.Response{
+			operation.Responses = append(operation.Responses, api.Response{
 				StatusCode: statusCode,
 			})
 
@@ -187,10 +187,10 @@ func (b *builder) Set(path, method string, o *Operation) (apischema.Operation, e
 
 		schema, err := b.convertSchema(content.Schema)
 		if err != nil {
-			return apischema.Operation{}, err
+			return api.Operation{}, err
 		}
 
-		operation.Responses = append(operation.Responses, apischema.Response{
+		operation.Responses = append(operation.Responses, api.Response{
 			StatusCode: statusCode,
 			MediaType:  "application/json",
 			Schema:     schema,
@@ -202,7 +202,7 @@ func (b *builder) Set(path, method string, o *Operation) (apischema.Operation, e
 	return operation, nil
 }
 
-func (b *builder) convertSchema(s Schema) (apischema.Schema, error) {
+func (b *builder) convertSchema(s Schema) (api.Schema, error) {
 	if s.Reference != "" {
 		schema, err := b.openapi.LookupByReference(s.Reference)
 		if err != nil {
@@ -213,22 +213,22 @@ func (b *builder) convertSchema(s Schema) (apischema.Schema, error) {
 	}
 
 	if s.Faker != "" {
-		return apischema.FakerSchema{Example: b.faker.ByName(s.Faker)}, nil
+		return api.FakerSchema{Example: b.faker.ByName(s.Faker)}, nil
 	}
 
 	switch s.Type {
 	case "boolean":
 		val, _ := s.Example.(bool)
-		return apischema.BooleanSchema{Example: val}, nil
+		return api.BooleanSchema{Example: val}, nil
 	case "integer":
 		val, _ := s.Example.(int64)
-		return apischema.IntSchema{Example: val}, nil
+		return api.IntSchema{Example: val}, nil
 	case "number":
 		val, _ := s.Example.(float64)
-		return apischema.FloatSchema{Example: val}, nil
+		return api.FloatSchema{Example: val}, nil
 	case "string":
 		val, _ := s.Example.(string)
-		return apischema.StringSchema{Example: val}, nil
+		return api.StringSchema{Example: val}, nil
 	case "array":
 		if nil == s.Items {
 			return nil, ErrEmptyItems
@@ -244,12 +244,12 @@ func (b *builder) convertSchema(s Schema) (apischema.Schema, error) {
 			return nil, err
 		}
 
-		return apischema.ArraySchema{
+		return api.ArraySchema{
 			Type:    itemsSchema,
 			Example: arrExample,
 		}, nil
 	case "object":
-		obj := apischema.ObjectSchema{Properties: make(map[string]apischema.Schema, len(s.Properties))}
+		obj := api.ObjectSchema{Properties: make(map[string]api.Schema, len(s.Properties))}
 
 		for key, prop := range s.Properties {
 			propSchema, err := b.convertSchema(*prop)

@@ -7,18 +7,18 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/go-dummy/dummy/internal/apischema"
+	"github.com/go-dummy/dummy/internal/api"
 	"github.com/go-dummy/dummy/internal/logger"
 )
 
 // Handlers -.
 type Handlers struct {
-	API    apischema.API
+	API    api.API
 	Logger *logger.Logger
 }
 
 // NewHandlers returns a new instance of Handlers
-func NewHandlers(api apischema.API, l *logger.Logger) Handlers {
+func NewHandlers(api api.API, l *logger.Logger) Handlers {
 	return Handlers{
 		API:    api,
 		Logger: l,
@@ -37,7 +37,7 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 
 	response, ok, err := s.Handlers.Get(path, r.Method, r.Body)
 	if ok {
-		if _, ok := err.(*json.SyntaxError); ok || errors.Is(err, apischema.ErrEmptyRequireField) {
+		if _, ok := err.(*json.SyntaxError); ok || errors.Is(err, api.ErrEmptyRequireField) {
 			w.WriteHeader(http.StatusBadRequest)
 
 			return
@@ -67,22 +67,22 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Get -.
-func (h Handlers) Get(path, method string, body io.ReadCloser) (apischema.Response, bool, error) {
-	response, err := h.API.FindResponse(apischema.FindResponseParams{
+func (h Handlers) Get(path, method string, body io.ReadCloser) (api.Response, bool, error) {
+	response, err := h.API.FindResponse(api.FindResponseParams{
 		Path:   path,
 		Method: method,
 		Body:   body,
 	})
 	if err != nil {
-		if errors.Is(err, apischema.ErrEmptyRequireField) {
-			return apischema.Response{}, true, err
+		if errors.Is(err, api.ErrEmptyRequireField) {
+			return api.Response{}, true, err
 		}
 
 		if _, ok := err.(*json.SyntaxError); ok {
-			return apischema.Response{}, true, err
+			return api.Response{}, true, err
 		}
 
-		return apischema.Response{}, false, err
+		return api.Response{}, false, err
 	}
 
 	return response, true, nil

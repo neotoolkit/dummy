@@ -1,4 +1,4 @@
-package apischema
+package api
 
 type API struct {
 	Operations []Operation

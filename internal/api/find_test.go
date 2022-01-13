@@ -1,14 +1,14 @@
 //go:build go1.18
 // +build go1.18
 
-package apischema_test
+package api_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/go-dummy/dummy/internal/apischema"
+	"github.com/go-dummy/dummy/internal/api"
 )
 
 func FuzzPathByParamDetect(f *testing.F) {
@@ -44,7 +44,7 @@ func FuzzPathByParamDetect(f *testing.F) {
 	}
 
 	f.Fuzz(func(t *testing.T, path, param string, want bool) {
-		got := apischema.PathByParamDetect(path, param)
+		got := api.PathByParamDetect(path, param)
 
 		require.Equal(t, want, got)
 	})

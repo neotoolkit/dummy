@@ -6,17 +6,17 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/go-dummy/dummy/internal/apischema"
+	"github.com/go-dummy/dummy/internal/api"
 	"github.com/go-dummy/dummy/internal/openapi3"
 )
 
 func TestParse_YAML(t *testing.T) {
-	expected := apischema.API{
-		Operations: []apischema.Operation{
+	expected := api.API{
+		Operations: []api.Operation{
 			{
 				Method: "POST",
 				Path:   "/users",
-				Body: map[string]apischema.FieldType{
+				Body: map[string]api.FieldType{
 					"id": {
 						Required: true,
 						Type:     "string",
@@ -30,15 +30,15 @@ func TestParse_YAML(t *testing.T) {
 						Type:     "string",
 					},
 				},
-				Responses: []apischema.Response{
+				Responses: []api.Response{
 					{
 						StatusCode: 201,
 						MediaType:  "application/json",
-						Schema: apischema.ObjectSchema{
-							Properties: map[string]apischema.Schema{
-								"id":        apischema.StringSchema{Example: "380ed0b7-eb21-4ad4-acd0-efa90cf69c6a"},
-								"firstName": apischema.StringSchema{Example: "Larry"},
-								"lastName":  apischema.StringSchema{Example: "Page"},
+						Schema: api.ObjectSchema{
+							Properties: map[string]api.Schema{
+								"id":        api.StringSchema{Example: "380ed0b7-eb21-4ad4-acd0-efa90cf69c6a"},
+								"firstName": api.StringSchema{Example: "Larry"},
+								"lastName":  api.StringSchema{Example: "Page"},
 							},
 							Example: map[string]interface{}{},
 						},
@@ -49,17 +49,17 @@ func TestParse_YAML(t *testing.T) {
 			{
 				Method: "GET",
 				Path:   "/users",
-				Body:   map[string]apischema.FieldType{},
-				Responses: []apischema.Response{
+				Body:   map[string]api.FieldType{},
+				Responses: []api.Response{
 					{
 						StatusCode: 200,
 						MediaType:  "application/json",
-						Schema: apischema.ArraySchema{
-							Type: apischema.ObjectSchema{
-								Properties: map[string]apischema.Schema{
-									"id":        apischema.StringSchema{Example: "380ed0b7-eb21-4ad4-acd0-efa90cf69c6a"},
-									"firstName": apischema.StringSchema{Example: "Larry"},
-									"lastName":  apischema.StringSchema{Example: "Page"},
+						Schema: api.ArraySchema{
+							Type: api.ObjectSchema{
+								Properties: map[string]api.Schema{
+									"id":        api.StringSchema{Example: "380ed0b7-eb21-4ad4-acd0-efa90cf69c6a"},
+									"firstName": api.StringSchema{Example: "Larry"},
+									"lastName":  api.StringSchema{Example: "Page"},
 								},
 								Example: map[string]interface{}{},
 							},
@@ -84,16 +84,16 @@ func TestParse_YAML(t *testing.T) {
 			{
 				Method: "GET",
 				Path:   "/users/{userId}",
-				Body:   map[string]apischema.FieldType{},
-				Responses: []apischema.Response{
+				Body:   map[string]api.FieldType{},
+				Responses: []api.Response{
 					{
 						StatusCode: 200,
 						MediaType:  "application/json",
-						Schema: apischema.ObjectSchema{
-							Properties: map[string]apischema.Schema{
-								"id":        apischema.StringSchema{Example: "380ed0b7-eb21-4ad4-acd0-efa90cf69c6a"},
-								"firstName": apischema.StringSchema{Example: "Larry"},
-								"lastName":  apischema.StringSchema{Example: "Page"},
+						Schema: api.ObjectSchema{
+							Properties: map[string]api.Schema{
+								"id":        api.StringSchema{Example: "380ed0b7-eb21-4ad4-acd0-efa90cf69c6a"},
+								"firstName": api.StringSchema{Example: "Larry"},
+								"lastName":  api.StringSchema{Example: "Page"},
 							},
 							Example: map[string]interface{}{},
 						},
@@ -110,7 +110,7 @@ func TestParse_YAML(t *testing.T) {
 	require.Equalf(t, testable(expected), testable(openapi), `parsed schema from "testdata/openapi3.yml"`)
 }
 
-func testable(api apischema.API) apischema.API {
+func testable(api api.API) api.API {
 	sort.Slice(api.Operations, func(i, j int) bool {
 		a, b := api.Operations[i], api.Operations[j]
 
