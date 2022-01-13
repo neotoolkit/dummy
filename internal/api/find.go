@@ -1,4 +1,4 @@
-package apischema
+package api
 
 import (
 	"encoding/json"
