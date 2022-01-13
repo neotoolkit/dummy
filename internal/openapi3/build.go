@@ -60,7 +60,6 @@ func (b *builder) Set(path, method string, o *Operation) (api.Operation, error) 
 	operation := api.Operation{
 		Method: method,
 		Path:   path,
-		Body:   make(map[string]api.FieldType),
 	}
 
 	body, ok := o.RequestBody.Content["application/json"]
@@ -77,6 +76,8 @@ func (b *builder) Set(path, method string, o *Operation) (api.Operation, error) 
 		} else {
 			s = body.Schema
 		}
+
+		operation.Body = make(map[string]api.FieldType, len(s.Properties))
 
 		for _, v := range s.Required {
 			operation.Body[v] = api.FieldType{

@@ -49,7 +49,6 @@ func TestParse_YAML(t *testing.T) {
 			{
 				Method: "GET",
 				Path:   "/users",
-				Body:   map[string]api.FieldType{},
 				Responses: []api.Response{
 					{
 						StatusCode: 200,
@@ -84,7 +83,6 @@ func TestParse_YAML(t *testing.T) {
 			{
 				Method: "GET",
 				Path:   "/users/{userId}",
-				Body:   map[string]api.FieldType{},
 				Responses: []api.Response{
 					{
 						StatusCode: 200,
