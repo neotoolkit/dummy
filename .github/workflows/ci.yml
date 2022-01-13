@@ -23,3 +23,13 @@ jobs:
           go test -v -race -covermode atomic -coverprofile=coverage.txt ./internal/...
       - name: Upload coverage report
         run: bash <(curl -s https://codecov.io/bash)
+  check-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+      - name: WriteGoList
+        run: go list -json -m all > go.list
+      - name: Nancy
+        uses: sonatype-nexus-community/nancy-github-action@main
+        continue-on-error: true
