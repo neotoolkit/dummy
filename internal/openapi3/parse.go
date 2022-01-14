@@ -11,6 +11,7 @@ import (
 	"github.com/go-dummy/dummy/internal/read"
 )
 
+// Parse -.
 func Parse(path string) (api.API, error) {
 	file, err := read.Read(path)
 	if err != nil {
@@ -30,6 +31,7 @@ func Parse(path string) (api.API, error) {
 	return b.Build()
 }
 
+// SchemaTypeError -.
 type SchemaTypeError struct {
 	schemaType string
 }
@@ -38,8 +40,10 @@ func (e *SchemaTypeError) Error() string {
 	return "unknown type " + e.schemaType
 }
 
+// ErrEmptyItems -.
 var ErrEmptyItems = errors.New("empty items in array")
 
+// ArrayExampleError -.
 type ArrayExampleError struct {
 	data interface{}
 }
@@ -66,6 +70,7 @@ func parseArrayExample(data interface{}) ([]interface{}, error) {
 	return nil, &ArrayExampleError{data: data}
 }
 
+// ObjectExampleError -.
 type ObjectExampleError struct {
 	data interface{}
 }

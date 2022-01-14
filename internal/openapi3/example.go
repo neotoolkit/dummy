@@ -1,11 +1,14 @@
 package openapi3
 
+// Example -.
 type Example struct {
 	Value interface{} `json:"value,omitempty" yaml:"value,omitempty"`
 }
 
+// Examples -.
 type Examples map[string]Example
 
+// GetKeys -.
 func (e Examples) GetKeys() []string {
 	keys := make([]string, len(e))
 	i := 0
@@ -18,6 +21,7 @@ func (e Examples) GetKeys() []string {
 	return keys
 }
 
+// ExampleToResponse -.
 func ExampleToResponse(data interface{}) interface{} {
 	switch d := data.(type) {
 	case map[string]interface{}:

@@ -15,6 +15,7 @@ type builder struct {
 	faker      faker.Faker
 }
 
+// Build -.
 func (b *builder) Build() (api.API, error) {
 	for path, method := range b.openapi.Paths {
 		if err := b.Add(path, http.MethodGet, method.Get); err != nil {
@@ -41,6 +42,7 @@ func (b *builder) Build() (api.API, error) {
 	return api.API{Operations: b.operations}, nil
 }
 
+// Add -.
 func (b *builder) Add(path, method string, o *Operation) error {
 	if o != nil {
 		p := RemoveTrailingSlash(path)
@@ -56,6 +58,7 @@ func (b *builder) Add(path, method string, o *Operation) error {
 	return nil
 }
 
+// Set -.
 func (b *builder) Set(path, method string, o *Operation) (api.Operation, error) {
 	operation := api.Operation{
 		Method: method,

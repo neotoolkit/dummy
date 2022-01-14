@@ -2,6 +2,7 @@ package openapi3
 
 import "fmt"
 
+// Schema -.
 type Schema struct {
 	Properties Schemas     `json:"properties,omitempty" yaml:"properties,omitempty"`
 	Type       string      `json:"type,omitempty" yaml:"type,omitempty"`
@@ -16,12 +17,15 @@ type Schema struct {
 	Reference string `json:"$ref,omitempty" yaml:"$ref,omitempty"`
 }
 
+// Schemas -.
 type Schemas map[string]*Schema
 
+// SchemaContext -.
 type SchemaContext interface {
 	LookupByReference(ref string) (Schema, error)
 }
 
+// ResponseByExample -.
 func (s Schema) ResponseByExample(schemaContext SchemaContext) (interface{}, error) {
 	if s.Reference != "" {
 		schema, err := schemaContext.LookupByReference(s.Reference)

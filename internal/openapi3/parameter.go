@@ -1,5 +1,6 @@
 package openapi3
 
+// Parameter -.
 type Parameter struct {
 	Name     string  `json:"name,omitempty" yaml:"name,omitempty"`
 	In       string  `json:"in,omitempty" yaml:"in,omitempty"`
@@ -7,4 +8,5 @@ type Parameter struct {
 	Schema   *Schema `json:"schema,omitempty" yaml:"schema,omitempty"`
 }
 
+// Parameters -.
 type Parameters []Parameter
