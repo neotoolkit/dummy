@@ -1,5 +1,6 @@
 package openapi3
 
+// Path -.
 type Path struct {
 	Post   *Operation `json:"post,omitempty" yaml:"post,omitempty"`
 	Get    *Operation `json:"get,omitempty" yaml:"get,omitempty"`
@@ -8,4 +9,5 @@ type Path struct {
 	Delete *Operation `json:"delete,omitempty" yaml:"delete,omitempty"`
 }
 
+// Paths -.
 type Paths map[string]*Path

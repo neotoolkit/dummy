@@ -4,6 +4,7 @@ import (
 	"strings"
 )
 
+// SchemaError -.
 type SchemaError struct {
 	ref string
 }
@@ -20,6 +21,7 @@ type OpenAPI struct {
 	Components Components `json:"components,omitempty" yaml:"components,omitempty"`
 }
 
+// LookupByReference -.
 func (api OpenAPI) LookupByReference(ref string) (Schema, error) {
 	schema := api.Components.Schemas[schemaKey(ref)]
 	if nil == schema {

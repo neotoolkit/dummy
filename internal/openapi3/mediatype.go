@@ -8,10 +8,12 @@ type MediaType struct {
 	Examples Examples    `json:"examples,omitempty" yaml:"examples,omitempty"`
 }
 
+// ResponseByExample -.
 func (mt MediaType) ResponseByExample() interface{} {
 	return ExampleToResponse(mt.Example)
 }
 
+// ResponseByExamplesKey -.
 func (mt MediaType) ResponseByExamplesKey(key string) interface{} {
 	return mt.examples(key)
 }

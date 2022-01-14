@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// Read -.
 func Read(path string) ([]byte, error) {
 	if strings.HasPrefix(path, "http://") || strings.HasPrefix(path, "https://") {
 		return readFromURL(path)
