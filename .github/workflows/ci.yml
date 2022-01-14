@@ -20,7 +20,7 @@ jobs:
       - name: Tests
         run: |
           gem install pact-provider-verifier
-          go test -v -race -covermode atomic -coverprofile=coverage.txt ./internal/...
+          go test -v -covermode atomic -coverprofile=coverage.txt ./...
       - name: Upload coverage report
         run: bash <(curl -s https://codecov.io/bash)
   check-dependencies:
