@@ -1,7 +1,9 @@
 openapi: 3.0.3
+
 info:
   title: Users dummy API
   version: 0.1.0
+
 paths:
   /users:
     get:
@@ -21,6 +23,7 @@ paths:
                 - id: 472063cc-4c83-11ec-81d3-0242ac130003
                   firstName: Sergey
                   lastName: Brin
+
 components:
   schemas:
     User:

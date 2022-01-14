@@ -1,7 +1,9 @@
 openapi: 3.0.3
+
 info:
   title: Users dummy API
   version: 0.1.0
+
 paths:
   /users:
     get:
@@ -32,7 +34,6 @@ components:
         lastName:
           type: string
           example: Musk
-
     UUID:
       type: string
       format: uuid
