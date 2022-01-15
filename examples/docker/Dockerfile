@@ -1,11 +1,9 @@
 FROM golang:latest
 
-RUN git clone https://github.com/go-dummy/dummy.git
+RUN go install github.com/go-dummy/dummy/cmd/dummy@latest
 
-COPY ./openapi3.yml ./dummy
+COPY ./openapi3.yml .
 
-WORKDIR ./dummy
+WORKDIR .
 
-RUN go mod download
-
-CMD ["go", "run", "./cmd/dummy", "-port=8080", "server", "openapi3.yml"]
+CMD ["dummy", "-port=8080", "server", "openapi3.yml"]
