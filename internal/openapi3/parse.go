@@ -72,12 +72,12 @@ func parseArrayExample(data interface{}) ([]interface{}, error) {
 
 // ObjectExampleError -.
 type ObjectExampleError struct {
-	data interface{}
+	Data interface{}
 }
 
 // Error -.
 func (e *ObjectExampleError) Error() string {
-	return fmt.Sprintf("unpredicted type for example %T", e.data)
+	return fmt.Sprintf("unpredicted type for example %T", e.Data)
 }
 
 func parseObjectExample(data interface{}) (map[string]interface{}, error) {
@@ -90,7 +90,7 @@ func parseObjectExample(data interface{}) (map[string]interface{}, error) {
 		return d, nil
 	}
 
-	return nil, &ObjectExampleError{data: data}
+	return nil, &ObjectExampleError{Data: data}
 }
 
 // RemoveTrailingSlash returns path without trailing slash
