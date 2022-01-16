@@ -125,3 +125,11 @@ func testable(api api.API) api.API {
 
 	return api
 }
+
+func TestObjectExampleError(t *testing.T) {
+	got := &openapi3.ObjectExampleError{
+		Data: "",
+	}
+
+	require.Equal(t, got.Error(), "unpredicted type for example string")
+}
