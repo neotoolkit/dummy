@@ -56,5 +56,5 @@ func TestFindResponseError(t *testing.T) {
 		Path:   "test path",
 	}
 
-	require.EqualError(t, got, "not specified operation: test method test path")
+	require.Equal(t, got.Error(), "not specified operation: test method test path")
 }

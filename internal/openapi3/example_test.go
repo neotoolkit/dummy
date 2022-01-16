@@ -18,3 +18,35 @@ func TestExamples_GetKeys(t *testing.T) {
 
 	require.Equal(t, len(e), len(res))
 }
+
+func TestExampleToResponse(t *testing.T) {
+	tests := []struct {
+		name string
+		data interface{}
+		want interface{}
+	}{
+		{
+			name: "",
+			data: nil,
+			want: nil,
+		},
+		{
+			name: "",
+			data: map[string]interface{}{},
+			want: map[string]interface{}{},
+		},
+		{
+			name: "",
+			data: []interface{}{},
+			want: []map[string]interface{}{},
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			got := openapi3.ExampleToResponse(tc.data)
+
+			require.Equal(t, tc.want, got)
+		})
+	}
+}
