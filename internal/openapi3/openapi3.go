@@ -9,6 +9,7 @@ type SchemaError struct {
 	ref string
 }
 
+// Error -.
 func (e *SchemaError) Error() string {
 	return "unknown schema " + e.ref
 }
