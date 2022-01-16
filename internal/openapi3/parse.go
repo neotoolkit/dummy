@@ -75,6 +75,7 @@ type ObjectExampleError struct {
 	data interface{}
 }
 
+// Error -.
 func (e *ObjectExampleError) Error() string {
 	return fmt.Sprintf("unpredicted type for example %T", e.data)
 }

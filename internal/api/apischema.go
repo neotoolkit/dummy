@@ -1,9 +1,11 @@
 package api
 
+// API -.
 type API struct {
 	Operations []Operation
 }
 
+// Operation -.
 type Operation struct {
 	Method    string
 	Path      string
@@ -11,11 +13,13 @@ type Operation struct {
 	Responses []Response
 }
 
+// FieldType -.
 type FieldType struct {
 	Required bool
 	Type     string
 }
 
+// Response -.
 type Response struct {
 	StatusCode int
 	MediaType  string
@@ -24,6 +28,7 @@ type Response struct {
 	Examples   map[string]interface{}
 }
 
+// ExampleValue -.
 func (r Response) ExampleValue(key string) interface{} {
 	if nil == r.Schema {
 		return nil
@@ -41,47 +46,58 @@ func (r Response) ExampleValue(key string) interface{} {
 	return r.Schema.ExampleValue()
 }
 
+// Schema -.
 type Schema interface {
 	ExampleValue() interface{}
 }
 
+// BooleanSchema -.
 type BooleanSchema struct {
 	Example bool
 }
 
+// ExampleValue -.
 func (b BooleanSchema) ExampleValue() interface{} {
 	return b.Example
 }
 
+// IntSchema -.
 type IntSchema struct {
 	Example int64
 }
 
+// ExampleValue -.
 func (i IntSchema) ExampleValue() interface{} {
 	return i.Example
 }
 
+// FloatSchema -.
 type FloatSchema struct {
 	Example float64
 }
 
+// ExampleValue -.
 func (f FloatSchema) ExampleValue() interface{} {
 	return f.Example
 }
 
+// StringSchema -.
 type StringSchema struct {
 	Example string
 }
 
+// ExampleValue -.
 func (s StringSchema) ExampleValue() interface{} {
 	return s.Example
 }
 
+// ArraySchema -.
 type ArraySchema struct {
 	Type    Schema
 	Example []interface{}
 }
 
+// ExampleValue -.
 func (a ArraySchema) ExampleValue() interface{} {
 	if len(a.Example) > 0 {
 		return a.Example
@@ -90,11 +106,13 @@ func (a ArraySchema) ExampleValue() interface{} {
 	return []interface{}{a.Type.ExampleValue()}
 }
 
+// ObjectSchema -.
 type ObjectSchema struct {
 	Properties map[string]Schema
 	Example    map[string]interface{}
 }
 
+// ExampleValue -.
 func (o ObjectSchema) ExampleValue() interface{} {
 	if len(o.Example) > 0 {
 		return o.Example
@@ -109,10 +127,12 @@ func (o ObjectSchema) ExampleValue() interface{} {
 	return example
 }
 
+// FakerSchema -.
 type FakerSchema struct {
 	Example interface{}
 }
 
+// ExampleValue -.
 func (f FakerSchema) ExampleValue() interface{} {
 	return f.Example
 }

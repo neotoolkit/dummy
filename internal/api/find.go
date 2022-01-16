@@ -8,15 +8,18 @@ import (
 	"strings"
 )
 
+// FindResponseError -.
 type FindResponseError struct {
 	Method string
 	Path   string
 }
 
+// Error -.
 func (e *FindResponseError) Error() string {
 	return "not specified operation: " + e.Method + " " + e.Path
 }
 
+// FindResponseParams -.
 type FindResponseParams struct {
 	Path      string
 	Method    string
@@ -24,8 +27,10 @@ type FindResponseParams struct {
 	MediaType string
 }
 
+// ErrEmptyRequireField -.
 var ErrEmptyRequireField = errors.New("empty require field")
 
+// FindResponse -.
 func (a API) FindResponse(params FindResponseParams) (Response, error) {
 	operation, ok := a.findOperation(params)
 	if !ok {
