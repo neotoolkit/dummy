@@ -1,6 +1,3 @@
-//go:build go1.18
-// +build go1.18
-
 package api_test
 
 import (
@@ -11,41 +8,53 @@ import (
 	"github.com/go-dummy/dummy/internal/api"
 )
 
-func FuzzPathByParamDetect(f *testing.F) {
+func TestPathByParamDetect(t *testing.T) {
 	tests := []struct {
+		name  string
 		path  string
 		param string
 		want  bool
 	}{
 		{
+			name:  "",
 			path:  "",
 			param: "",
 			want:  true,
 		},
 		{
+			name:  "",
 			path:  "/path",
 			param: "/path",
 			want:  true,
 		},
 		{
+			name:  "",
 			path:  "/path/1",
 			param: "/path/{1}",
 			want:  true,
 		},
 		{
+			name:  "",
 			path:  "/path/1/path/2",
 			param: "/path/{1}/path/{2}",
 			want:  true,
 		},
 	}
 
-	for _, seed := range tests {
-		f.Add(seed.path, seed.param, seed.want)
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			got := api.PathByParamDetect(tc.path, tc.param)
+
+			require.Equal(t, tc.want, got)
+		})
+	}
+}
+
+func TestFindResponseError(t *testing.T) {
+	got := &api.FindResponseError{
+		Method: "test method",
+		Path:   "test path",
 	}
 
-	f.Fuzz(func(t *testing.T, path, param string, want bool) {
-		got := api.PathByParamDetect(path, param)
-
-		require.Equal(t, want, got)
-	})
+	require.EqualError(t, got, "not specified operation: test method test path")
 }

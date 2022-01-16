@@ -9,12 +9,12 @@ import (
 )
 
 type FindResponseError struct {
-	method string
-	path   string
+	Method string
+	Path   string
 }
 
 func (e *FindResponseError) Error() string {
-	return "not specified operation: " + e.method + " " + e.path
+	return "not specified operation: " + e.Method + " " + e.Path
 }
 
 type FindResponseParams struct {
@@ -30,8 +30,8 @@ func (a API) FindResponse(params FindResponseParams) (Response, error) {
 	operation, ok := a.findOperation(params)
 	if !ok {
 		return Response{}, &FindResponseError{
-			method: params.Method,
-			path:   params.Path,
+			Method: params.Method,
+			Path:   params.Path,
 		}
 	}
 
