@@ -6,12 +6,12 @@ import (
 
 // SchemaError -.
 type SchemaError struct {
-	ref string
+	Ref string
 }
 
 // Error -.
 func (e *SchemaError) Error() string {
-	return "unknown schema " + e.ref
+	return "unknown schema " + e.Ref
 }
 
 // OpenAPI Object
@@ -26,7 +26,7 @@ type OpenAPI struct {
 func (api OpenAPI) LookupByReference(ref string) (Schema, error) {
 	schema := api.Components.Schemas[schemaKey(ref)]
 	if nil == schema {
-		return Schema{}, &SchemaError{ref: schema.Reference}
+		return Schema{}, &SchemaError{Ref: schema.Reference}
 	}
 
 	return *schema, nil
