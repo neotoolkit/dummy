@@ -33,11 +33,11 @@ func Parse(path string) (api.API, error) {
 
 // SchemaTypeError -.
 type SchemaTypeError struct {
-	schemaType string
+	SchemaType string
 }
 
 func (e *SchemaTypeError) Error() string {
-	return "unknown type " + e.schemaType
+	return "unknown type " + e.SchemaType
 }
 
 // ErrEmptyItems -.
@@ -45,11 +45,11 @@ var ErrEmptyItems = errors.New("empty items in array")
 
 // ArrayExampleError -.
 type ArrayExampleError struct {
-	data interface{}
+	Data interface{}
 }
 
 func (e *ArrayExampleError) Error() string {
-	return fmt.Sprintf("unpredicted type for example %T", e.data)
+	return fmt.Sprintf("unpredicted type for example %T", e.Data)
 }
 
 func parseArrayExample(data interface{}) ([]interface{}, error) {
@@ -67,7 +67,7 @@ func parseArrayExample(data interface{}) ([]interface{}, error) {
 		return res, nil
 	}
 
-	return nil, &ArrayExampleError{data: data}
+	return nil, &ArrayExampleError{Data: data}
 }
 
 // ObjectExampleError -.
