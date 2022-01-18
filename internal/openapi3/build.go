@@ -207,6 +207,6 @@ func (b *builder) convertSchema(s Schema) (api.Schema, error) {
 
 		return obj, nil
 	default:
-		return nil, &SchemaTypeError{schemaType: s.Type}
+		return nil, &SchemaTypeError{SchemaType: s.Type}
 	}
 }

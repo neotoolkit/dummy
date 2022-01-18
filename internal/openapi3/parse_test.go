@@ -133,3 +133,19 @@ func TestObjectExampleError(t *testing.T) {
 
 	require.Equal(t, got.Error(), "unpredicted type for example string")
 }
+
+func TestSchemaTypeError(t *testing.T) {
+	got := &openapi3.SchemaTypeError{
+		SchemaType: "",
+	}
+
+	require.Equal(t, got.Error(), "unknown type ")
+}
+
+func TestArrayExampleError(t *testing.T) {
+	got := &openapi3.ArrayExampleError{
+		Data: "",
+	}
+
+	require.Equal(t, got.Error(), "unpredicted type for example string")
+}
