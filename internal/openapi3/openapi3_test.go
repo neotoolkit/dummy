@@ -2,9 +2,11 @@ package openapi3_test
 
 import (
 	"errors"
-	"github.com/go-dummy/dummy/internal/openapi3"
-	"github.com/stretchr/testify/require"
 	"testing"
+
+	"github.com/stretchr/testify/require"
+
+	"github.com/go-dummy/dummy/internal/openapi3"
 )
 
 func TestSchemaError(t *testing.T) {
