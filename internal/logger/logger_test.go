@@ -1,9 +1,11 @@
 package logger_test
 
 import (
-	"github.com/go-dummy/dummy/internal/logger"
-	"github.com/stretchr/testify/require"
 	"testing"
+
+	"github.com/stretchr/testify/require"
+
+	"github.com/go-dummy/dummy/internal/logger"
 )
 
 func TestNewLogger(t *testing.T) {

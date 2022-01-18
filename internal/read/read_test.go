@@ -2,9 +2,11 @@ package read_test
 
 import (
 	"errors"
-	"github.com/go-dummy/dummy/internal/read"
-	"github.com/stretchr/testify/require"
 	"testing"
+
+	"github.com/stretchr/testify/require"
+
+	"github.com/go-dummy/dummy/internal/read"
 )
 
 func TestRead(t *testing.T) {
