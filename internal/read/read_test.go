@@ -10,13 +10,11 @@ import (
 )
 
 func TestRead(t *testing.T) {
-	type test struct {
+	tests := []struct {
 		name string
 		path string
 		err  error
-	}
-
-	tests := []test{
+	}{
 		{
 			name: "read file",
 			path: "./testdata/openapi3.yml",

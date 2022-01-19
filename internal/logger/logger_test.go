@@ -9,12 +9,10 @@ import (
 )
 
 func TestNewLogger(t *testing.T) {
-	type test struct {
+	tests := []struct {
 		name  string
 		level string
-	}
-
-	tests := []test{
+	}{
 		{
 			name:  "",
 			level: "",

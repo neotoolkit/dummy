@@ -19,12 +19,10 @@ func TestIntBetween(t *testing.T) {
 }
 
 func TestByName(t *testing.T) {
-	type test struct {
+	tests := []struct {
 		name  string
 		faker string
-	}
-
-	tests := []test{
+	}{
 		{
 			name:  "",
 			faker: "Boolean",
