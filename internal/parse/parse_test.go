@@ -1,4 +1,4 @@
-package openapi3_test
+package parse_test
 
 import (
 	"sort"
@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/go-dummy/dummy/internal/api"
-	"github.com/go-dummy/dummy/internal/openapi3"
+	"github.com/go-dummy/dummy/internal/parse"
 )
 
 func TestParse_YAML(t *testing.T) {
@@ -102,13 +102,15 @@ func TestParse_YAML(t *testing.T) {
 		},
 	}
 
-	openapi, err := openapi3.Parse("testdata/openapi3.yml")
+	openapi, err := parse.Parse("testdata/openapi3.yml")
 
 	require.NoError(t, err)
-	require.Equalf(t, testable(expected), testable(openapi), `parsed schema from "testdata/openapi3.yml"`)
+	require.Equalf(t, testable(t, expected), testable(t, openapi), `parsed schema from "testdata/openapi3.yml"`)
 }
 
-func testable(api api.API) api.API {
+func testable(t *testing.T, api api.API) api.API {
+	t.Helper()
+
 	sort.Slice(api.Operations, func(i, j int) bool {
 		a, b := api.Operations[i], api.Operations[j]
 
@@ -124,60 +126,4 @@ func testable(api api.API) api.API {
 	})
 
 	return api
-}
-
-func TestObjectExampleError(t *testing.T) {
-	got := &openapi3.ObjectExampleError{
-		Data: "",
-	}
-
-	require.Equal(t, got.Error(), "unpredicted type for example string")
-}
-
-func TestSchemaTypeError(t *testing.T) {
-	got := &openapi3.SchemaTypeError{
-		SchemaType: "",
-	}
-
-	require.Equal(t, got.Error(), "unknown type ")
-}
-
-func TestArrayExampleError(t *testing.T) {
-	got := &openapi3.ArrayExampleError{
-		Data: "",
-	}
-
-	require.Equal(t, got.Error(), "unpredicted type for example string")
-}
-
-func TestRemoveTrailingSlash(t *testing.T) {
-	tests := []struct {
-		name string
-		path string
-		want string
-	}{
-		{
-			name: "",
-			path: "",
-			want: "",
-		},
-		{
-			name: "",
-			path: "/",
-			want: "",
-		},
-		{
-			name: "",
-			path: "path/",
-			want: "path",
-		},
-	}
-
-	for _, tc := range tests {
-		t.Run(tc.name, func(t *testing.T) {
-			got := openapi3.RemoveTrailingSlash(tc.path)
-
-			require.Equal(t, tc.want, got)
-		})
-	}
 }

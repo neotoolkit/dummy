@@ -1,6 +1,7 @@
 package openapi3
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -9,15 +10,86 @@ import (
 	"github.com/go-dummy/dummy/internal/faker"
 )
 
-type builder struct {
-	openapi    OpenAPI
-	operations []api.Operation
-	faker      faker.Faker
+// SchemaTypeError -.
+type SchemaTypeError struct {
+	SchemaType string
+}
+
+func (e *SchemaTypeError) Error() string {
+	return "unknown type " + e.SchemaType
+}
+
+// ErrEmptyItems -.
+var ErrEmptyItems = errors.New("empty items in array")
+
+// ArrayExampleError -.
+type ArrayExampleError struct {
+	Data interface{}
+}
+
+func (e *ArrayExampleError) Error() string {
+	return fmt.Sprintf("unpredicted type for example %T", e.Data)
+}
+
+func parseArrayExample(data interface{}) ([]interface{}, error) {
+	if nil == data {
+		return []interface{}{}, nil
+	}
+
+	d, ok := data.([]interface{})
+	if ok {
+		res := make([]interface{}, len(d))
+		for k, v := range d {
+			res[k] = v.(map[string]interface{})
+		}
+
+		return res, nil
+	}
+
+	return nil, &ArrayExampleError{Data: data}
+}
+
+// ObjectExampleError -.
+type ObjectExampleError struct {
+	Data interface{}
+}
+
+// Error -.
+func (e *ObjectExampleError) Error() string {
+	return fmt.Sprintf("unpredicted type for example %T", e.Data)
+}
+
+func parseObjectExample(data interface{}) (map[string]interface{}, error) {
+	if nil == data {
+		return map[string]interface{}{}, nil
+	}
+
+	d, ok := data.(map[string]interface{})
+	if ok {
+		return d, nil
+	}
+
+	return nil, &ObjectExampleError{Data: data}
+}
+
+// RemoveTrailingSlash returns path without trailing slash
+func RemoveTrailingSlash(path string) string {
+	if len(path) > 0 && path[len(path)-1] == '/' {
+		return path[0 : len(path)-1]
+	}
+
+	return path
+}
+
+type Builder struct {
+	OpenAPI    OpenAPI
+	Operations []api.Operation
+	Faker      faker.Faker
 }
 
 // Build -.
-func (b *builder) Build() (api.API, error) {
-	for path, method := range b.openapi.Paths {
+func (b *Builder) Build() (api.API, error) {
+	for path, method := range b.OpenAPI.Paths {
 		if err := b.Add(path, http.MethodGet, method.Get); err != nil {
 			return api.API{}, err
 		}
@@ -39,11 +111,11 @@ func (b *builder) Build() (api.API, error) {
 		}
 	}
 
-	return api.API{Operations: b.operations}, nil
+	return api.API{Operations: b.Operations}, nil
 }
 
 // Add -.
-func (b *builder) Add(path, method string, o *Operation) error {
+func (b *Builder) Add(path, method string, o *Operation) error {
 	if o != nil {
 		p := RemoveTrailingSlash(path)
 
@@ -52,14 +124,14 @@ func (b *builder) Add(path, method string, o *Operation) error {
 			return err
 		}
 
-		b.operations = append(b.operations, operation)
+		b.Operations = append(b.Operations, operation)
 	}
 
 	return nil
 }
 
 // Set -.
-func (b *builder) Set(path, method string, o *Operation) (api.Operation, error) {
+func (b *Builder) Set(path, method string, o *Operation) (api.Operation, error) {
 	operation := api.Operation{
 		Method: method,
 		Path:   path,
@@ -70,7 +142,7 @@ func (b *builder) Set(path, method string, o *Operation) (api.Operation, error) 
 		var s Schema
 
 		if body.Schema.Reference != "" {
-			schema, err := b.openapi.LookupByReference(body.Schema.Reference)
+			schema, err := b.OpenAPI.LookupByReference(body.Schema.Reference)
 			if err != nil {
 				return api.Operation{}, fmt.Errorf("resolve reference: %w", err)
 			}
@@ -140,9 +212,9 @@ func (b *builder) Set(path, method string, o *Operation) (api.Operation, error) 
 	return operation, nil
 }
 
-func (b *builder) convertSchema(s Schema) (api.Schema, error) {
+func (b *Builder) convertSchema(s Schema) (api.Schema, error) {
 	if s.Reference != "" {
-		schema, err := b.openapi.LookupByReference(s.Reference)
+		schema, err := b.OpenAPI.LookupByReference(s.Reference)
 		if err != nil {
 			return nil, fmt.Errorf("resolve reference: %w", err)
 		}
@@ -151,7 +223,7 @@ func (b *builder) convertSchema(s Schema) (api.Schema, error) {
 	}
 
 	if s.Faker != "" {
-		return api.FakerSchema{Example: b.faker.ByName(s.Faker)}, nil
+		return api.FakerSchema{Example: b.Faker.ByName(s.Faker)}, nil
 	}
 
 	switch s.Type {

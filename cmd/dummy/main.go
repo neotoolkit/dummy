@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-dummy/dummy/internal/config"
 	"github.com/go-dummy/dummy/internal/logger"
-	"github.com/go-dummy/dummy/internal/openapi3"
+	"github.com/go-dummy/dummy/internal/parse"
 	"github.com/go-dummy/dummy/internal/server"
 )
 
@@ -36,13 +36,13 @@ func run() error {
 				flag.StringVar(&cfg.Server.Port, "port", "8080", "")
 				flag.StringVar(&cfg.Logger.Level, "logger-level", "INFO", "")
 
-				openapi, err := openapi3.Parse(cfg.Server.Path)
+				api, err := parse.Parse(cfg.Server.Path)
 				if err != nil {
-					return fmt.Errorf("specification parse error: %w\n", err)
+					return fmt.Errorf("specification parse error: %w", err)
 				}
 
 				l := logger.NewLogger(cfg.Logger.Level)
-				h := server.NewHandlers(openapi, l)
+				h := server.NewHandlers(api, l)
 				s := server.NewServer(cfg.Server, l, h)
 
 				return s.Run()
