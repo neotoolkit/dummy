@@ -14,7 +14,7 @@ import (
 	"github.com/go-dummy/dummy/internal/server"
 )
 
-const version = "0.1.0"
+const version = "0.2.1"
 
 func main() {
 	err := run()
