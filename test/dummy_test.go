@@ -14,7 +14,7 @@ import (
 
 	"github.com/go-dummy/dummy/internal/config"
 	"github.com/go-dummy/dummy/internal/logger"
-	"github.com/go-dummy/dummy/internal/openapi3"
+	"github.com/go-dummy/dummy/internal/parse"
 	"github.com/go-dummy/dummy/internal/server"
 )
 
@@ -33,7 +33,7 @@ func FuzzDummy(f *testing.F) {
 	}
 
 	f.Fuzz(func(t *testing.T, path, pactDir, pactURL string) {
-		api, err := openapi3.Parse(path)
+		api, err := parse.Parse(path)
 		if err != nil {
 			t.Fatal(err)
 		}
