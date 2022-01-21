@@ -8,7 +8,7 @@ Run mock server based on API contract with one command. Written in Go
 ## Installation and usage
 ### Installation
 ```bash
-go install github.com/go-dummy/dummy/cmd/dummy
+go install github.com/go-dummy/dummy/cmd/dummy@latest
 ```
 ### Usage
 ```bash
