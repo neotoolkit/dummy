@@ -3,6 +3,7 @@ module github.com/go-dummy/dummy
 go 1.17
 
 require (
+	github.com/cristalhq/acmd v0.5.2
 	github.com/google/uuid v1.3.0
 	github.com/pact-foundation/pact-go v1.6.7
 	github.com/rs/zerolog v1.26.1
