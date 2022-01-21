@@ -1,61 +1,59 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"os"
 
+	"github.com/cristalhq/acmd"
+
 	"github.com/go-dummy/dummy/internal/config"
-	"github.com/go-dummy/dummy/internal/exitcode"
 	"github.com/go-dummy/dummy/internal/logger"
 	"github.com/go-dummy/dummy/internal/openapi3"
 	"github.com/go-dummy/dummy/internal/server"
 )
 
-const version = "0.0.0"
+const version = "0.1.0"
 
 func main() {
-	run()
+	err := run()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "server run error: %v\n", err)
+	}
 }
 
-func run() {
-	flag.Usage = func() {
-		fmt.Println(`usage: dummy [arg]
+func run() error {
+	cmds := []acmd.Command{
+		{
+			Name:        "server",
+			Description: "run mock server",
+			Do: func(ctx context.Context, args []string) error {
+				cfg := config.NewConfig()
 
-- server [path] - run mock server
-- version - show version and exit`)
+				cfg.Server.Path = args[0]
+
+				flag.StringVar(&cfg.Server.Port, "port", "8080", "")
+				flag.StringVar(&cfg.Logger.Level, "logger-level", "INFO", "")
+
+				openapi, err := openapi3.Parse(cfg.Server.Path)
+				if err != nil {
+					return fmt.Errorf("specification parse error: %w\n", err)
+				}
+
+				l := logger.NewLogger(cfg.Logger.Level)
+				h := server.NewHandlers(openapi, l)
+				s := server.NewServer(cfg.Server, l, h)
+
+				return s.Run()
+			},
+		},
 	}
 
-	cfg := config.NewConfig()
+	r := acmd.RunnerOf(cmds, acmd.Config{
+		AppName: "Dummy",
+		Version: version,
+	})
 
-	flag.StringVar(&cfg.Server.Port, "port", "8080", "")
-	flag.StringVar(&cfg.Logger.Level, "logger-level", "INFO", "")
-
-	flag.Parse()
-
-	for i := 0; i < flag.NArg(); i++ {
-		switch flag.Arg(i) {
-		case "server":
-			cfg.Server.Path = flag.Arg(i + 1)
-
-			openapi, err := openapi3.Parse(cfg.Server.Path)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "specification parse error: %v\n", err)
-				os.Exit(exitcode.Failure)
-			}
-
-			l := logger.NewLogger(cfg.Logger.Level)
-			h := server.NewHandlers(openapi, l)
-			s := server.NewServer(cfg.Server, l, h)
-
-			err = s.Run()
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "server run error: %v\n", err)
-				os.Exit(exitcode.Failure)
-			}
-		case "version":
-			fmt.Println(version)
-			os.Exit(exitcode.Success)
-		}
-	}
+	return r.Run()
 }
