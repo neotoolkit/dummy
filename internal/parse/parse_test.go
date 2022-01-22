@@ -127,3 +127,43 @@ func testable(t *testing.T, api api.API) api.API {
 
 	return api
 }
+
+func TestGetSpecType(t *testing.T) {
+	tests := []struct {
+		name string
+		path string
+		want parse.SpecType
+		err  error
+	}{
+		{
+			name: "",
+			path: "",
+			want: parse.Unknown,
+			err:  parse.ErrEmptySpecTypePath,
+		},
+		{
+			name: "",
+			path: "./testdata/openapi3",
+			want: parse.Unknown,
+			err: &parse.SpecFileError{
+				Path: "./testdata/openapi3",
+			},
+		},
+		{
+			name: "",
+			path: "./testdata/openapi3.yml",
+			want: parse.OpenAPI3,
+			err:  nil,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			got, err := parse.GetSpecType(tc.path)
+			if err != nil {
+				require.EqualError(t, err, tc.err.Error())
+			}
+			require.Equal(t, tc.want, got)
+		})
+	}
+}
