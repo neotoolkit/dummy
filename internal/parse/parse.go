@@ -1,12 +1,13 @@
 package parse
 
 import (
-	"gopkg.in/yaml.v3"
+	"strings"
 
-	"github.com/go-dummy/dummy/internal/openapi3"
+	"gopkg.in/yaml.v3"
 
 	"github.com/go-dummy/dummy/internal/api"
 	"github.com/go-dummy/dummy/internal/faker"
+	"github.com/go-dummy/dummy/internal/openapi3"
 	"github.com/go-dummy/dummy/internal/read"
 )
 
@@ -17,18 +18,27 @@ func Parse(path string) (api.API, error) {
 		return api.API{}, err
 	}
 
-	var openapi openapi3.OpenAPI
+	splitPath := strings.Split(path, ".")
 
-	if err := yaml.Unmarshal(file, &openapi); err != nil {
-		return api.API{}, err
+	switch splitPath[1] {
+	case "yml", "yaml":
+		var openapi openapi3.OpenAPI
+
+		if err := yaml.Unmarshal(file, &openapi); err != nil {
+			return api.API{}, err
+		}
+
+		f := faker.NewFaker()
+
+		b := &openapi3.Builder{
+			OpenAPI: openapi,
+			Faker:   f,
+		}
+
+		return b.Build()
+	case "graphql":
+		panic("Not implemented")
 	}
 
-	f := faker.NewFaker()
-
-	b := &openapi3.Builder{
-		OpenAPI: openapi,
-		Faker:   f,
-	}
-
-	return b.Build()
+	return api.API{}, nil
 }
