@@ -4,10 +4,10 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/go-dummy/faker"
 	"gopkg.in/yaml.v3"
 
 	"github.com/go-dummy/dummy/internal/api"
-	"github.com/go-dummy/dummy/internal/faker"
 	"github.com/go-dummy/dummy/internal/openapi3"
 	"github.com/go-dummy/dummy/internal/read"
 )
