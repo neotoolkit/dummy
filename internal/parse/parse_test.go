@@ -152,7 +152,7 @@ func TestGetSpecType(t *testing.T) {
 		{
 			name: "",
 			path: "./testdata/openapi3.yml",
-			want: parse.OpenAPI3,
+			want: parse.OpenAPI,
 			err:  nil,
 		},
 	}

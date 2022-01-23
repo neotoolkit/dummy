@@ -15,9 +15,9 @@ import (
 type SpecType string
 
 const (
-	OpenAPI3 SpecType = "OpenAPI 3.x"
-	GraphQL  SpecType = "GraphQL"
-	Unknown  SpecType = "Unknown"
+	OpenAPI SpecType = "OpenAPI"
+	GraphQL SpecType = "GraphQL"
+	Unknown SpecType = "Unknown"
 )
 
 var ErrEmptySpecTypePath = errors.New("empty spec type path")
@@ -55,7 +55,7 @@ func Parse(path string) (api.API, error) {
 	}
 
 	switch specType {
-	case OpenAPI3:
+	case OpenAPI:
 		var openapi openapi.OpenAPI
 
 		if err := yaml.Unmarshal(file, &openapi); err != nil {
@@ -105,7 +105,7 @@ func GetSpecType(path string) (SpecType, error) {
 	switch splitPath[1] {
 	case "yml", "yaml":
 		if err := yaml.Unmarshal(file, &openapi.OpenAPI{}); err == nil {
-			return OpenAPI3, nil
+			return OpenAPI, nil
 		}
 
 		return Unknown, &SpecTypeError{
