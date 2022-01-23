@@ -9,7 +9,6 @@ import (
 	"gopkg.in/yaml.v3"
 
 	"github.com/go-dummy/dummy/internal/api"
-	"github.com/go-dummy/dummy/internal/openapi3"
 	"github.com/go-dummy/dummy/internal/read"
 )
 
@@ -105,7 +104,7 @@ func GetSpecType(path string) (SpecType, error) {
 
 	switch splitPath[1] {
 	case "yml", "yaml":
-		if err := yaml.Unmarshal(file, &openapi3.OpenAPI{}); err == nil {
+		if err := yaml.Unmarshal(file, &openapi.OpenAPI{}); err == nil {
 			return OpenAPI3, nil
 		}
 
