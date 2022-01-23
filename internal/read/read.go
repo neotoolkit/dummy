@@ -9,13 +9,13 @@ import (
 // Read -.
 func Read(path string) ([]byte, error) {
 	if strings.HasPrefix(path, "http://") || strings.HasPrefix(path, "https://") {
-		return readFromURL(path)
+		return url(path)
 	}
 
-	return readFromFile(path)
+	return file(path)
 }
 
-func readFromURL(url string) ([]byte, error) {
+func url(url string) ([]byte, error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
@@ -30,7 +30,7 @@ func readFromURL(url string) ([]byte, error) {
 	return body, nil
 }
 
-func readFromFile(path string) ([]byte, error) {
+func file(path string) ([]byte, error) {
 	file, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err
