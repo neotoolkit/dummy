@@ -1,15 +1,15 @@
-package openapi3_test
+package api_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/go-dummy/dummy/internal/openapi3"
+	"github.com/go-dummy/dummy/internal/api"
 )
 
 func TestObjectExampleError(t *testing.T) {
-	got := &openapi3.ObjectExampleError{
+	got := &api.ObjectExampleError{
 		Data: "",
 	}
 
@@ -17,7 +17,7 @@ func TestObjectExampleError(t *testing.T) {
 }
 
 func TestSchemaTypeError(t *testing.T) {
-	got := &openapi3.SchemaTypeError{
+	got := &api.SchemaTypeError{
 		SchemaType: "",
 	}
 
@@ -25,7 +25,7 @@ func TestSchemaTypeError(t *testing.T) {
 }
 
 func TestArrayExampleError(t *testing.T) {
-	got := &openapi3.ArrayExampleError{
+	got := &api.ArrayExampleError{
 		Data: "",
 	}
 
@@ -57,7 +57,7 @@ func TestRemoveTrailingSlash(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			got := openapi3.RemoveTrailingSlash(tc.path)
+			got := api.RemoveTrailingSlash(tc.path)
 
 			require.Equal(t, tc.want, got)
 		})

@@ -5,6 +5,7 @@ go 1.17
 require (
 	github.com/cristalhq/acmd v0.5.2
 	github.com/go-dummy/faker v0.1.0
+	github.com/go-dummy/openapi v0.1.0
 	github.com/pact-foundation/pact-go v1.6.7
 	github.com/rs/zerolog v1.26.1
 	github.com/stretchr/testify v1.7.0

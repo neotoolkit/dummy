@@ -1,4 +1,4 @@
-package openapi3
+package api
 
 import (
 	"errors"
@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/go-dummy/faker"
+	"github.com/go-dummy/openapi"
 
-	"github.com/go-dummy/dummy/internal/api"
+	"github.com/go-dummy/faker"
 )
 
 // SchemaTypeError -.
@@ -83,40 +83,40 @@ func RemoveTrailingSlash(path string) string {
 }
 
 type Builder struct {
-	OpenAPI    OpenAPI
-	Operations []api.Operation
+	OpenAPI    openapi.OpenAPI
+	Operations []Operation
 	Faker      faker.Faker
 }
 
 // Build -.
-func (b *Builder) Build() (api.API, error) {
+func (b *Builder) Build() (API, error) {
 	for path, method := range b.OpenAPI.Paths {
 		if err := b.Add(path, http.MethodGet, method.Get); err != nil {
-			return api.API{}, err
+			return API{}, err
 		}
 
 		if err := b.Add(path, http.MethodPost, method.Post); err != nil {
-			return api.API{}, err
+			return API{}, err
 		}
 
 		if err := b.Add(path, http.MethodPut, method.Put); err != nil {
-			return api.API{}, err
+			return API{}, err
 		}
 
 		if err := b.Add(path, http.MethodPatch, method.Patch); err != nil {
-			return api.API{}, err
+			return API{}, err
 		}
 
 		if err := b.Add(path, http.MethodDelete, method.Delete); err != nil {
-			return api.API{}, err
+			return API{}, err
 		}
 	}
 
-	return api.API{Operations: b.Operations}, nil
+	return API{Operations: b.Operations}, nil
 }
 
 // Add -.
-func (b *Builder) Add(path, method string, o *Operation) error {
+func (b *Builder) Add(path, method string, o *openapi.Operation) error {
 	if o != nil {
 		p := RemoveTrailingSlash(path)
 
@@ -132,20 +132,20 @@ func (b *Builder) Add(path, method string, o *Operation) error {
 }
 
 // Set -.
-func (b *Builder) Set(path, method string, o *Operation) (api.Operation, error) {
-	operation := api.Operation{
+func (b *Builder) Set(path, method string, o *openapi.Operation) (Operation, error) {
+	operation := Operation{
 		Method: method,
 		Path:   path,
 	}
 
 	body, ok := o.RequestBody.Content["application/json"]
 	if ok {
-		var s Schema
+		var s openapi.Schema
 
 		if body.Schema.Reference != "" {
 			schema, err := b.OpenAPI.LookupByReference(body.Schema.Reference)
 			if err != nil {
-				return api.Operation{}, fmt.Errorf("resolve reference: %w", err)
+				return Operation{}, fmt.Errorf("resolve reference: %w", err)
 			}
 
 			s = schema
@@ -153,16 +153,16 @@ func (b *Builder) Set(path, method string, o *Operation) (api.Operation, error) 
 			s = body.Schema
 		}
 
-		operation.Body = make(map[string]api.FieldType, len(s.Properties))
+		operation.Body = make(map[string]FieldType, len(s.Properties))
 
 		for _, v := range s.Required {
-			operation.Body[v] = api.FieldType{
+			operation.Body[v] = FieldType{
 				Required: true,
 			}
 		}
 
 		for k, v := range s.Properties {
-			operation.Body[k] = api.FieldType{
+			operation.Body[k] = FieldType{
 				Required: operation.Body[k].Required,
 				Type:     v.Type,
 			}
@@ -172,36 +172,36 @@ func (b *Builder) Set(path, method string, o *Operation) (api.Operation, error) 
 	for code, resp := range o.Responses {
 		statusCode, err := strconv.Atoi(code)
 		if err != nil {
-			return api.Operation{}, err
+			return Operation{}, err
 		}
 
 		content, ok := resp.Content["application/json"]
 		if !ok {
-			operation.Responses = append(operation.Responses, api.Response{
+			operation.Responses = append(operation.Responses, Response{
 				StatusCode: statusCode,
 			})
 
 			continue
 		}
 
-		example := ExampleToResponse(content.Example)
+		example := openapi.ExampleToResponse(content.Example)
 
 		examples := make(map[string]interface{}, len(content.Examples)+1)
 
 		if len(content.Examples) > 0 {
 			for key, e := range content.Examples {
-				examples[key] = ExampleToResponse(e.Value)
+				examples[key] = openapi.ExampleToResponse(e.Value)
 			}
 
-			examples[""] = ExampleToResponse(content.Examples[content.Examples.GetKeys()[0]].Value)
+			examples[""] = openapi.ExampleToResponse(content.Examples[content.Examples.GetKeys()[0]].Value)
 		}
 
 		schema, err := b.convertSchema(content.Schema)
 		if err != nil {
-			return api.Operation{}, err
+			return Operation{}, err
 		}
 
-		operation.Responses = append(operation.Responses, api.Response{
+		operation.Responses = append(operation.Responses, Response{
 			StatusCode: statusCode,
 			MediaType:  "application/json",
 			Schema:     schema,
@@ -213,7 +213,7 @@ func (b *Builder) Set(path, method string, o *Operation) (api.Operation, error) 
 	return operation, nil
 }
 
-func (b *Builder) convertSchema(s Schema) (api.Schema, error) {
+func (b *Builder) convertSchema(s openapi.Schema) (Schema, error) {
 	if s.Reference != "" {
 		schema, err := b.OpenAPI.LookupByReference(s.Reference)
 		if err != nil {
@@ -224,22 +224,22 @@ func (b *Builder) convertSchema(s Schema) (api.Schema, error) {
 	}
 
 	if s.Faker != "" {
-		return api.FakerSchema{Example: b.Faker.ByName(s.Faker)}, nil
+		return FakerSchema{Example: b.Faker.ByName(s.Faker)}, nil
 	}
 
 	switch s.Type {
 	case "boolean":
 		val, _ := s.Example.(bool)
-		return api.BooleanSchema{Example: val}, nil
+		return BooleanSchema{Example: val}, nil
 	case "integer":
 		val, _ := s.Example.(int64)
-		return api.IntSchema{Example: val}, nil
+		return IntSchema{Example: val}, nil
 	case "number":
 		val, _ := s.Example.(float64)
-		return api.FloatSchema{Example: val}, nil
+		return FloatSchema{Example: val}, nil
 	case "string":
 		val, _ := s.Example.(string)
-		return api.StringSchema{Example: val}, nil
+		return StringSchema{Example: val}, nil
 	case "array":
 		if nil == s.Items {
 			return nil, ErrEmptyItems
@@ -255,12 +255,12 @@ func (b *Builder) convertSchema(s Schema) (api.Schema, error) {
 			return nil, err
 		}
 
-		return api.ArraySchema{
+		return ArraySchema{
 			Type:    itemsSchema,
 			Example: arrExample,
 		}, nil
 	case "object":
-		obj := api.ObjectSchema{Properties: make(map[string]api.Schema, len(s.Properties))}
+		obj := ObjectSchema{Properties: make(map[string]Schema, len(s.Properties))}
 
 		for key, prop := range s.Properties {
 			propSchema, err := b.convertSchema(*prop)
