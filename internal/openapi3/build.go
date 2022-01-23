@@ -6,8 +6,9 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/go-dummy/faker"
+
 	"github.com/go-dummy/dummy/internal/api"
-	"github.com/go-dummy/dummy/internal/faker"
 )
 
 // SchemaTypeError -.
