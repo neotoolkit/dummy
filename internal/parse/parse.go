@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/go-dummy/faker"
+	"github.com/go-dummy/openapi"
 	"gopkg.in/yaml.v3"
 
 	"github.com/go-dummy/dummy/internal/api"
@@ -56,7 +57,7 @@ func Parse(path string) (api.API, error) {
 
 	switch specType {
 	case OpenAPI3:
-		var openapi openapi3.OpenAPI
+		var openapi openapi.OpenAPI
 
 		if err := yaml.Unmarshal(file, &openapi); err != nil {
 			return api.API{}, err
@@ -64,7 +65,7 @@ func Parse(path string) (api.API, error) {
 
 		f := faker.NewFaker()
 
-		b := &openapi3.Builder{
+		b := &api.Builder{
 			OpenAPI: openapi,
 			Faker:   f,
 		}
