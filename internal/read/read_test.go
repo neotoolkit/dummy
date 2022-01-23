@@ -15,7 +15,8 @@ import (
 )
 
 func TestRead(t *testing.T) {
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintln(w, `{
    "openapi": "3.0.3",
@@ -35,7 +36,14 @@ func TestRead(t *testing.T) {
       }
    }
 }`)
-	}))
+	})
+	mux.HandleFunc("/error", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Content-Length", "50")
+		// return less bytes, wich will result in an "unexpected EOF" from ioutil.ReadAll()
+		fmt.Fprintln(w, []byte("a"))
+	})
+
+	ts := httptest.NewServer(mux)
 	defer ts.Close()
 
 	tests := []struct {
@@ -51,6 +59,11 @@ func TestRead(t *testing.T) {
 				URL: "https:",
 				Err: errors.New("http: no Host in request URL"),
 			},
+		},
+		{
+			name: "read from URL error",
+			path: ts.URL + "/error",
+			err:  errors.New("unexpected EOF"),
 		},
 		{
 			name: "read from URL",
