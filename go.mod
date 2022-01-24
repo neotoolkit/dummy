@@ -6,6 +6,7 @@ require (
 	github.com/cristalhq/acmd v0.5.2
 	github.com/go-dummy/faker v0.1.0
 	github.com/go-dummy/openapi v0.2.0
+	github.com/lamoda/gonkey v1.13.1
 	github.com/pact-foundation/pact-go v1.6.7
 	github.com/rs/zerolog v1.26.1
 	github.com/stretchr/testify v1.7.0
@@ -21,7 +22,6 @@ require (
 	github.com/joho/godotenv v1.3.0 // indirect
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/kylelemons/godebug v1.1.0 // indirect
-	github.com/lamoda/gonkey v1.13.1 // indirect
 	github.com/lib/pq v1.3.0 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
