@@ -1,0 +1,23 @@
+- name: Empty lastName
+  method: POST
+  path: /users
+
+  request: |
+    {
+      "firstName": "Elon"
+    }
+
+  response:
+    400: |
+
+- name: Empty firstName
+  method: POST
+  path: /users
+
+  request: |
+    {
+      "lastName": "Must"
+    }
+
+  response:
+    400: |

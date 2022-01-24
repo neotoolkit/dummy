@@ -1,0 +1,53 @@
+openapi: 3.0.3
+
+info:
+  title: Users dummy API
+  version: 0.1.0
+
+paths:
+  /users:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserBody"
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              example:
+                id: e1afccea-5168-4735-84d4-cb96f6fb5d25
+                firstName: Elon
+                lastName: Musk
+
+components:
+  schemas:
+    UserBody:
+      type: object
+      required:
+        - firstName
+        - lastName
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+    User:
+      type: object
+      required:
+        - id
+        - firstName
+        - lastName
+      properties:
+        id:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+        lastName:
+          type: string

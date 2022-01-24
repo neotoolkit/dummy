@@ -1,6 +1,3 @@
-//go:build go1.18
-// +build go1.18
-
 package test_test
 
 import (
@@ -9,8 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/pact-foundation/pact-go/dsl"
-	"github.com/pact-foundation/pact-go/types"
+	"github.com/lamoda/gonkey/runner"
 
 	"github.com/go-dummy/dummy/internal/config"
 	"github.com/go-dummy/dummy/internal/logger"
@@ -18,22 +14,28 @@ import (
 	"github.com/go-dummy/dummy/internal/server"
 )
 
-func FuzzDummy(f *testing.F) {
+func TestDummy(t *testing.T) {
 	testdata, err := ioutil.ReadDir("testdata")
 	if err != nil {
-		f.Fatal(err)
+		t.Fatal(err)
 	}
+
+	type test struct {
+		SpecPath       string
+		GonkeyTestsDir string
+	}
+
+	tests := make([]test, len(testdata))
 
 	for i := 0; i < len(testdata); i++ {
-		f.Add(
-			"testdata/"+testdata[i].Name()+"/openapi3.yml",
-			"testdata/"+testdata[i].Name(),
-			"testdata/"+testdata[i].Name()+"/pact.json",
-		)
+		tests[i] = test{
+			SpecPath:       "testdata/" + testdata[i].Name() + "/openapi.yml",
+			GonkeyTestsDir: "testdata/" + testdata[i].Name() + "/cases",
+		}
 	}
 
-	f.Fuzz(func(t *testing.T, path, pactDir, pactURL string) {
-		api, err := parse.Parse(path)
+	for _, tc := range tests {
+		api, err := parse.Parse(tc.SpecPath)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -48,18 +50,9 @@ func FuzzDummy(f *testing.F) {
 		mux.HandleFunc("/", s.Handler)
 		newServer := httptest.NewServer(mux)
 
-		pact := dsl.Pact{
-			Consumer:                 "consumer",
-			Provider:                 "dummy",
-			PactDir:                  pactDir,
-			DisableToolValidityCheck: true,
-		}
-
-		if _, err := pact.VerifyProvider(t, types.VerifyRequest{
-			ProviderBaseURL: newServer.URL,
-			PactURLs:        []string{pactURL},
-		}); err != nil {
-			t.Fatal(err)
-		}
-	})
+		runner.RunWithTesting(t, &runner.RunWithTestingParams{
+			Server:   newServer,
+			TestsDir: tc.GonkeyTestsDir,
+		})
+	}
 }
