@@ -7,7 +7,6 @@ require (
 	github.com/go-dummy/faker v0.1.0
 	github.com/go-dummy/openapi v0.2.0
 	github.com/lamoda/gonkey v1.13.1
-	github.com/pact-foundation/pact-go v1.6.7
 	github.com/rs/zerolog v1.26.1
 	github.com/stretchr/testify v1.7.0
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
@@ -17,8 +16,6 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fatih/color v1.7.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
-	github.com/hashicorp/go-version v1.3.0 // indirect
-	github.com/hashicorp/logutils v1.0.0 // indirect
 	github.com/joho/godotenv v1.3.0 // indirect
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/kylelemons/godebug v1.1.0 // indirect
