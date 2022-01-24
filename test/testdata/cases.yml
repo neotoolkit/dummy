@@ -1,0 +1,170 @@
+- name: Create user. Bad request. Empty lastName
+  method: POST
+  path: /users
+
+  request: |
+    {
+      "firstName": "Elon"
+    }
+
+  response:
+    400: |
+
+- name: Create user. Bad request. Empty firstName
+  method: POST
+  path: /users
+
+  request: |
+    {
+      "lastName": "Musk"
+    }
+
+  response:
+    400: |
+
+- name: Create user
+  method: POST
+  path: /users
+
+  request: |
+    {
+      "firstName": "Elon",
+      "lastName": "Musk"
+    }
+
+  response:
+    201: |
+      {
+        "id":"e1afccea-5168-4735-84d4-cb96f6fb5d25",
+        "firstName":"Elon",
+        "lastName":"Musk"
+      }
+
+- name: Get users
+  method: GET
+  path: /users
+
+  response:
+    200: |
+      [
+        {
+          "id": "e1afccea-5168-4735-84d4-cb96f6fb5d25",
+          "firstName": "Elon",
+          "lastName": "Musk"
+        },
+        {
+          "id":"472063cc-4c83-11ec-81d3-0242ac130003",
+          "firstName":"Sergey",
+          "lastName":"Brin"
+        }
+      ]
+
+- name: Get user by ID
+  method: GET
+  path: /users/e1afccea-5168-4735-84d4-cb96f6fb5d25
+
+  response:
+    200: |
+      {
+        "id":"e1afccea-5168-4735-84d4-cb96f6fb5d25",
+        "firstName":"Elon",
+        "lastName":"Musk"
+      }
+
+- name: Update user. Bad request. Empty lastName
+  method: PUT
+  path: /users/e1afccea-5168-4735-84d4-cb96f6fb5d25
+
+  request: |
+    {
+      "firstName": "Elon"
+    }
+
+  response:
+    400: |
+
+- name: Update user. Bad request. Empty firstName
+  method: PUT
+  path: /users/e1afccea-5168-4735-84d4-cb96f6fb5d25
+
+  request: |
+    {
+      "lastName": "Musk"
+    }
+
+  response:
+    400: |
+
+- name: Update user
+  method: PUT
+  path: /users/e1afccea-5168-4735-84d4-cb96f6fb5d25
+
+  request: |
+    {
+      "firstName": "Elon",
+      "lastName": "Musk"
+    }
+
+  response:
+    200: |
+      {
+        "id":"e1afccea-5168-4735-84d4-cb96f6fb5d25",
+        "firstName":"Elon",
+        "lastName":"Musk"
+      }
+
+- name: Update user. Bad request. Empty lastName
+  method: PATCH
+  path: /users/e1afccea-5168-4735-84d4-cb96f6fb5d25
+
+  request: |
+    {
+      "firstName": "Elon"
+    }
+
+  response:
+    400: |
+
+- name: Update user. Bad request. Empty firstName
+  method: PATCH
+  path: /users/e1afccea-5168-4735-84d4-cb96f6fb5d25
+
+  request: |
+    {
+      "lastName": "Musk"
+    }
+
+  response:
+    400: |
+
+- name: Update user
+  method: PATCH
+  path: /users/e1afccea-5168-4735-84d4-cb96f6fb5d25
+
+  request: |
+    {
+      "firstName": "Elon",
+      "lastName": "Musk"
+    }
+
+  response:
+    200: |
+      {
+        "id":"e1afccea-5168-4735-84d4-cb96f6fb5d25",
+        "firstName":"Elon",
+        "lastName":"Musk"
+      }
+
+- name: Delete user by ID
+  method: DELETE
+  path: /users/e1afccea-5168-4735-84d4-cb96f6fb5d25
+
+  response:
+    204: |
+
+- name: Not Found
+  method: GET
+  path: /
+
+  response:
+    404: |

@@ -12,7 +12,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/User"
+              $ref: "#/components/schemas/UserBody"
       responses:
         '201':
           description: ''
@@ -24,7 +24,6 @@ paths:
                 id: e1afccea-5168-4735-84d4-cb96f6fb5d25
                 firstName: Elon
                 lastName: Musk
-
     get:
       responses:
         '200':
@@ -32,9 +31,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/Users'
               example:
                 - id: e1afccea-5168-4735-84d4-cb96f6fb5d25
                   firstName: Elon
@@ -42,7 +39,6 @@ paths:
                 - id: 472063cc-4c83-11ec-81d3-0242ac130003
                   firstName: Sergey
                   lastName: Brin
-
   /users/{userId}:
     get:
       parameters:
@@ -63,14 +59,13 @@ paths:
                 id: e1afccea-5168-4735-84d4-cb96f6fb5d25
                 firstName: Elon
                 lastName: Musk
-
     put:
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/User"
+              $ref: "#/components/schemas/UserBody"
       responses:
         '200':
           description: ''
@@ -82,14 +77,13 @@ paths:
                 id: e1afccea-5168-4735-84d4-cb96f6fb5d25
                 firstName: Elon
                 lastName: Musk
-
     patch:
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/User"
+              $ref: "#/components/schemas/UserBody"
       responses:
         '200':
           description: ''
@@ -101,7 +95,6 @@ paths:
                 id: e1afccea-5168-4735-84d4-cb96f6fb5d25
                 firstName: Elon
                 lastName: Musk
-
     delete:
       responses:
         '204':
@@ -109,6 +102,16 @@ paths:
 
 components:
   schemas:
+    UserBody:
+      type: object
+      required:
+        - firstName
+        - lastName
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
     User:
       type: object
       required:
@@ -126,3 +129,7 @@ components:
         lastName:
           type: string
           example: Musk
+    Users:
+      type: array
+      items:
+        $ref: '#/components/schemas/User'
