@@ -1,7 +1,6 @@
 package test_test
 
 import (
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -15,44 +14,23 @@ import (
 )
 
 func TestDummy(t *testing.T) {
-	testdata, err := ioutil.ReadDir("testdata")
+	api, err := parse.Parse("./testdata/openapi.yml")
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	type test struct {
-		SpecPath       string
-		GonkeyTestsDir string
-	}
+	s := new(server.Server)
+	conf := config.NewConfig()
+	s.Config = conf.Server
+	s.Handlers.API = api
+	s.Logger = logger.NewLogger(conf.Logger.Level)
 
-	tests := make([]test, len(testdata))
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", s.Handler)
+	newServer := httptest.NewServer(mux)
 
-	for i := 0; i < len(testdata); i++ {
-		tests[i] = test{
-			SpecPath:       "testdata/" + testdata[i].Name() + "/openapi.yml",
-			GonkeyTestsDir: "testdata/" + testdata[i].Name() + "/cases",
-		}
-	}
-
-	for _, tc := range tests {
-		api, err := parse.Parse(tc.SpecPath)
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		s := new(server.Server)
-		conf := config.NewConfig()
-		s.Config = conf.Server
-		s.Handlers.API = api
-		s.Logger = logger.NewLogger(conf.Logger.Level)
-
-		mux := http.NewServeMux()
-		mux.HandleFunc("/", s.Handler)
-		newServer := httptest.NewServer(mux)
-
-		runner.RunWithTesting(t, &runner.RunWithTestingParams{
-			Server:   newServer,
-			TestsDir: tc.GonkeyTestsDir,
-		})
-	}
+	runner.RunWithTesting(t, &runner.RunWithTestingParams{
+		Server:   newServer,
+		TestsDir: "./testdata/cases.yml",
+	})
 }
