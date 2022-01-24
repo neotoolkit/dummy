@@ -6,7 +6,7 @@ import (
 
 	"github.com/go-dummy/faker"
 	"github.com/go-dummy/openapi"
-	"gopkg.in/yaml.v3"
+	"github.com/goccy/go-yaml"
 
 	"github.com/go-dummy/dummy/internal/api"
 	"github.com/go-dummy/dummy/internal/read"
