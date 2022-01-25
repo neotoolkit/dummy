@@ -104,13 +104,16 @@ func GetSpecType(path string) (SpecType, error) {
 
 	switch splitPath[1] {
 	case "yml", "yaml":
-		if err := yaml.Unmarshal(file, &openapi.OpenAPI{}); err == nil {
-			return OpenAPI, nil
+		var openapi openapi.OpenAPI
+
+		err := yaml.Unmarshal(file, &openapi)
+		if err != nil || len(openapi.OpenAPI) == 0 {
+			return Unknown, &SpecTypeError{
+				Path: path,
+			}
 		}
 
-		return Unknown, &SpecTypeError{
-			Path: path,
-		}
+		return OpenAPI, nil
 	case "graphql":
 		return GraphQL, nil
 	default:
