@@ -211,6 +211,14 @@ func TestGetSpecType(t *testing.T) {
 			want: parse.OpenAPI,
 			err:  nil,
 		},
+		{
+			name: "",
+			path: "./testdata/api.raml",
+			want: parse.Unknown,
+			err: &parse.SpecTypeError{
+				Path: "./testdata/api.raml",
+			},
+		},
 	}
 
 	for _, tc := range tests {
