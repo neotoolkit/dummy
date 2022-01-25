@@ -71,7 +71,7 @@ func Parse(path string) (api.API, error) {
 
 		return b.Build()
 	case GraphQL:
-		panic("Not implemented")
+		return api.API{}, nil
 	}
 
 	return api.API{}, nil
