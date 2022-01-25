@@ -219,6 +219,12 @@ func TestGetSpecType(t *testing.T) {
 				Path: "./testdata/api.raml",
 			},
 		},
+		{
+			name: "",
+			path: "./testdata/schema.graphql",
+			want: parse.GraphQL,
+			err:  nil,
+		},
 	}
 
 	for _, tc := range tests {
