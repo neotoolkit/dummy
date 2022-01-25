@@ -1,6 +1,8 @@
 package parse_test
 
 import (
+	"errors"
+	"io/fs"
 	"sort"
 	"testing"
 
@@ -9,6 +11,60 @@ import (
 	"github.com/go-dummy/dummy/internal/api"
 	"github.com/go-dummy/dummy/internal/parse"
 )
+
+func TestSpecTypeError(t *testing.T) {
+	got := &parse.SpecTypeError{
+		Path: "test",
+	}
+
+	require.Equal(t, got.Error(), "specification type not implemented, path: test")
+}
+
+func TestSpecFileError(t *testing.T) {
+	got := &parse.SpecFileError{
+		Path: "test",
+	}
+
+	require.Equal(t, got.Error(), "test without format")
+}
+
+func TestParse(t *testing.T) {
+	tests := []struct {
+		name string
+		path string
+		want api.API
+		err  error
+	}{
+		{
+			name: "empty path",
+			path: "",
+			want: api.API{},
+			err: &fs.PathError{
+				Op:   "open",
+				Path: "",
+				Err:  errors.New("no such file or directory"),
+			},
+		},
+		{
+			name: "file without format",
+			path: "./testdata/openapi",
+			want: api.API{},
+			err: &parse.SpecFileError{
+				Path: "./testdata/openapi",
+			},
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			got, err := parse.Parse(tc.path)
+			if err != nil {
+				require.EqualError(t, err, tc.err.Error())
+			}
+			require.Equal(t, tc.want, got)
+		})
+	}
+}
 
 func TestParse_YAML(t *testing.T) {
 	expected := api.API{
