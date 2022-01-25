@@ -53,6 +53,34 @@ func TestParse(t *testing.T) {
 				Path: "./testdata/openapi",
 			},
 		},
+		{
+			name: "graphql",
+			path: "./testdata/schema.graphql",
+			want: api.API{},
+			err:  nil,
+		},
+		{
+			name: "",
+			path: "./testdata/empty-openapi.yml",
+			want: api.API{},
+			err: &parse.SpecTypeError{
+				Path: "./testdata/empty-openapi.yml",
+			},
+		},
+		{
+			name: "",
+			path: "./testdata/openapi.yml",
+			want: api.API{},
+			err:  nil,
+		},
+		{
+			name: "unknown format",
+			path: "./testdata/api.raml",
+			want: api.API{},
+			err: &parse.SpecTypeError{
+				Path: "./testdata/api.raml",
+			},
+		},
 	}
 
 	for _, tc := range tests {
