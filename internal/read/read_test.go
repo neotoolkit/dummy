@@ -39,7 +39,7 @@ func TestRead(t *testing.T) {
 	})
 	mux.HandleFunc("/error", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Content-Length", "50")
-		// return less bytes, wich will result in an "unexpected EOF" from ioutil.ReadAll()
+		// return less bytes, which will result in an "unexpected EOF" from ioutil.ReadAll()
 		fmt.Fprintln(w, []byte("a"))
 	})
 
