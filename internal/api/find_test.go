@@ -51,6 +51,12 @@ func TestPathByParamDetect(t *testing.T) {
 			param: "/path/{1}/path1/{2}",
 			want:  false,
 		},
+		{
+			name:  "",
+			path:  "/path/1/path/2/path",
+			param: "/path/{1}/path/{2}",
+			want:  false,
+		},
 	}
 
 	for _, tc := range tests {
