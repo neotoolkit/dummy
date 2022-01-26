@@ -47,8 +47,8 @@ func TestPathByParamDetect(t *testing.T) {
 		},
 		{
 			name:  "",
-			path:  "/path/1/path1/2",
-			param: "/path/{1}/path/{2}",
+			path:  "/path/1/path/2",
+			param: "/path/{1}/path1/{2}",
 			want:  false,
 		},
 	}
