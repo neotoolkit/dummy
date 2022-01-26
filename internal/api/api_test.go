@@ -98,49 +98,107 @@ func TestResponse_ExampleValue(t *testing.T) {
 		want     interface{}
 	}{
 		{
-			name:     "boolean examples",
-			response: api.Response{Schema: api.BooleanSchema{}, Examples: map[string]interface{}{"first": false, "second": true}},
-			key:      "first",
-			want:     false,
+			name: "boolean examples",
+			response: api.Response{
+				Schema:   api.BooleanSchema{},
+				Examples: map[string]interface{}{"first": false, "second": true},
+			},
+			key:  "first",
+			want: false,
 		},
 		{
-			name:     "int examples",
-			response: api.Response{Schema: api.IntSchema{}, Examples: map[string]interface{}{"first": int64(4), "second": int64(2)}},
-			key:      "first",
-			want:     int64(4),
+			name: "int examples",
+			response: api.Response{
+				Schema:   api.IntSchema{},
+				Examples: map[string]interface{}{"first": int64(4), "second": int64(2)},
+			},
+			key:  "first",
+			want: int64(4),
 		},
 		{
-			name:     "float examples",
-			response: api.Response{Schema: api.FloatSchema{}, Examples: map[string]interface{}{"first": 4.0, "second": 2.0}},
-			key:      "first",
-			want:     4.0,
+			name: "float examples",
+			response: api.Response{
+				Schema:   api.FloatSchema{},
+				Examples: map[string]interface{}{"first": 4.0, "second": 2.0},
+			},
+			key:  "first",
+			want: 4.0,
 		},
 		{
-			name:     "string examples",
-			response: api.Response{Schema: api.StringSchema{}, Examples: map[string]interface{}{"first": "abc", "second": "xyz"}},
-			key:      "first",
-			want:     "abc",
+			name: "string examples",
+			response: api.Response{
+				Schema:   api.StringSchema{},
+				Examples: map[string]interface{}{"first": "abc", "second": "xyz"},
+			},
+			key:  "first",
+			want: "abc",
 		},
 		{
-			name:     "array examples",
-			response: api.Response{Schema: api.ArraySchema{}, Examples: map[string]interface{}{"first": []int64{4, 2}, "second": []int64{0, 0}}},
-			key:      "first",
-			want:     []int64{4, 2},
+			name: "array examples",
+			response: api.Response{
+				Schema:   api.ArraySchema{},
+				Examples: map[string]interface{}{"first": []int64{4, 2}, "second": []int64{0, 0}},
+			},
+			key:  "first",
+			want: []int64{4, 2},
 		},
 		{
-			name:     "object examples",
-			response: api.Response{Schema: api.ObjectSchema{}, Examples: map[string]interface{}{"first": map[string]interface{}{"first": "abc"}, "second": map[string]interface{}{"first": "xyz"}}},
-			key:      "first",
-			want:     map[string]interface{}{"first": "abc"},
+			name: "object examples",
+			response: api.Response{
+				Schema:   api.ObjectSchema{},
+				Examples: map[string]interface{}{"first": map[string]interface{}{"first": "abc"}, "second": map[string]interface{}{"first": "xyz"}},
+			},
+			key:  "first",
+			want: map[string]interface{}{"first": "abc"},
 		},
 		{
 			name: "use schema example",
-			response: api.Response{Examples: map[string]interface{}{"first": map[string]interface{}{"first": "abc"}, "second": map[string]interface{}{"first": "xyz"}},
+			response: api.Response{
+				Examples: map[string]interface{}{"first": map[string]interface{}{"first": "abc"}, "second": map[string]interface{}{"first": "xyz"}},
 				Schema: api.ObjectSchema{
 					Example: map[string]interface{}{"first": "schema variant"},
-				}},
+				},
+			},
 			key:  "third",
 			want: map[string]interface{}{"first": "schema variant"},
+		},
+		{
+			name: "nil schema",
+			response: api.Response{
+				Schema:   nil,
+				Examples: map[string]interface{}{"first": false, "second": true},
+			},
+			key:  "first",
+			want: nil,
+		},
+		{
+			name: "example",
+			response: api.Response{
+				Schema:  api.ObjectSchema{},
+				Example: map[string]interface{}{"first": "abc", "second": "def"},
+			},
+			key:  "",
+			want: map[string]interface{}{"first": "abc", "second": "def"},
+		},
+		{
+			name: "object properties",
+			response: api.Response{
+				Schema: api.ObjectSchema{
+					Properties: map[string]api.Schema{
+						"key": api.ObjectSchema{},
+					},
+				},
+			},
+			key:  "",
+			want: map[string]interface{}{"key": map[string]interface{}{}},
+		},
+		{
+			name: "faker schema",
+			response: api.Response{
+				Schema: api.FakerSchema{},
+			},
+			key:  "",
+			want: nil,
 		},
 	}
 
