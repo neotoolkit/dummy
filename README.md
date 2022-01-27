@@ -14,6 +14,14 @@ go install github.com/go-dummy/dummy/cmd/dummy
 ```bash
 dummy server ./openapi.yml
 ```
+### Local run
+#### Requirements
+- go version 1.17 for run linter and tests (make all)
+- go version 1.18 for run project
+- golangci-lint (`$ go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0`)
+```bash
+make local
+```
 More usage [examples](examples)
 
 ## ♥️ Sponsors
