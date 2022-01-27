@@ -1,20 +1,13 @@
 package api_test
 
 import (
+	"github.com/go-dummy/openapi"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 
 	"github.com/go-dummy/dummy/internal/api"
 )
-
-func TestObjectExampleError(t *testing.T) {
-	got := &api.ObjectExampleError{
-		Data: "",
-	}
-
-	require.Equal(t, got.Error(), "unpredicted type for example string")
-}
 
 func TestSchemaTypeError(t *testing.T) {
 	got := &api.SchemaTypeError{
@@ -30,6 +23,100 @@ func TestArrayExampleError(t *testing.T) {
 	}
 
 	require.Equal(t, got.Error(), "unpredicted type for example string")
+}
+
+func TestParseArrayExample(t *testing.T) {
+	tests := []struct {
+		name string
+		data interface{}
+		want []interface{}
+		err  error
+	}{
+		{
+			name: "nil data",
+			data: nil,
+			want: []interface{}{},
+			err:  nil,
+		},
+		{
+			name: "array",
+			data: []interface{}{
+				map[string]interface{}{
+					"key": "value",
+				},
+			},
+			want: []interface{}{
+				map[string]interface{}{
+					"key": "value",
+				},
+			},
+			err: nil,
+		},
+		{
+			name: "not array",
+			data: "string",
+			want: nil,
+			err:  &api.ArrayExampleError{Data: "string"},
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			res, err := api.ParseArrayExample(tc.data)
+			if err != nil {
+				require.EqualError(t, err, tc.err.Error())
+			}
+
+			require.Equal(t, tc.want, res)
+		})
+	}
+}
+
+func TestObjectExampleError(t *testing.T) {
+	got := &api.ObjectExampleError{
+		Data: "",
+	}
+
+	require.Equal(t, got.Error(), "unpredicted type for example string")
+}
+
+func TestParseObjectExample(t *testing.T) {
+	tests := []struct {
+		name string
+		data interface{}
+		want map[string]interface{}
+		err  error
+	}{
+		{
+			name: "nil data",
+			data: nil,
+			want: map[string]interface{}{},
+			err:  nil,
+		},
+		{
+			name: "object",
+			data: map[string]interface{}{},
+			want: map[string]interface{}{},
+			err:  nil,
+		},
+		{
+			name: "not object",
+			data: "string",
+			want: nil,
+			err:  &api.ObjectExampleError{Data: "string"},
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			res, err := api.ParseObjectExample(tc.data)
+			if err != nil {
+				require.EqualError(t, err, tc.err.Error())
+			}
+
+			require.Equal(t, tc.want, res)
+		})
+	}
 }
 
 func TestRemoveTrailingSlash(t *testing.T) {
@@ -60,6 +147,150 @@ func TestRemoveTrailingSlash(t *testing.T) {
 			got := api.RemoveTrailingSlash(tc.path)
 
 			require.Equal(t, tc.want, got)
+		})
+	}
+}
+
+func TestBuilder_Build(t *testing.T) {
+	tests := []struct {
+		name    string
+		builder api.Builder
+		want    api.API
+		err     error
+	}{
+		{
+			name:    "",
+			builder: api.Builder{},
+			want:    api.API{},
+			err:     nil,
+		},
+		{
+			name: "GET",
+			builder: api.Builder{
+				OpenAPI: openapi.OpenAPI{
+					Paths: map[string]*openapi.Path{
+						"test": {
+							Get: &openapi.Operation{},
+						},
+					},
+				},
+			},
+			want: api.API{
+				Operations: []api.Operation{
+					{
+						Method:    "GET",
+						Path:      "test",
+						Body:      map[string]api.FieldType(nil),
+						Responses: []api.Response(nil),
+					},
+				},
+			},
+			err: nil,
+		},
+		{
+			name: "POST",
+			builder: api.Builder{
+				OpenAPI: openapi.OpenAPI{
+					Paths: map[string]*openapi.Path{
+						"test": {
+							Post: &openapi.Operation{},
+						},
+					},
+				},
+			},
+			want: api.API{
+				Operations: []api.Operation{
+					{
+						Method:    "POST",
+						Path:      "test",
+						Body:      map[string]api.FieldType(nil),
+						Responses: []api.Response(nil),
+					},
+				},
+			},
+			err: nil,
+		},
+		{
+			name: "PUT",
+			builder: api.Builder{
+				OpenAPI: openapi.OpenAPI{
+					Paths: map[string]*openapi.Path{
+						"test": {
+							Put: &openapi.Operation{},
+						},
+					},
+				},
+			},
+			want: api.API{
+				Operations: []api.Operation{
+					{
+						Method:    "PUT",
+						Path:      "test",
+						Body:      map[string]api.FieldType(nil),
+						Responses: []api.Response(nil),
+					},
+				},
+			},
+			err: nil,
+		},
+		{
+			name: "PATCH",
+			builder: api.Builder{
+				OpenAPI: openapi.OpenAPI{
+					Paths: map[string]*openapi.Path{
+						"test": {
+							Patch: &openapi.Operation{},
+						},
+					},
+				},
+			},
+			want: api.API{
+				Operations: []api.Operation{
+					{
+						Method:    "PATCH",
+						Path:      "test",
+						Body:      map[string]api.FieldType(nil),
+						Responses: []api.Response(nil),
+					},
+				},
+			},
+			err: nil,
+		},
+		{
+			name: "DELETE",
+			builder: api.Builder{
+				OpenAPI: openapi.OpenAPI{
+					Paths: map[string]*openapi.Path{
+						"test": {
+							Delete: &openapi.Operation{},
+						},
+					},
+				},
+			},
+			want: api.API{
+				Operations: []api.Operation{
+					{
+						Method:    "DELETE",
+						Path:      "test",
+						Body:      map[string]api.FieldType(nil),
+						Responses: []api.Response(nil),
+					},
+				},
+			},
+			err: nil,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			b := tc.builder
+
+			res, err := b.Build()
+			if err != nil {
+				require.EqualError(t, err, tc.err.Error())
+			}
+
+			require.Equal(t, tc.want, res)
 		})
 	}
 }
