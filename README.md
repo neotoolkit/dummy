@@ -1,4 +1,4 @@
-Run mock server based on API contract with one command.
+Run mock server based off an API contract with one command.
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/go-dummy/dummy)](https://goreportcard.com/report/github.com/go-dummy/dummy)
 [![codecov](https://codecov.io/gh/go-dummy/dummy/branch/main/graph/badge.svg?token=2J45SL2XJS)](https://codecov.io/gh/go-dummy/dummy)
@@ -9,7 +9,7 @@ Dummy requires Go > 1.17
 go install github.com/go-dummy/dummy/cmd/dummy@latest
 ```
 ### Usage
-Dummy can help you create a fake "mock" based off an API contract, which helps people see how your API will work before you even have it built. Run it locally with the prism mock command to run your API on a HTTP server you can interact with.
+Dummy can help you run mock server based off an API contract, which helps people see how your API will work before you even have it built. Run it locally with the `dummy server` command to run your API on a HTTP server you can interact with.
 ```bash
 dummy server ./openapi.yml
 ```
