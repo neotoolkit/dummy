@@ -1,6 +1,6 @@
 github.com/coreos/go-systemd/v22 v22.3.2/go.mod h1:Y58oyj3AT4RCenI/lSvhwexgC+NSVTIJ3seZv2GcEnc=
-github.com/cristalhq/acmd v0.5.3 h1:mKcPYdUpUELRQu84D6uklMFjU6nPTzUYXO8C1TgXpdI=
-github.com/cristalhq/acmd v0.5.3/go.mod h1:LG5oa43pE/BbxtfMoImHCQN++0Su7dzipdgBjMCBVDQ=
+github.com/cristalhq/acmd v0.5.4 h1:nIomwF2uRzV8hnhE9oOD50EIfKqh3Gj7BwHNB/W4icg=
+github.com/cristalhq/acmd v0.5.4/go.mod h1:LG5oa43pE/BbxtfMoImHCQN++0Su7dzipdgBjMCBVDQ=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
