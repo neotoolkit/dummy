@@ -1,7 +1,9 @@
 package api_test
 
 import (
+	"fmt"
 	"github.com/go-dummy/openapi"
+	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -188,6 +190,28 @@ func TestBuilder_Build(t *testing.T) {
 			err: nil,
 		},
 		{
+			name: "Wrong status code in GET",
+			builder: api.Builder{
+				OpenAPI: openapi.OpenAPI{
+					Paths: map[string]*openapi.Path{
+						"test": {
+							Get: &openapi.Operation{
+								Responses: map[string]*openapi.Response{
+									"Wrong status code": nil,
+								},
+							},
+						},
+					},
+				},
+			},
+			want: api.API{},
+			err: &strconv.NumError{
+				Func: "Atoi",
+				Num:  "Wrong status code",
+				Err:  strconv.ErrSyntax,
+			},
+		},
+		{
 			name: "POST",
 			builder: api.Builder{
 				OpenAPI: openapi.OpenAPI{
@@ -209,6 +233,30 @@ func TestBuilder_Build(t *testing.T) {
 				},
 			},
 			err: nil,
+		},
+		{
+			name: "Wrong schema reference in POST",
+			builder: api.Builder{
+				OpenAPI: openapi.OpenAPI{
+					Paths: map[string]*openapi.Path{
+						"test": {
+							Post: &openapi.Operation{
+								RequestBody: openapi.RequestBody{
+									Content: map[string]*openapi.MediaType{
+										"application/json": {
+											Schema: openapi.Schema{
+												Ref: "wrong schema reference",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			want: api.API{},
+			err:  fmt.Errorf("resolve reference: %w", &openapi.SchemaError{Ref: "wrong schema reference"}),
 		},
 		{
 			name: "PUT",
@@ -234,6 +282,30 @@ func TestBuilder_Build(t *testing.T) {
 			err: nil,
 		},
 		{
+			name: "Wrong schema reference in PUT",
+			builder: api.Builder{
+				OpenAPI: openapi.OpenAPI{
+					Paths: map[string]*openapi.Path{
+						"test": {
+							Put: &openapi.Operation{
+								RequestBody: openapi.RequestBody{
+									Content: map[string]*openapi.MediaType{
+										"application/json": {
+											Schema: openapi.Schema{
+												Ref: "wrong schema reference",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			want: api.API{},
+			err:  fmt.Errorf("resolve reference: %w", &openapi.SchemaError{Ref: "wrong schema reference"}),
+		},
+		{
 			name: "PATCH",
 			builder: api.Builder{
 				OpenAPI: openapi.OpenAPI{
@@ -257,6 +329,30 @@ func TestBuilder_Build(t *testing.T) {
 			err: nil,
 		},
 		{
+			name: "Wrong schema reference in PATCH",
+			builder: api.Builder{
+				OpenAPI: openapi.OpenAPI{
+					Paths: map[string]*openapi.Path{
+						"test": {
+							Patch: &openapi.Operation{
+								RequestBody: openapi.RequestBody{
+									Content: map[string]*openapi.MediaType{
+										"application/json": {
+											Schema: openapi.Schema{
+												Ref: "wrong schema reference",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			want: api.API{},
+			err:  fmt.Errorf("resolve reference: %w", &openapi.SchemaError{Ref: "wrong schema reference"}),
+		},
+		{
 			name: "DELETE",
 			builder: api.Builder{
 				OpenAPI: openapi.OpenAPI{
@@ -278,6 +374,28 @@ func TestBuilder_Build(t *testing.T) {
 				},
 			},
 			err: nil,
+		},
+		{
+			name: "Wrong status code in DELETE",
+			builder: api.Builder{
+				OpenAPI: openapi.OpenAPI{
+					Paths: map[string]*openapi.Path{
+						"test": {
+							Delete: &openapi.Operation{
+								Responses: map[string]*openapi.Response{
+									"Wrong status code": nil,
+								},
+							},
+						},
+					},
+				},
+			},
+			want: api.API{},
+			err: &strconv.NumError{
+				Func: "Atoi",
+				Num:  "Wrong status code",
+				Err:  strconv.ErrSyntax,
+			},
 		},
 	}
 
