@@ -138,6 +138,10 @@ func (b *Builder) Set(path, method string, o *openapi.Operation) (Operation, err
 		Path:   path,
 	}
 
+	if nil == o {
+		return operation, nil
+	}
+
 	body, ok := o.RequestBody.Content["application/json"]
 	if ok {
 		var s openapi.Schema
