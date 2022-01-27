@@ -32,7 +32,7 @@ func (e *ArrayExampleError) Error() string {
 	return fmt.Sprintf("unpredicted type for example %T", e.Data)
 }
 
-func parseArrayExample(data interface{}) ([]interface{}, error) {
+func ParseArrayExample(data interface{}) ([]interface{}, error) {
 	if nil == data {
 		return []interface{}{}, nil
 	}
@@ -60,7 +60,7 @@ func (e *ObjectExampleError) Error() string {
 	return fmt.Sprintf("unpredicted type for example %T", e.Data)
 }
 
-func parseObjectExample(data interface{}) (map[string]interface{}, error) {
+func ParseObjectExample(data interface{}) (map[string]interface{}, error) {
 	if nil == data {
 		return map[string]interface{}{}, nil
 	}
@@ -250,7 +250,7 @@ func (b *Builder) convertSchema(s openapi.Schema) (Schema, error) {
 			return nil, err
 		}
 
-		arrExample, err := parseArrayExample(s.Example)
+		arrExample, err := ParseArrayExample(s.Example)
 		if err != nil {
 			return nil, err
 		}
@@ -271,7 +271,7 @@ func (b *Builder) convertSchema(s openapi.Schema) (Schema, error) {
 			obj.Properties[key] = propSchema
 		}
 
-		objExample, err := parseObjectExample(s.Example)
+		objExample, err := ParseObjectExample(s.Example)
 		if err != nil {
 			return nil, err
 		}
