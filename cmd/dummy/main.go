@@ -33,8 +33,12 @@ func run() error {
 
 				cfg.Server.Path = args[0]
 
-				flag.StringVar(&cfg.Server.Port, "port", "8080", "")
-				flag.StringVar(&cfg.Logger.Level, "logger-level", "INFO", "")
+				fs := flag.NewFlagSet("dummy", flag.ContinueOnError)
+				fs.StringVar(&cfg.Server.Port, "port", "8080", "")
+				fs.StringVar(&cfg.Logger.Level, "logger-level", "INFO", "")
+				if err := fs.Parse(args[1:]); err != nil {
+					return err
+				}
 
 				api, err := parse.Parse(cfg.Server.Path)
 				if err != nil {
