@@ -35,6 +35,7 @@ func run() error {
 
 				flag.StringVar(&cfg.Server.Port, "port", "8080", "")
 				flag.StringVar(&cfg.Logger.Level, "logger-level", "INFO", "")
+				flag.Parse()
 
 				api, err := parse.Parse(cfg.Server.Path)
 				if err != nil {
