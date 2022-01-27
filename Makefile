@@ -22,3 +22,7 @@ lint:
 .PHONY: test
 test:
 	go test ./...
+
+.PHONY: local
+local:
+	go run ./cmd/dummy -port=8080 server examples/docker/openapi3.yml
