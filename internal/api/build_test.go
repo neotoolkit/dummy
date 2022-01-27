@@ -412,3 +412,148 @@ func TestBuilder_Build(t *testing.T) {
 		})
 	}
 }
+
+func TestBuilder_Add(t *testing.T) {
+	tests := []struct {
+		name      string
+		builder   api.Builder
+		path      string
+		method    string
+		operation *openapi.Operation
+		err       error
+	}{
+		{
+			name:      "",
+			builder:   api.Builder{},
+			path:      "",
+			method:    "",
+			operation: nil,
+			err:       nil,
+		},
+		{
+			name:    "",
+			builder: api.Builder{},
+			path:    "",
+			method:  "",
+			operation: &openapi.Operation{
+				RequestBody: openapi.RequestBody{
+					Content: map[string]*openapi.MediaType{
+						"application/json": {
+							Schema: openapi.Schema{
+								Ref: "wrong schema reference",
+							},
+						},
+					},
+				},
+			},
+			err: fmt.Errorf("resolve reference: %w", &openapi.SchemaError{Ref: "wrong schema reference"}),
+		},
+		{
+			name:      "",
+			builder:   api.Builder{},
+			path:      "",
+			method:    "",
+			operation: &openapi.Operation{},
+			err:       nil,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			b := tc.builder
+
+			err := b.Add(tc.path, tc.method, tc.operation)
+			if err != nil {
+				require.EqualError(t, err, tc.err.Error())
+			}
+		})
+	}
+}
+
+func TestBuilder_Set(t *testing.T) {
+	tests := []struct {
+		name      string
+		builder   api.Builder
+		path      string
+		method    string
+		operation *openapi.Operation
+		want      api.Operation
+		err       error
+	}{
+		{
+			name:      "",
+			builder:   api.Builder{},
+			path:      "",
+			method:    "",
+			operation: nil,
+			want:      api.Operation{},
+			err:       nil,
+		},
+		{
+			name:    "",
+			builder: api.Builder{},
+			path:    "",
+			method:  "",
+			operation: &openapi.Operation{
+				RequestBody: openapi.RequestBody{
+					Content: map[string]*openapi.MediaType{
+						"application/json": {
+							Schema: openapi.Schema{
+								Ref: "wrong schema reference",
+							},
+						},
+					},
+				},
+			},
+			want: api.Operation{},
+			err:  fmt.Errorf("resolve reference: %w", &openapi.SchemaError{Ref: "wrong schema reference"}),
+		},
+
+		{
+			name:    "",
+			builder: api.Builder{},
+			path:    "",
+			method:  "",
+			operation: &openapi.Operation{
+				RequestBody: openapi.RequestBody{
+					Content: map[string]*openapi.MediaType{
+						"application/json": {
+							Schema: openapi.Schema{
+								Required: []string{"field"},
+								Properties: map[string]*openapi.Schema{
+									"prop": {},
+								},
+							},
+						},
+					},
+				},
+			},
+			want: api.Operation{
+				Body: map[string]api.FieldType{
+					"field": {
+						Required: true,
+						Type:     "",
+					},
+					"prop": {
+						Required: false,
+						Type:     "",
+					},
+				},
+			},
+			err: nil,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			b := tc.builder
+
+			got, err := b.Set(tc.path, tc.method, tc.operation)
+			if err != nil {
+				require.EqualError(t, err, tc.err.Error())
+			}
+
+			require.Equal(t, tc.want, got)
+		})
+	}
+}
