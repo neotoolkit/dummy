@@ -63,10 +63,8 @@ func run() error {
 				interrupt := make(chan os.Signal, 1)
 				signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
 
-				select {
-				case x := <-interrupt:
-					l.Info().Msgf("received `%v`", x)
-				}
+				x := <-interrupt
+				l.Info().Msgf("received `%v`", x)
 
 				const timeout = 5 * time.Second
 
