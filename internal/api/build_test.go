@@ -2,10 +2,10 @@ package api_test
 
 import (
 	"fmt"
-	"github.com/go-dummy/openapi"
 	"strconv"
 	"testing"
 
+	"github.com/go-dummy/openapi"
 	"github.com/stretchr/testify/require"
 
 	"github.com/go-dummy/dummy/internal/api"
