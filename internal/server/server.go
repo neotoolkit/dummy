@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/go-dummy/dummy/internal/config"
@@ -46,4 +47,8 @@ func (s *Server) Run() error {
 	}
 
 	return nil
+}
+
+func (s *Server) Stop(ctx context.Context) error {
+	return s.Server.Shutdown(ctx)
 }

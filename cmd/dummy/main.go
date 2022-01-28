@@ -2,9 +2,14 @@ package main
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"fmt"
+	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/cristalhq/acmd"
 
@@ -49,7 +54,26 @@ func run() error {
 				h := server.NewHandlers(api, l)
 				s := server.NewServer(cfg.Server, l, h)
 
-				return s.Run()
+				go func() {
+					if err := s.Run(); !errors.Is(err, http.ErrServerClosed) {
+						l.Logger.Err(err).Msg("run server")
+					}
+				}()
+
+				interrupt := make(chan os.Signal, 1)
+				signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
+
+				select {
+				case x := <-interrupt:
+					l.Info().Msgf("received `%v`", x)
+				}
+
+				const timeout = 5 * time.Second
+
+				ctx, cancelFunc := context.WithTimeout(context.Background(), timeout)
+				defer cancelFunc()
+
+				return s.Stop(ctx)
 			},
 		},
 	}
