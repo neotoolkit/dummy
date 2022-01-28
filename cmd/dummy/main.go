@@ -68,7 +68,7 @@ func run() error {
 
 				const timeout = 5 * time.Second
 
-				ctx, cancelFunc := context.WithTimeout(context.Background(), timeout)
+				ctx, cancelFunc := context.WithTimeout(ctx, timeout)
 				defer cancelFunc()
 
 				return s.Stop(ctx)
