@@ -6,4 +6,4 @@ COPY ./openapi3.yml .
 
 WORKDIR .
 
-CMD ["dummy", "-port=8080", "server", "openapi3.yml"]
+CMD ["dummy", "server", "openapi3.yml", "-port=8080"]

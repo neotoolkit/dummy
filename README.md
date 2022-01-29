@@ -10,8 +10,11 @@ go install github.com/go-dummy/dummy/cmd/dummy@latest
 ```
 ### Usage
 Dummy can help you run mock server based off an API contract, which helps people see how your API will work before you even have it built. Run it locally with the `dummy server` command to run your API on a HTTP server you can interact with.
-```bash
+```shell
 dummy server ./openapi.yml
+```
+```shell
+dummy server https://raw.githubusercontent.com/go-dummy/dummy/main/examples/docker/openapi3.yml
 ```
 ### Local run
 #### Requirements
