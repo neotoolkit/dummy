@@ -83,13 +83,7 @@ func GetSpecType(path string) (SpecType, error) {
 		return Unknown, ErrEmptySpecTypePath
 	}
 
-	var splitPath []string
-
-	if path[0] == '.' {
-		splitPath = strings.Split(path[1:], ".")
-	} else {
-		splitPath = strings.Split(path, ".")
-	}
+	splitPath := strings.Split(path[1:], ".")
 
 	if len(splitPath) == 1 {
 		return Unknown, &SpecFileError{
@@ -102,7 +96,7 @@ func GetSpecType(path string) (SpecType, error) {
 		return Unknown, err
 	}
 
-	switch splitPath[1] {
+	switch splitPath[len(splitPath)-1] {
 	case "yml", "yaml":
 		var openapi openapi.OpenAPI
 
