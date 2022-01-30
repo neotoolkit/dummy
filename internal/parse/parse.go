@@ -56,16 +56,15 @@ func Parse(path string) (api.API, error) {
 
 	switch specType {
 	case OpenAPI:
-		var openapi openapi.OpenAPI
-
-		if err := yaml.Unmarshal(file, &openapi); err != nil {
+		oapi, err := openapi.Parse(file)
+		if err != nil {
 			return api.API{}, err
 		}
 
 		f := faker.NewFaker()
 
 		b := &api.Builder{
-			OpenAPI: openapi,
+			OpenAPI: oapi,
 			Faker:   f,
 		}
 
