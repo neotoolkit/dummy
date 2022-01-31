@@ -3,7 +3,7 @@ module github.com/go-dummy/dummy
 go 1.17
 
 require (
-	github.com/cristalhq/acmd v0.5.4
+	github.com/cristalhq/acmd v0.5.5
 	github.com/go-dummy/faker v0.1.0
 	github.com/go-dummy/openapi v0.3.0
 	github.com/goccy/go-yaml v1.9.5
