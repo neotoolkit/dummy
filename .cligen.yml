@@ -1,0 +1,4 @@
+name: "Dummy"
+commands:
+  - name: "server"
+    description: "run mock server"
