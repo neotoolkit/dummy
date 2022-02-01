@@ -8,8 +8,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/go-dummy/dummy/internal/api"
-	"github.com/go-dummy/dummy/internal/parse"
+	"github.com/neotoolkit/dummy/internal/api"
+	"github.com/neotoolkit/dummy/internal/parse"
 )
 
 func TestSpecTypeError(t *testing.T) {

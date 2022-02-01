@@ -13,7 +13,7 @@ fmt:
 
 .PHONY: imports
 imports:
-	goimports -local github.com/go-dummy/dummy/ -w -l ./
+	goimports -local github.com/neotoolkit/dummy/ -w -l ./
 
 .PHONY: lint
 lint:

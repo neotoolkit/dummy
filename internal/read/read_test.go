@@ -11,7 +11,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/go-dummy/dummy/internal/read"
+	"github.com/neotoolkit/dummy/internal/read"
 )
 
 func TestRead(t *testing.T) {

@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/go-dummy/dummy/internal/logger"
+	"github.com/neotoolkit/dummy/internal/logger"
 )
 
 type responseWriter struct {

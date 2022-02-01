@@ -5,10 +5,10 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/go-dummy/openapi"
+	"github.com/neotoolkit/openapi"
 	"github.com/stretchr/testify/require"
 
-	"github.com/go-dummy/dummy/internal/api"
+	"github.com/neotoolkit/dummy/internal/api"
 )
 
 func TestSchemaTypeError(t *testing.T) {

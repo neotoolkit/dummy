@@ -1,13 +1,13 @@
-module github.com/go-dummy/dummy
+module github.com/neotoolkit/dummy
 
 go 1.17
 
 require (
 	github.com/cristalhq/acmd v0.5.5
-	github.com/go-dummy/faker v0.1.0
-	github.com/go-dummy/openapi v0.3.0
 	github.com/goccy/go-yaml v1.9.5
 	github.com/lamoda/gonkey v1.13.2
+	github.com/neotoolkit/faker v0.1.1
+	github.com/neotoolkit/openapi v0.3.1
 	github.com/rs/zerolog v1.26.1
 	github.com/stretchr/testify v1.7.0
 )

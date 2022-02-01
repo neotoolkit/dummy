@@ -8,4 +8,4 @@ on:
 
 jobs:
   build:
-    uses: go-dummy/.github/.github/workflows/build.yml@main
+    uses: neotoolkit/.github/.github/workflows/build.yml@main

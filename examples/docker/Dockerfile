@@ -1,6 +1,6 @@
 FROM golang:latest
 
-RUN go install github.com/go-dummy/dummy/cmd/dummy@latest
+RUN go install github.com/neotoolkit/dummy/cmd/dummy@latest
 
 COPY ./openapi3.yml .
 

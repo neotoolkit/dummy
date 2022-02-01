@@ -7,10 +7,10 @@ import (
 
 	"github.com/lamoda/gonkey/runner"
 
-	"github.com/go-dummy/dummy/internal/config"
-	"github.com/go-dummy/dummy/internal/logger"
-	"github.com/go-dummy/dummy/internal/parse"
-	"github.com/go-dummy/dummy/internal/server"
+	"github.com/neotoolkit/dummy/internal/config"
+	"github.com/neotoolkit/dummy/internal/logger"
+	"github.com/neotoolkit/dummy/internal/parse"
+	"github.com/neotoolkit/dummy/internal/server"
 )
 
 func TestDummy(t *testing.T) {

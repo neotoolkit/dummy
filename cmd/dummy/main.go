@@ -13,10 +13,10 @@ import (
 
 	"github.com/cristalhq/acmd"
 
-	"github.com/go-dummy/dummy/internal/config"
-	"github.com/go-dummy/dummy/internal/logger"
-	"github.com/go-dummy/dummy/internal/parse"
-	"github.com/go-dummy/dummy/internal/server"
+	"github.com/neotoolkit/dummy/internal/config"
+	"github.com/neotoolkit/dummy/internal/logger"
+	"github.com/neotoolkit/dummy/internal/parse"
+	"github.com/neotoolkit/dummy/internal/server"
 )
 
 const version = "0.2.1"

@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/go-dummy/openapi"
+	"github.com/neotoolkit/openapi"
 
-	"github.com/go-dummy/faker"
+	"github.com/neotoolkit/faker"
 )
 
 // SchemaTypeError -.

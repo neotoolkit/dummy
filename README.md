@@ -13,7 +13,7 @@ Run mock server based off an API contract with one command
 
 ## Installation
 ```shell
-go install github.com/go-dummy/dummy/cmd/dummy@latest
+go install github.com/neotoolkit/dummy/cmd/dummy@latest
 ```
 
 ## Usage
@@ -22,7 +22,7 @@ Dummy can help you run mock server based off an API contract, which helps people
 dummy s openapi.yml
 ```
 ```shell
-dummy s https://raw.githubusercontent.com/go-dummy/dummy/main/examples/docker/openapi.yml
+dummy s https://raw.githubusercontent.com/neotoolkit/dummy/main/examples/docker/openapi.yml
 ```
 More usage [examples](examples)
 
@@ -35,18 +35,18 @@ See [these docs][pkg-url].
 ## Sponsors
 <p>
   <a href="https://evrone.com/?utm_source=github&utm_campaign=dotenv-linter">
-    <img src="https://raw.githubusercontent.com/go-dummy/.github/main/assets/sponsored_by_evrone.svg"
+    <img src="https://raw.githubusercontent.com/neotoolkit/.github/main/assets/sponsored_by_evrone.svg"
       alt="Sponsored by Evrone">
   </a>
 </p>
 
-[build-img]: https://github.com/go-dummy/dummy/workflows/build/badge.svg
-[build-url]: https://github.com/go-dummy/dummy/actions
-[pkg-img]: https://pkg.go.dev/badge/go-dummy/dummy
-[pkg-url]: https://pkg.go.dev/github.com/go-dummy/dummy
-[reportcard-img]: https://goreportcard.com/badge/go-dummy/dummy
-[reportcard-url]: https://goreportcard.com/report/go-dummy/dummy
-[coverage-img]: https://codecov.io/gh/go-dummy/dummy/branch/main/graph/badge.svg
-[coverage-url]: https://codecov.io/gh/go-dummy/dummy
-[version-img]: https://img.shields.io/github/v/release/go-dummy/dummy
-[version-url]: https://github.com/go-dummy/dummy/releases
+[build-img]: https://github.com/neotoolkit/dummy/workflows/build/badge.svg
+[build-url]: https://github.com/neotoolkit/dummy/actions
+[pkg-img]: https://pkg.go.dev/badge/neotoolkit/dummy
+[pkg-url]: https://pkg.go.dev/github.com/neotoolkit/dummy
+[reportcard-img]: https://goreportcard.com/badge/neotoolkit/dummy
+[reportcard-url]: https://goreportcard.com/report/neotoolkit/dummy
+[coverage-img]: https://codecov.io/gh/neotoolkit/dummy/branch/main/graph/badge.svg
+[coverage-url]: https://codecov.io/gh/neotoolkit/dummy
+[version-img]: https://img.shields.io/github/v/release/neotoolkit/dummy
+[version-url]: https://github.com/neotoolkit/dummy/releases

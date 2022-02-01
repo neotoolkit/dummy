@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/go-dummy/dummy/internal/config"
+	"github.com/neotoolkit/dummy/internal/config"
 )
 
 func TestNewConfig(t *testing.T) {

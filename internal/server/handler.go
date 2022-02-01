@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/go-dummy/dummy/internal/api"
-	"github.com/go-dummy/dummy/internal/logger"
+	"github.com/neotoolkit/dummy/internal/api"
+	"github.com/neotoolkit/dummy/internal/logger"
 )
 
 // Handlers -.

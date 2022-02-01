@@ -4,12 +4,12 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/go-dummy/faker"
-	"github.com/go-dummy/openapi"
 	"github.com/goccy/go-yaml"
+	"github.com/neotoolkit/faker"
+	"github.com/neotoolkit/openapi"
 
-	"github.com/go-dummy/dummy/internal/api"
-	"github.com/go-dummy/dummy/internal/read"
+	"github.com/neotoolkit/dummy/internal/api"
+	"github.com/neotoolkit/dummy/internal/read"
 )
 
 type SpecType string

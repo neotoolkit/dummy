@@ -9,5 +9,5 @@ dummy server openapi.yml
 dummy s openapi.json
 ```
 ```shell
-dummy s https://raw.githubusercontent.com/go-dummy/dummy/main/examples/docker/openapi.yml
+dummy s https://raw.githubusercontent.com/neotoolkit/dummy/main/examples/docker/openapi.yml
 ```

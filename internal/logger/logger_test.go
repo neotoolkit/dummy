@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/go-dummy/dummy/internal/logger"
+	"github.com/neotoolkit/dummy/internal/logger"
 )
 
 func TestNewLogger(t *testing.T) {

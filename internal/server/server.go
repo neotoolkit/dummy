@@ -4,9 +4,9 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/go-dummy/dummy/internal/config"
-	"github.com/go-dummy/dummy/internal/logger"
-	"github.com/go-dummy/dummy/internal/middleware"
+	"github.com/neotoolkit/dummy/internal/config"
+	"github.com/neotoolkit/dummy/internal/logger"
+	"github.com/neotoolkit/dummy/internal/middleware"
 )
 
 // Server is struct for Server

@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/go-dummy/dummy/internal/api"
+	"github.com/neotoolkit/dummy/internal/api"
 )
 
 func TestSchema_ExampleValue(t *testing.T) {
