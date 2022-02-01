@@ -32,6 +32,7 @@ func run() error {
 	cmds := []acmd.Command{
 		{
 			Name:        "server",
+			Alias:       "s",
 			Description: "run mock server",
 			Do: func(ctx context.Context, args []string) error {
 				cfg := config.NewConfig()
