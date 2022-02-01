@@ -1,4 +1,5 @@
 name: "Dummy"
 commands:
   - name: "server"
+    alias: "s"
     description: "run mock server"
