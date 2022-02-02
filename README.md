@@ -9,7 +9,7 @@
 Run mock server based off an API contract with one command
 
 ## Features
-- support OpenAPI 3.x
+- Supports `OpenAPI 3.x`
 
 ## Installation
 ```shell
