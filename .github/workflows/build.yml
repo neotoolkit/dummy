@@ -2,10 +2,9 @@ name: build
 
 on:
   pull_request:
-    paths-ignore:
-      - 'examples/**'
-      - '**.md'
 
 jobs:
   build:
     uses: neotoolkit/.github/.github/workflows/build.yml@main
+  lint:
+    uses: neotoolkit/.github/.github/workflows/lint.yml@main
