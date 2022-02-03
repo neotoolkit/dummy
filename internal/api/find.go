@@ -3,9 +3,10 @@ package api
 import (
 	"encoding/json"
 	"errors"
-	"io"
 	"net/http"
 	"strings"
+
+	"github.com/neotoolkit/dummy/internal/model"
 )
 
 // FindResponseError -.
@@ -19,22 +20,14 @@ func (e *FindResponseError) Error() string {
 	return "not specified operation: " + e.Method + " " + e.Path
 }
 
-// FindResponseParams -.
-type FindResponseParams struct {
-	Path      string
-	Method    string
-	Body      io.ReadCloser
-	MediaType string
-}
-
 // ErrEmptyRequireField -.
 var ErrEmptyRequireField = errors.New("empty require field")
 
 // FindResponse -.
-func (a API) FindResponse(params FindResponseParams) (Response, error) {
+func (a API) FindResponse(params model.FindResponseParams) (model.Response, error) {
 	operation, ok := a.findOperation(params)
 	if !ok {
-		return Response{}, &FindResponseError{
+		return nil, &FindResponseError{
 			Method: params.Method,
 			Path:   params.Path,
 		}
@@ -46,13 +39,13 @@ func (a API) FindResponse(params FindResponseParams) (Response, error) {
 
 		err := json.NewDecoder(params.Body).Decode(&body)
 		if err != nil {
-			return Response{}, err
+			return nil, err
 		}
 
 		for k, v := range operation.Body {
 			_, ok := body[k]
 			if !ok && v.Required {
-				return Response{}, ErrEmptyRequireField
+				return nil, ErrEmptyRequireField
 			}
 		}
 	}
@@ -65,7 +58,7 @@ func (a API) FindResponse(params FindResponseParams) (Response, error) {
 	return response, nil
 }
 
-func (a API) findOperation(params FindResponseParams) (Operation, bool) {
+func (a API) findOperation(params model.FindResponseParams) (Operation, bool) {
 	for _, op := range a.Operations {
 		if !PathByParamDetect(params.Path, op.Path) {
 			continue
@@ -81,7 +74,7 @@ func (a API) findOperation(params FindResponseParams) (Operation, bool) {
 	return Operation{}, false
 }
 
-func (o Operation) findResponse(params FindResponseParams) (Response, bool) {
+func (o Operation) findResponse(params model.FindResponseParams) (Response, bool) {
 	for _, r := range o.Responses {
 		if r.MediaType != params.MediaType {
 			continue

@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/neotoolkit/dummy/internal/api"
+	"github.com/neotoolkit/dummy/internal/model"
 	"github.com/neotoolkit/dummy/internal/parse"
 )
 
@@ -32,13 +33,13 @@ func TestParse(t *testing.T) {
 	tests := []struct {
 		name string
 		path string
-		want api.API
+		want model.API
 		err  error
 	}{
 		{
 			name: "empty path",
 			path: "",
-			want: api.API{},
+			want: nil,
 			err: &fs.PathError{
 				Op:   "open",
 				Path: "",
@@ -48,7 +49,7 @@ func TestParse(t *testing.T) {
 		{
 			name: "file without format",
 			path: "./testdata/openapi",
-			want: api.API{},
+			want: nil,
 			err: &parse.SpecFileError{
 				Path: "./testdata/openapi",
 			},
@@ -56,13 +57,13 @@ func TestParse(t *testing.T) {
 		{
 			name: "graphql",
 			path: "./testdata/schema.graphql",
-			want: api.API{},
-			err:  nil,
+			want: nil,
+			err:  errors.New("not implemented: graphql"),
 		},
 		{
 			name: "",
 			path: "./testdata/empty-openapi.yml",
-			want: api.API{},
+			want: nil,
 			err: &parse.SpecTypeError{
 				Path: "./testdata/empty-openapi.yml",
 			},
@@ -76,7 +77,7 @@ func TestParse(t *testing.T) {
 		{
 			name: "unknown format",
 			path: "./testdata/api.raml",
-			want: api.API{},
+			want: nil,
 			err: &parse.SpecTypeError{
 				Path: "./testdata/api.raml",
 			},
@@ -116,8 +117,8 @@ func TestParse_YAML(t *testing.T) {
 				},
 				Responses: []api.Response{
 					{
-						StatusCode: 201,
-						MediaType:  "application/json",
+						Code:      201,
+						MediaType: "application/json",
 						Schema: api.ObjectSchema{
 							Properties: map[string]api.Schema{
 								"id":        api.StringSchema{Example: "380ed0b7-eb21-4ad4-acd0-efa90cf69c6a"},
@@ -135,8 +136,8 @@ func TestParse_YAML(t *testing.T) {
 				Path:   "/users",
 				Responses: []api.Response{
 					{
-						StatusCode: 200,
-						MediaType:  "application/json",
+						Code:      200,
+						MediaType: "application/json",
 						Schema: api.ArraySchema{
 							Type: api.ObjectSchema{
 								Properties: map[string]api.Schema{
@@ -169,8 +170,8 @@ func TestParse_YAML(t *testing.T) {
 				Path:   "/users/{userId}",
 				Responses: []api.Response{
 					{
-						StatusCode: 200,
-						MediaType:  "application/json",
+						Code:      200,
+						MediaType: "application/json",
 						Schema: api.ObjectSchema{
 							Properties: map[string]api.Schema{
 								"id":        api.StringSchema{Example: "380ed0b7-eb21-4ad4-acd0-efa90cf69c6a"},
@@ -189,7 +190,7 @@ func TestParse_YAML(t *testing.T) {
 	openapi, err := parse.Parse("testdata/openapi3.yml")
 
 	require.NoError(t, err)
-	require.Equalf(t, testable(t, expected), testable(t, openapi), `parsed schema from "testdata/openapi3.yml"`)
+	require.Equalf(t, testable(t, expected), testable(t, openapi.(api.API)), `parsed schema from "testdata/openapi3.yml"`)
 }
 
 func testable(t *testing.T, api api.API) api.API {

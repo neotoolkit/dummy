@@ -9,6 +9,7 @@ import (
 	"github.com/neotoolkit/openapi"
 
 	"github.com/neotoolkit/dummy/internal/api"
+	"github.com/neotoolkit/dummy/internal/model"
 	"github.com/neotoolkit/dummy/internal/read"
 )
 
@@ -20,6 +21,7 @@ const (
 	Unknown SpecType = "Unknown"
 )
 
+var ErrNotImplemented = errors.New("")
 var ErrEmptySpecTypePath = errors.New("empty spec type path")
 
 // SpecTypeError -.
@@ -43,22 +45,22 @@ func (e *SpecFileError) Error() string {
 }
 
 // Parse -.
-func Parse(path string) (api.API, error) {
+func Parse(path string) (model.API, error) {
 	file, err := read.Read(path)
 	if err != nil {
-		return api.API{}, err
+		return nil, err
 	}
 
 	specType, err := GetSpecType(path)
 	if err != nil {
-		return api.API{}, err
+		return nil, err
 	}
 
 	switch specType {
 	case OpenAPI:
 		oapi, err := openapi.Parse(file)
 		if err != nil {
-			return api.API{}, err
+			return nil, err
 		}
 
 		f := faker.NewFaker()
@@ -70,7 +72,7 @@ func Parse(path string) (api.API, error) {
 
 		return b.Build()
 	case GraphQL:
-		return api.API{}, nil
+		return nil, errors.New("not implemented: graphql")
 	}
 
 	return api.API{}, nil

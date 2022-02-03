@@ -182,7 +182,7 @@ func (b *Builder) Set(path, method string, o *openapi.Operation) (Operation, err
 		content, ok := resp.Content["application/json"]
 		if !ok {
 			operation.Responses = append(operation.Responses, Response{
-				StatusCode: statusCode,
+				Code: statusCode,
 			})
 
 			continue
@@ -206,11 +206,11 @@ func (b *Builder) Set(path, method string, o *openapi.Operation) (Operation, err
 		}
 
 		operation.Responses = append(operation.Responses, Response{
-			StatusCode: statusCode,
-			MediaType:  "application/json",
-			Schema:     schema,
-			Example:    example,
-			Examples:   examples,
+			Code:      statusCode,
+			MediaType: "application/json",
+			Schema:    schema,
+			Example:   example,
+			Examples:  examples,
 		})
 	}
 

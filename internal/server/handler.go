@@ -9,16 +9,28 @@ import (
 
 	"github.com/neotoolkit/dummy/internal/api"
 	"github.com/neotoolkit/dummy/internal/logger"
+	"github.com/neotoolkit/dummy/internal/model"
 )
+
+type NoOpResponse struct {
+}
+
+func (n NoOpResponse) StatusCode() int {
+	return http.StatusInternalServerError
+}
+
+func (n NoOpResponse) ExampleValue(_ string) interface{} {
+	return struct{}{}
+}
 
 // Handlers -.
 type Handlers struct {
-	API    api.API
+	API    model.API
 	Logger *logger.Logger
 }
 
 // NewHandlers returns a new instance of Handlers
-func NewHandlers(api api.API, l *logger.Logger) Handlers {
+func NewHandlers(api model.API, l *logger.Logger) Handlers {
 	return Handlers{
 		API:    api,
 		Logger: l,
@@ -43,7 +55,7 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		w.WriteHeader(response.StatusCode)
+		w.WriteHeader(response.StatusCode())
 		resp := response.ExampleValue(r.Header.Get("X-Example"))
 
 		if nil == resp {
@@ -67,22 +79,22 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Get -.
-func (h Handlers) Get(path, method string, body io.ReadCloser) (api.Response, bool, error) {
-	response, err := h.API.FindResponse(api.FindResponseParams{
+func (h Handlers) Get(path, method string, body io.ReadCloser) (model.Response, bool, error) {
+	response, err := h.API.FindResponse(model.FindResponseParams{
 		Path:   path,
 		Method: method,
 		Body:   body,
 	})
 	if err != nil {
 		if errors.Is(err, api.ErrEmptyRequireField) {
-			return api.Response{}, true, err
+			return NoOpResponse{}, true, err
 		}
 
 		if _, ok := err.(*json.SyntaxError); ok {
-			return api.Response{}, true, err
+			return NoOpResponse{}, true, err
 		}
 
-		return api.Response{}, false, err
+		return NoOpResponse{}, false, err
 	}
 
 	return response, true, nil

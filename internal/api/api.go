@@ -21,11 +21,15 @@ type FieldType struct {
 
 // Response -.
 type Response struct {
-	StatusCode int
-	MediaType  string
-	Schema     Schema
-	Example    interface{}
-	Examples   map[string]interface{}
+	Code      int
+	MediaType string
+	Schema    Schema
+	Example   interface{}
+	Examples  map[string]interface{}
+}
+
+func (r Response) StatusCode() int {
+	return r.Code
 }
 
 // ExampleValue -.
