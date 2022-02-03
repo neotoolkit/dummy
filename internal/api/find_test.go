@@ -23,6 +23,7 @@ func (params ResponseParamsBody) Read(p []byte) (n int, err error) {
 	}
 
 	readerResult, readerError := bytes.NewReader(jsonData).Read(p)
+
 	return readerResult, readerError
 }
 
