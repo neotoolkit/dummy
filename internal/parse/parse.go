@@ -2,15 +2,19 @@ package parse
 
 import (
 	"errors"
+	"strings"
+
 	"github.com/goccy/go-yaml"
-	"github.com/neotoolkit/dummy/internal/api"
-	"github.com/neotoolkit/dummy/internal/read"
 	"github.com/neotoolkit/faker"
 	"github.com/neotoolkit/openapi"
-	"strings"
+
+	"github.com/neotoolkit/dummy/internal/api"
+	"github.com/neotoolkit/dummy/internal/read"
 )
 
 type SpecType string
+
+var Test = 1
 
 const (
 	OpenAPI SpecType = "OpenAPI"
