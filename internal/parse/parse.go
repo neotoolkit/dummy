@@ -2,14 +2,12 @@ package parse
 
 import (
 	"errors"
-	"strings"
-
 	"github.com/goccy/go-yaml"
-	"github.com/neotoolkit/faker"
-	"github.com/neotoolkit/openapi"
-
 	"github.com/neotoolkit/dummy/internal/api"
 	"github.com/neotoolkit/dummy/internal/read"
+	"github.com/neotoolkit/faker"
+	"github.com/neotoolkit/openapi"
+	"strings"
 )
 
 type SpecType string
