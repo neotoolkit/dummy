@@ -40,8 +40,8 @@ github.com/mattn/go-colorable v0.1.12/go.mod h1:u5H1YNBxpqRaxsYJYSkiCWKzEfiAb1Gb
 github.com/mattn/go-isatty v0.0.12/go.mod h1:cbi8OIDigv2wuxKPP5vlRcQ1OAZbq2CE4Kysco4FUpU=
 github.com/mattn/go-isatty v0.0.14 h1:yVuAays6BHfxijgZPzw+3Zlu5yQgKGP2/hcQbHb7S9Y=
 github.com/mattn/go-isatty v0.0.14/go.mod h1:7GGIvUiUoEMVVmxf/4nioHXj79iQHKdU27kJ6hsGG94=
-github.com/neotoolkit/faker v0.1.1 h1:v8wfbaru2OdBGn4/NJQ8euo2D8AdzZnm4XElNb0fCZo=
-github.com/neotoolkit/faker v0.1.1/go.mod h1:ChsI+y4MR3t1Ybbt0ktUXqDVJTq9w9oXuL59jJ5ufF4=
+github.com/neotoolkit/faker v0.1.2 h1:4/Xbk8DssKBZFUA/wIpWeGvWM9KMlQoitLFck3KROdg=
+github.com/neotoolkit/faker v0.1.2/go.mod h1:ChsI+y4MR3t1Ybbt0ktUXqDVJTq9w9oXuL59jJ5ufF4=
 github.com/neotoolkit/openapi v0.3.1 h1:mdiBhcb4EkM+Ebe96w+Ns5BJs1SB9Groj8abjYODks8=
 github.com/neotoolkit/openapi v0.3.1/go.mod h1:gjP+o4cR08QAZaVFIvJP6rsBoBlqz34hovntey1r4ks=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
