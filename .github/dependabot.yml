@@ -5,7 +5,11 @@ updates:
     directory: /
     schedule:
       interval: daily
+    reviewers:
+      - "neotoolkit/team"
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
       interval: daily
+    reviewers:
+      - "neotoolkit/team"
