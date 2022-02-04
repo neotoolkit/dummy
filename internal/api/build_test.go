@@ -570,7 +570,7 @@ func TestBuilder_Set(t *testing.T) {
 				Responses: openapi.Responses{
 					"200": {
 						Content: map[string]*openapi.MediaType{
-							"application/json": &openapi.MediaType{
+							"application/json": {
 								Example: "example",
 							},
 						},
