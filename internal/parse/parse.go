@@ -14,7 +14,7 @@ import (
 
 type SpecType string
 
-var Test = 1
+var Test = 2
 
 const (
 	OpenAPI SpecType = "OpenAPI"
