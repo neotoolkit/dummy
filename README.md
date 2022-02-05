@@ -34,7 +34,7 @@ See [these docs][pkg-url].
 
 ## Sponsors
 <p>
-  <a href="https://evrone.com/?utm_source=github&utm_campaign=dotenv-linter">
+  <a href="https://evrone.com/?utm_source=github&utm_campaign=neotoolkit">
     <img src="https://raw.githubusercontent.com/neotoolkit/.github/main/assets/sponsored_by_evrone.svg"
       alt="Sponsored by Evrone">
   </a>
