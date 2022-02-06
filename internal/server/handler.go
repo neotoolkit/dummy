@@ -55,8 +55,7 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 			s.Logger.Error().Err(err).Msg("serialize response")
 		}
 
-		_, err = w.Write(bytes)
-		if err != nil {
+		if _, err := w.Write(bytes); err != nil {
 			s.Logger.Error().Err(err).Msg("write response")
 		}
 
