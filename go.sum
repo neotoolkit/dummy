@@ -44,6 +44,7 @@ github.com/neotoolkit/faker v0.1.1 h1:v8wfbaru2OdBGn4/NJQ8euo2D8AdzZnm4XElNb0fCZ
 github.com/neotoolkit/faker v0.1.1/go.mod h1:ChsI+y4MR3t1Ybbt0ktUXqDVJTq9w9oXuL59jJ5ufF4=
 github.com/neotoolkit/openapi v0.3.1 h1:mdiBhcb4EkM+Ebe96w+Ns5BJs1SB9Groj8abjYODks8=
 github.com/neotoolkit/openapi v0.3.1/go.mod h1:gjP+o4cR08QAZaVFIvJP6rsBoBlqz34hovntey1r4ks=
+github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=

@@ -1,0 +1,8 @@
+type Query {
+    hero: Character
+}
+
+type Character {
+    id: Int
+    name: String
+}

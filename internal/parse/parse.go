@@ -9,6 +9,7 @@ import (
 	"github.com/neotoolkit/openapi"
 
 	"github.com/neotoolkit/dummy/internal/api"
+	"github.com/neotoolkit/dummy/internal/graphql"
 	"github.com/neotoolkit/dummy/internal/model"
 	"github.com/neotoolkit/dummy/internal/read"
 )
@@ -72,7 +73,9 @@ func Parse(path string) (model.API, error) {
 
 		return b.Build()
 	case GraphQL:
-		return nil, errors.New("not implemented: graphql")
+		b := graphql.NewBuilder(file)
+
+		return b.Build()
 	}
 
 	return api.API{}, nil
