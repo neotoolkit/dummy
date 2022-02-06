@@ -43,14 +43,33 @@ func (a API) FindResponse(params model.FindResponseParams) (model.Response, erro
 		}
 
 		fields := objectType.Fields
-		//for _, nestedField := range selectionField.SelectionSet {
-		//
-		//}
+		if len(selectionField.SelectionSet) > 0 {
+			fields = selectFields(fields, selectionField.SelectionSet)
+		}
 
 		putFieldsToResponse(respObject, rootObjectField.Name, fields)
 	}
 
 	return response{respObject: respObject}, nil
+}
+
+func selectFields(fields []gModel.Field, selectionSet gModel.SelectionSet) []gModel.Field {
+	selected := make([]gModel.Field, 0, len(selectionSet))
+	for _, field := range fields {
+		if in(field, selectionSet) {
+			selected = append(selected, field)
+		}
+	}
+	return selected
+}
+
+func in(field gModel.Field, selectionSet gModel.SelectionSet) bool {
+	for _, f := range selectionSet {
+		if f.Name == field.Name {
+			return true
+		}
+	}
+	return false
 }
 
 func putFieldsToResponse(object map[string]interface{}, key string, fields []gModel.Field) {
