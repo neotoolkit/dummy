@@ -179,6 +179,10 @@ func (b *Builder) Set(path, method string, o *openapi.Operation) (Operation, err
 			return Operation{}, err
 		}
 
+		if statusCode < http.StatusOK || statusCode >= http.StatusMultipleChoices {
+			continue
+		}
+
 		content, ok := resp.Content["application/json"]
 		if !ok {
 			operation.Responses = append(operation.Responses, Response{

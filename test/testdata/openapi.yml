@@ -24,6 +24,8 @@ paths:
                 id: e1afccea-5168-4735-84d4-cb96f6fb5d25
                 firstName: Elon
                 lastName: Musk
+        '500':
+          description: ''
     get:
       responses:
         '200':
