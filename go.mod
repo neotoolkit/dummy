@@ -7,7 +7,7 @@ require (
 	github.com/goccy/go-yaml v1.9.5
 	github.com/lamoda/gonkey v1.13.2
 	github.com/neotoolkit/faker v0.1.2
-	github.com/neotoolkit/openapi v0.3.1
+	github.com/neotoolkit/openapi v0.4.2
 	github.com/rs/zerolog v1.26.1
 	github.com/stretchr/testify v1.7.0
 )
