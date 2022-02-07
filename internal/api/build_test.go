@@ -2,6 +2,7 @@ package api_test
 
 import (
 	"fmt"
+	"net/http"
 	"strconv"
 	"testing"
 
@@ -508,7 +509,6 @@ func TestBuilder_Set(t *testing.T) {
 			want: api.Operation{},
 			err:  fmt.Errorf("resolve reference: %w", &openapi.SchemaError{Ref: "wrong schema reference"}),
 		},
-
 		{
 			name:    "",
 			builder: api.Builder{},
@@ -541,6 +541,44 @@ func TestBuilder_Set(t *testing.T) {
 				},
 			},
 			err: nil,
+		},
+		{
+			name:    "",
+			builder: api.Builder{},
+			path:    "",
+			method:  "",
+			operation: &openapi.Operation{
+				Responses: openapi.Responses{
+					"200": {},
+				},
+			},
+			want: api.Operation{
+				Responses: []api.Response{
+					{
+						StatusCode: http.StatusOK,
+					},
+				},
+			},
+			err: nil,
+		},
+		{
+			name:    "",
+			builder: api.Builder{},
+			path:    "",
+			method:  "",
+			operation: &openapi.Operation{
+				Responses: openapi.Responses{
+					"200": {
+						Content: map[string]*openapi.MediaType{
+							"application/json": {
+								Example: "example",
+							},
+						},
+					},
+				},
+			},
+			want: api.Operation{},
+			err:  &api.SchemaTypeError{SchemaType: ""},
 		},
 	}
 

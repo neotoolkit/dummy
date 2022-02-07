@@ -50,7 +50,7 @@ func (a API) FindResponse(params model.FindResponseParams) (model.Response, erro
 		}
 	}
 
-	response, ok := operation.findResponse(params)
+	response, ok := operation.findOperationResponse(params)
 	if !ok {
 		return operation.Responses[0], nil
 	}
@@ -60,7 +60,7 @@ func (a API) FindResponse(params model.FindResponseParams) (model.Response, erro
 
 func (a API) findOperation(params model.FindResponseParams) (Operation, bool) {
 	for _, op := range a.Operations {
-		if !PathByParamDetect(params.Path, op.Path) {
+		if !IsPathMatchTemplate(params.Path, op.Path) {
 			continue
 		}
 
@@ -86,21 +86,21 @@ func (o Operation) findResponse(params model.FindResponseParams) (Response, bool
 	return Response{}, false
 }
 
-// PathByParamDetect returns result of
-func PathByParamDetect(path, param string) bool {
-	splitPath := strings.Split(path, "/")
-	splitParam := strings.Split(param, "/")
+// IsPathMatchTemplate returns true if path matches template
+func IsPathMatchTemplate(path, pathTemplate string) bool {
+	pathSegments := strings.Split(path, "/")
+	templateSegments := strings.Split(pathTemplate, "/")
 
-	if len(splitPath) != len(splitParam) {
+	if len(pathSegments) != len(templateSegments) {
 		return false
 	}
 
-	for i := 0; i < len(splitPath); i++ {
-		if strings.HasPrefix(splitParam[i], "{") && strings.HasSuffix(splitParam[i], "}") {
+	for i := 0; i < len(pathSegments); i++ {
+		if strings.HasPrefix(templateSegments[i], "{") && strings.HasSuffix(templateSegments[i], "}") {
 			continue
 		}
 
-		if splitPath[i] != splitParam[i] {
+		if pathSegments[i] != templateSegments[i] {
 			return false
 		}
 	}
