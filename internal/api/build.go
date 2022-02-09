@@ -146,7 +146,7 @@ func (b *Builder) Set(path, method string, o *openapi.Operation) (Operation, err
 	if ok {
 		var s openapi.Schema
 
-		if body.Schema.Ref != "" {
+		if body.Schema.IsRef() {
 			schema, err := b.OpenAPI.LookupByReference(body.Schema.Ref)
 			if err != nil {
 				return Operation{}, fmt.Errorf("resolve reference: %w", err)
@@ -222,7 +222,7 @@ func (b *Builder) Set(path, method string, o *openapi.Operation) (Operation, err
 }
 
 func (b *Builder) convertSchema(s openapi.Schema) (Schema, error) {
-	if s.Ref != "" {
+	if s.IsRef() {
 		schema, err := b.OpenAPI.LookupByReference(s.Ref)
 		if err != nil {
 			return nil, fmt.Errorf("resolve reference: %w", err)
