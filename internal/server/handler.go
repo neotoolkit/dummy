@@ -37,7 +37,7 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 
 	response, ok, err := s.Handlers.Get(path, r.Method, r.Body)
 	if ok {
-		if _, ok := err.(*json.SyntaxError); ok || errors.Is(err, api.ErrEmptyRequireField) {
+		if _, ok := err.(*json.SyntaxError); ok || errors.Is(err, api.ErrEmptyRequireField) || err == io.EOF {
 			w.WriteHeader(http.StatusBadRequest)
 
 			return
@@ -74,6 +74,10 @@ func (h Handlers) Get(path, method string, body io.ReadCloser) (api.Response, bo
 	})
 	if err != nil {
 		if errors.Is(err, api.ErrEmptyRequireField) {
+			return api.Response{}, true, err
+		}
+
+		if err == io.EOF {
 			return api.Response{}, true, err
 		}
 
