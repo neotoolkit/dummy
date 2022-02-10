@@ -1,6 +1,6 @@
 # dummy
 
-[![CI-img]][build-url]
+[![CI-img]][CI-url]
 [![pkg-img]][pkg-url]
 [![reportcard-img]][reportcard-url]
 [![coverage-img]][coverage-url]
