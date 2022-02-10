@@ -40,8 +40,8 @@ See [these docs][pkg-url].
   </a>
 </p>
 
-[build-img]: https://github.com/neotoolkit/dummy/workflows/build/badge.svg
-[build-url]: https://github.com/neotoolkit/dummy/actions
+[CI-img]: https://github.com/neotoolkit/dummy/workflows/CI/badge.svg
+[CI-url]: https://github.com/neotoolkit/dummy/actions
 [pkg-img]: https://pkg.go.dev/badge/neotoolkit/dummy
 [pkg-url]: https://pkg.go.dev/github.com/neotoolkit/dummy
 [reportcard-img]: https://goreportcard.com/badge/neotoolkit/dummy
