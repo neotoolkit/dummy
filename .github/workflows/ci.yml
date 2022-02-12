@@ -6,5 +6,7 @@ on:
 jobs:
   build:
     uses: neotoolkit/.github/.github/workflows/build.yml@main
+  dependency:
+    uses: neotoolkit/.github/.github/workflows/dependency.yml@main
   lint:
     uses: neotoolkit/.github/.github/workflows/lint.yml@main
