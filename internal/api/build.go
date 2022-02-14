@@ -146,7 +146,8 @@ func (b *Builder) Set(path, method string, o *openapi.Operation) (Operation, err
 	if ok || len(o.RequestBody.Ref) > 0 {
 		var s openapi.Schema
 
-		if len(o.RequestBody.Ref) > 0 {
+		switch {
+		case len(o.RequestBody.Ref) > 0:
 			requestBody, err := b.OpenAPI.LookupRequestBodyByReference(o.RequestBody.Ref)
 			if err != nil {
 				return Operation{}, fmt.Errorf("resolve reference: %w", err)
@@ -156,14 +157,14 @@ func (b *Builder) Set(path, method string, o *openapi.Operation) (Operation, err
 			if ok {
 				s = body.Schema
 			}
-		} else if body.Schema.IsRef() {
+		case body.Schema.IsRef():
 			schema, err := b.OpenAPI.LookupSchemaByReference(body.Schema.Ref)
 			if err != nil {
 				return Operation{}, fmt.Errorf("resolve reference: %w", err)
 			}
 
 			s = schema
-		} else {
+		default:
 			s = body.Schema
 		}
 
