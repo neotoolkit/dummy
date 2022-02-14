@@ -16,9 +16,7 @@ type Logger struct {
 func NewLogger(level string) *Logger {
 	logger := zerolog.New(os.Stdout).Level(setLevel(level)).With().Timestamp().Logger()
 
-	return &Logger{
-		&logger,
-	}
+	return &Logger{&logger}
 }
 
 func setLevel(level string) zerolog.Level {

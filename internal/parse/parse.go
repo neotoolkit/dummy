@@ -85,9 +85,7 @@ func GetSpecType(path string) (SpecType, error) {
 	splitPath := strings.Split(path[1:], ".")
 
 	if len(splitPath) == 1 {
-		return Unknown, &SpecFileError{
-			Path: path,
-		}
+		return Unknown, &SpecFileError{Path: path}
 	}
 
 	file, err := read.Read(path)
@@ -97,21 +95,16 @@ func GetSpecType(path string) (SpecType, error) {
 
 	switch splitPath[len(splitPath)-1] {
 	case "yml", "yaml":
-		var openapi openapi.OpenAPI
+		var oapi openapi.OpenAPI
 
-		err := yaml.Unmarshal(file, &openapi)
-		if err != nil || len(openapi.OpenAPI) == 0 {
-			return Unknown, &SpecTypeError{
-				Path: path,
-			}
+		if err := yaml.Unmarshal(file, &oapi); err != nil || len(oapi.OpenAPI) == 0 {
+			return Unknown, &SpecTypeError{Path: path}
 		}
 
 		return OpenAPI, nil
 	case "graphql":
 		return GraphQL, nil
 	default:
-		return Unknown, &SpecTypeError{
-			Path: path,
-		}
+		return Unknown, nil
 	}
 }
