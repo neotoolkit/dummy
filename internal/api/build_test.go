@@ -1,6 +1,7 @@
 package api_test
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -579,6 +580,19 @@ func TestBuilder_Set(t *testing.T) {
 			},
 			want: api.Operation{},
 			err:  &api.SchemaTypeError{SchemaType: ""},
+		},
+		{
+			name:    "",
+			builder: api.Builder{},
+			path:    "",
+			method:  "",
+			operation: &openapi.Operation{
+				RequestBody: openapi.RequestBody{
+					Ref: "request-body",
+				},
+			},
+			want: api.Operation{},
+			err:  errors.New("resolve reference: unknown request body request-body"),
 		},
 	}
 

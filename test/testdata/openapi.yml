@@ -8,11 +8,7 @@ paths:
   /users:
     post:
       requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UserBody"
+        $ref: "#/components/requestBodies/UserBody"
       responses:
         '201':
           description: ''
@@ -62,12 +58,15 @@ paths:
                 firstName: Elon
                 lastName: Musk
     put:
+      parameters:
+        - in: path
+          name: userId
+          description: ''
+          required: true
+          schema:
+            type: string
       requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UserBody"
+        $ref: "#/components/requestBodies/UserBody"
       responses:
         '200':
           description: ''
@@ -80,12 +79,15 @@ paths:
                 firstName: Elon
                 lastName: Musk
     patch:
+      parameters:
+        - in: path
+          name: userId
+          description: ''
+          required: true
+          schema:
+            type: string
       requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UserBody"
+        $ref: "#/components/requestBodies/UserBody"
       responses:
         '200':
           description: ''
@@ -98,22 +100,19 @@ paths:
                 firstName: Elon
                 lastName: Musk
     delete:
+      parameters:
+        - in: path
+          name: userId
+          description: ''
+          required: true
+          schema:
+            type: string
       responses:
         '204':
           description: ''
 
 components:
   schemas:
-    UserBody:
-      type: object
-      required:
-        - firstName
-        - lastName
-      properties:
-        firstName:
-          type: string
-        lastName:
-          type: string
     User:
       type: object
       required:
@@ -135,3 +134,18 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/User'
+
+  requestBodies:
+    UserBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - firstName
+              - lastName
+            properties:
+              firstName:
+                type: string
+              lastName:
+                type: string
