@@ -5,10 +5,10 @@ import (
 	"errors"
 	"io"
 	"net/http"
-	"strings"
 
 	"github.com/neotoolkit/dummy/internal/api"
 	"github.com/neotoolkit/dummy/internal/logger"
+	"github.com/neotoolkit/dummy/internal/pkg/pathfmt"
 )
 
 // Handlers -.
@@ -33,9 +33,9 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
-	path := RemoveFragment(r.URL.Path)
+	p := pathfmt.RemoveFragment(r.URL.Path)
 
-	response, ok, err := s.Handlers.Get(path, r.Method, r.Body)
+	response, ok, err := s.Handlers.Get(p, r.Method, r.Body)
 	if ok {
 		if _, ok := err.(*json.SyntaxError); ok || errors.Is(err, api.ErrEmptyRequireField) || err == io.EOF {
 			w.WriteHeader(http.StatusBadRequest)
@@ -100,18 +100,4 @@ func setStatusCode(w http.ResponseWriter, statusCode string) bool {
 	default:
 		return false
 	}
-}
-
-// RemoveTrailingSlash returns path without trailing slash
-func RemoveTrailingSlash(path string) string {
-	if len(path) > 0 && path[len(path)-1] == '/' {
-		return path[0 : len(path)-1]
-	}
-
-	return path
-}
-
-// RemoveFragment - clear url from reference in path
-func RemoveFragment(path string) string {
-	return RemoveTrailingSlash(strings.Split(path, "#")[0])
 }
