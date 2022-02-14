@@ -143,11 +143,21 @@ func (b *Builder) Set(path, method string, o *openapi.Operation) (Operation, err
 	}
 
 	body, ok := o.RequestBody.Content["application/json"]
-	if ok {
+	if ok || len(o.RequestBody.Ref) > 0 {
 		var s openapi.Schema
 
-		if body.Schema.IsRef() {
-			schema, err := b.OpenAPI.LookupByReference(body.Schema.Ref)
+		if len(o.RequestBody.Ref) > 0 {
+			requestBody, err := b.OpenAPI.LookupRequestBodyByReference(o.RequestBody.Ref)
+			if err != nil {
+				return Operation{}, fmt.Errorf("resolve reference: %w", err)
+			}
+
+			body, ok := requestBody.Content["application/json"]
+			if ok {
+				s = body.Schema
+			}
+		} else if body.Schema.IsRef() {
+			schema, err := b.OpenAPI.LookupSchemaByReference(body.Schema.Ref)
 			if err != nil {
 				return Operation{}, fmt.Errorf("resolve reference: %w", err)
 			}
@@ -223,7 +233,7 @@ func (b *Builder) Set(path, method string, o *openapi.Operation) (Operation, err
 
 func (b *Builder) convertSchema(s openapi.Schema) (Schema, error) {
 	if s.IsRef() {
-		schema, err := b.OpenAPI.LookupByReference(s.Ref)
+		schema, err := b.OpenAPI.LookupSchemaByReference(s.Ref)
 		if err != nil {
 			return nil, fmt.Errorf("resolve reference: %w", err)
 		}
