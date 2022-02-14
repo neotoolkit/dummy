@@ -123,38 +123,6 @@ func TestParseObjectExample(t *testing.T) {
 	}
 }
 
-func TestRemoveTrailingSlash(t *testing.T) {
-	tests := []struct {
-		name string
-		path string
-		want string
-	}{
-		{
-			name: "",
-			path: "",
-			want: "",
-		},
-		{
-			name: "",
-			path: "/",
-			want: "",
-		},
-		{
-			name: "",
-			path: "path/",
-			want: "path",
-		},
-	}
-
-	for _, tc := range tests {
-		t.Run(tc.name, func(t *testing.T) {
-			got := api.RemoveTrailingSlash(tc.path)
-
-			require.Equal(t, tc.want, got)
-		})
-	}
-}
-
 func TestBuilder_Build(t *testing.T) {
 	tests := []struct {
 		name    string

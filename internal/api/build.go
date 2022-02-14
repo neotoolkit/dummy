@@ -6,9 +6,10 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/neotoolkit/faker"
 	"github.com/neotoolkit/openapi"
 
-	"github.com/neotoolkit/faker"
+	"github.com/neotoolkit/dummy/internal/pkg/pathfmt"
 )
 
 // SchemaTypeError -.
@@ -73,15 +74,6 @@ func ParseObjectExample(data interface{}) (map[string]interface{}, error) {
 	return nil, &ObjectExampleError{Data: data}
 }
 
-// RemoveTrailingSlash returns path without trailing slash
-func RemoveTrailingSlash(path string) string {
-	if len(path) > 0 && path[len(path)-1] == '/' {
-		return path[0 : len(path)-1]
-	}
-
-	return path
-}
-
 type Builder struct {
 	OpenAPI    openapi.OpenAPI
 	Operations []Operation
@@ -118,7 +110,7 @@ func (b *Builder) Build() (API, error) {
 // Add -.
 func (b *Builder) Add(path, method string, o *openapi.Operation) error {
 	if o != nil {
-		p := RemoveTrailingSlash(path)
+		p := pathfmt.RemoveTrailingSlash(path)
 
 		operation, err := b.Set(p, method, o)
 		if err != nil {
