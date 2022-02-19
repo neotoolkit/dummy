@@ -41,7 +41,7 @@ func run() error {
 
 				fs := flag.NewFlagSet("dummy", flag.ContinueOnError)
 				fs.StringVar(&cfg.Server.Port, "port", "8080", "")
-				fs.StringVar(&cfg.Logger.Level, "logger-level", "INFO", "")
+				fs.StringVar(&cfg.Logger.Level, "logger-level", "info", "")
 				if err := fs.Parse(args[1:]); err != nil {
 					return err
 				}
@@ -57,7 +57,7 @@ func run() error {
 
 				go func() {
 					if err := s.Run(); !errors.Is(err, http.ErrServerClosed) {
-						l.Logger.Err(err).Msg("run server")
+						l.Errorf("run server error: %v", err)
 					}
 				}()
 
@@ -65,7 +65,7 @@ func run() error {
 				signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
 
 				x := <-interrupt
-				l.Info().Msgf("received `%v`", x)
+				l.Infof("received `%v`", x)
 
 				const timeout = 5 * time.Second
 

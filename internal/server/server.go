@@ -5,20 +5,20 @@ import (
 	"net/http"
 
 	"github.com/neotoolkit/dummy/internal/config"
-	"github.com/neotoolkit/dummy/internal/logger"
 	"github.com/neotoolkit/dummy/internal/middleware"
+	"github.com/neotoolkit/dummy/internal/pkg/logger"
 )
 
 // Server is struct for Server
 type Server struct {
 	Config   config.Server
 	Server   *http.Server
-	Logger   *logger.Logger
+	Logger   logger.Logger
 	Handlers Handlers
 }
 
 // NewServer returns a new instance of Server instance
-func NewServer(config config.Server, l *logger.Logger, h Handlers) *Server {
+func NewServer(config config.Server, l logger.Logger, h Handlers) *Server {
 	return &Server{
 		Config:   config,
 		Logger:   l,
@@ -39,7 +39,7 @@ func (s *Server) Run() error {
 		Handler: handler,
 	}
 
-	s.Logger.Info().Msgf("Running mock server on %s port", s.Config.Port)
+	s.Logger.Infof("Running mock server on %s port", s.Config.Port)
 
 	err := s.Server.ListenAndServe()
 	if err != nil {

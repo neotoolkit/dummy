@@ -52,11 +52,11 @@ func (s *Server) Handler(w http.ResponseWriter, r *http.Request) {
 
 		bytes, err := json.Marshal(resp)
 		if err != nil {
-			s.Logger.Error().Err(err).Msg("serialize response")
+			s.Logger.Errorf("serialize response error: %v", err)
 		}
 
 		if _, err := w.Write(bytes); err != nil {
-			s.Logger.Error().Err(err).Msg("write response")
+			s.Logger.Errorf("write response error: %v", err)
 		}
 
 		return
