@@ -8,8 +8,8 @@ require (
 	github.com/lamoda/gonkey v1.13.2
 	github.com/neotoolkit/faker v0.1.2
 	github.com/neotoolkit/openapi v0.9.1
-	github.com/rs/zerolog v1.26.1
 	github.com/stretchr/testify v1.7.0
+	go.uber.org/zap v1.21.0
 )
 
 require (
@@ -21,10 +21,14 @@ require (
 	github.com/lib/pq v1.10.4 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/tidwall/gjson v1.13.0 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect
+	go.uber.org/atomic v1.7.0 // indirect
+	go.uber.org/multierr v1.6.0 // indirect
+	golang.org/x/crypto v0.0.0-20211215165025-cf75a172585e // indirect
 	golang.org/x/sys v0.0.0-20220207234003-57398862261d // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
