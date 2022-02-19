@@ -41,7 +41,7 @@ func run() error {
 
 				fs := flag.NewFlagSet("dummy", flag.ContinueOnError)
 				fs.StringVar(&cfg.Server.Port, "port", "8080", "")
-				fs.StringVar(&cfg.Logger.Level, "logger-level", "INFO", "")
+				fs.StringVar(&cfg.Logger.Level, "logger-level", "info", "")
 				if err := fs.Parse(args[1:]); err != nil {
 					return err
 				}
