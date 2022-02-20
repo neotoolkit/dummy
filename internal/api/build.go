@@ -163,9 +163,7 @@ func (b *Builder) Set(path, method string, o *openapi.Operation) (Operation, err
 		operation.Body = make(map[string]FieldType, len(s.Properties))
 
 		for _, v := range s.Required {
-			operation.Body[v] = FieldType{
-				Required: true,
-			}
+			operation.Body[v] = FieldType{Required: true}
 		}
 
 		for k, v := range s.Properties {
