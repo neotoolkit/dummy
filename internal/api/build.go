@@ -26,23 +26,23 @@ var ErrEmptyItems = errors.New("empty items in array")
 
 // ArrayExampleError -.
 type ArrayExampleError struct {
-	Data interface{}
+	Data any
 }
 
 func (e *ArrayExampleError) Error() string {
 	return fmt.Sprintf("unpredicted type for example %T", e.Data)
 }
 
-func ParseArrayExample(data interface{}) ([]interface{}, error) {
+func ParseArrayExample(data any) ([]any, error) {
 	if nil == data {
-		return []interface{}{}, nil
+		return []any{}, nil
 	}
 
-	d, ok := data.([]interface{})
+	d, ok := data.([]any)
 	if ok {
-		res := make([]interface{}, len(d))
+		res := make([]any, len(d))
 		for k, v := range d {
-			res[k] = v.(map[string]interface{})
+			res[k] = v.(map[string]any)
 		}
 
 		return res, nil
@@ -53,7 +53,7 @@ func ParseArrayExample(data interface{}) ([]interface{}, error) {
 
 // ObjectExampleError -.
 type ObjectExampleError struct {
-	Data interface{}
+	Data any
 }
 
 // Error -.
@@ -61,12 +61,12 @@ func (e *ObjectExampleError) Error() string {
 	return fmt.Sprintf("unpredicted type for example %T", e.Data)
 }
 
-func ParseObjectExample(data interface{}) (map[string]interface{}, error) {
+func ParseObjectExample(data any) (map[string]any, error) {
 	if nil == data {
-		return map[string]interface{}{}, nil
+		return map[string]any{}, nil
 	}
 
-	d, ok := data.(map[string]interface{})
+	d, ok := data.(map[string]any)
 	if ok {
 		return d, nil
 	}
@@ -195,7 +195,7 @@ func (b *Builder) Set(path, method string, o *openapi.Operation) (Operation, err
 
 		example := openapi.ExampleToResponse(content.Example)
 
-		examples := make(map[string]interface{}, len(content.Examples)+1)
+		examples := make(map[string]any, len(content.Examples)+1)
 
 		if len(content.Examples) > 0 {
 			for key, e := range content.Examples {

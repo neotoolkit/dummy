@@ -12,7 +12,7 @@ func TestSchema_ExampleValue(t *testing.T) {
 	tests := []struct {
 		name   string
 		schema api.Schema
-		want   interface{}
+		want   any
 	}{
 		{
 			name:   "boolean: default",
@@ -57,27 +57,27 @@ func TestSchema_ExampleValue(t *testing.T) {
 		{
 			name:   "array: default",
 			schema: api.ArraySchema{Type: api.StringSchema{}},
-			want:   []interface{}{""},
+			want:   []any{""},
 		},
 		{
 			name:   "array: with int example",
-			schema: api.ArraySchema{Example: []interface{}{4, 2}},
-			want:   []interface{}{4, 2},
+			schema: api.ArraySchema{Example: []any{4, 2}},
+			want:   []any{4, 2},
 		},
 		{
 			name:   "array: with string example",
-			schema: api.ArraySchema{Example: []interface{}{"4", "2"}},
-			want:   []interface{}{"4", "2"},
+			schema: api.ArraySchema{Example: []any{"4", "2"}},
+			want:   []any{"4", "2"},
 		},
 		{
 			name:   "object: default",
 			schema: api.ObjectSchema{},
-			want:   map[string]interface{}{},
+			want:   map[string]any{},
 		},
 		{
 			name:   "object: with example",
-			schema: api.ObjectSchema{Example: map[string]interface{}{"a": "4", "b": "2"}},
-			want:   map[string]interface{}{"a": "4", "b": "2"},
+			schema: api.ObjectSchema{Example: map[string]any{"a": "4", "b": "2"}},
+			want:   map[string]any{"a": "4", "b": "2"},
 		},
 	}
 
@@ -95,13 +95,13 @@ func TestResponse_ExampleValue(t *testing.T) {
 		name     string
 		response api.Response
 		key      string
-		want     interface{}
+		want     any
 	}{
 		{
 			name: "boolean examples",
 			response: api.Response{
 				Schema:   api.BooleanSchema{},
-				Examples: map[string]interface{}{"first": false, "second": true},
+				Examples: map[string]any{"first": false, "second": true},
 			},
 			key:  "first",
 			want: false,
@@ -110,7 +110,7 @@ func TestResponse_ExampleValue(t *testing.T) {
 			name: "int examples",
 			response: api.Response{
 				Schema:   api.IntSchema{},
-				Examples: map[string]interface{}{"first": int64(4), "second": int64(2)},
+				Examples: map[string]any{"first": int64(4), "second": int64(2)},
 			},
 			key:  "first",
 			want: int64(4),
@@ -119,7 +119,7 @@ func TestResponse_ExampleValue(t *testing.T) {
 			name: "float examples",
 			response: api.Response{
 				Schema:   api.FloatSchema{},
-				Examples: map[string]interface{}{"first": 4.0, "second": 2.0},
+				Examples: map[string]any{"first": 4.0, "second": 2.0},
 			},
 			key:  "first",
 			want: 4.0,
@@ -128,7 +128,7 @@ func TestResponse_ExampleValue(t *testing.T) {
 			name: "string examples",
 			response: api.Response{
 				Schema:   api.StringSchema{},
-				Examples: map[string]interface{}{"first": "abc", "second": "xyz"},
+				Examples: map[string]any{"first": "abc", "second": "xyz"},
 			},
 			key:  "first",
 			want: "abc",
@@ -137,7 +137,7 @@ func TestResponse_ExampleValue(t *testing.T) {
 			name: "array examples",
 			response: api.Response{
 				Schema:   api.ArraySchema{},
-				Examples: map[string]interface{}{"first": []int64{4, 2}, "second": []int64{0, 0}},
+				Examples: map[string]any{"first": []int64{4, 2}, "second": []int64{0, 0}},
 			},
 			key:  "first",
 			want: []int64{4, 2},
@@ -146,7 +146,7 @@ func TestResponse_ExampleValue(t *testing.T) {
 			name: "object examples",
 			response: api.Response{
 				Schema:   api.ObjectSchema{},
-				Examples: map[string]interface{}{"first": map[string]interface{}{"first": "abc"}, "second": map[string]interface{}{"first": "xyz"}},
+				Examples: map[string]any{"first": map[string]any{"first": "abc"}, "second": map[string]any{"first": "xyz"}},
 			},
 			key:  "first",
 			want: map[string]interface{}{"first": "abc"},
@@ -154,19 +154,19 @@ func TestResponse_ExampleValue(t *testing.T) {
 		{
 			name: "use schema example",
 			response: api.Response{
-				Examples: map[string]interface{}{"first": map[string]interface{}{"first": "abc"}, "second": map[string]interface{}{"first": "xyz"}},
+				Examples: map[string]any{"first": map[string]any{"first": "abc"}, "second": map[string]any{"first": "xyz"}},
 				Schema: api.ObjectSchema{
-					Example: map[string]interface{}{"first": "schema variant"},
+					Example: map[string]any{"first": "schema variant"},
 				},
 			},
 			key:  "third",
-			want: map[string]interface{}{"first": "schema variant"},
+			want: map[string]any{"first": "schema variant"},
 		},
 		{
 			name: "nil schema",
 			response: api.Response{
 				Schema:   nil,
-				Examples: map[string]interface{}{"first": false, "second": true},
+				Examples: map[string]any{"first": false, "second": true},
 			},
 			key:  "first",
 			want: nil,
@@ -175,10 +175,10 @@ func TestResponse_ExampleValue(t *testing.T) {
 			name: "example",
 			response: api.Response{
 				Schema:  api.ObjectSchema{},
-				Example: map[string]interface{}{"first": "abc", "second": "def"},
+				Example: map[string]any{"first": "abc", "second": "def"},
 			},
 			key:  "",
-			want: map[string]interface{}{"first": "abc", "second": "def"},
+			want: map[string]any{"first": "abc", "second": "def"},
 		},
 		{
 			name: "object properties",
@@ -190,7 +190,7 @@ func TestResponse_ExampleValue(t *testing.T) {
 				},
 			},
 			key:  "",
-			want: map[string]interface{}{"key": map[string]interface{}{}},
+			want: map[string]any{"key": map[string]any{}},
 		},
 		{
 			name: "faker schema",

@@ -1,6 +1,6 @@
 module github.com/neotoolkit/dummy
 
-go 1.17
+go 1.18
 
 require (
 	github.com/cristalhq/acmd v0.5.7
