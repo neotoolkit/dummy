@@ -6,7 +6,7 @@
 [![coverage-img]][coverage-url]
 [![version-img]][version-url]
 
-<img align="right" alt="dummy" src="https://raw.githubusercontent.com/neotoolkit/.github/main/assets/dummy_sign_color.svg">
+<img align="right" alt="dummy" src="https://raw.githubusercontent.com/neotoolkit/.github/main/assets/dummy_sign_color.png">
 
 Run mock server based off an API contract with one command
 
