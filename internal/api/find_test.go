@@ -12,7 +12,7 @@ import (
 )
 
 type ResponseParamsBody struct {
-	Body         interface{}
+	Body         any
 	IsBodyBroken bool
 }
 
@@ -147,15 +147,15 @@ func TestFindResponse(t *testing.T) {
 	}
 	bodyWithoutRequiredParamError := errors.New("empty require field")
 
-	bodyWithoutRequiredParam := map[string]interface{}{
+	bodyWithoutRequiredParam := map[string]any{
 		"param3": "qwe",
 		"param2": "rty",
 	}
-	bodyWithoutOptionalParam := map[string]interface{}{
+	bodyWithoutOptionalParam := map[string]any{
 		"param3": "qwe",
 		"param1": "rty",
 	}
-	bodyWithAllParam := map[string]interface{}{
+	bodyWithAllParam := map[string]any{
 		"param1": "qwe",
 		"param2": "rty",
 	}
@@ -166,9 +166,9 @@ func TestFindResponse(t *testing.T) {
 		name              string
 		path              string
 		method            string
-		body              interface{}
+		body              any
 		wantFirst         api.Response
-		wantSecond        interface{}
+		wantSecond        any
 		responseMediaType string
 	}{
 		{

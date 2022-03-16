@@ -24,12 +24,12 @@ type Response struct {
 	StatusCode int
 	MediaType  string
 	Schema     Schema
-	Example    interface{}
-	Examples   map[string]interface{}
+	Example    any
+	Examples   map[string]any
 }
 
 // ExampleValue -.
-func (r Response) ExampleValue(key string) interface{} {
+func (r Response) ExampleValue(key string) any {
 	if nil == r.Schema {
 		return nil
 	}
@@ -48,7 +48,7 @@ func (r Response) ExampleValue(key string) interface{} {
 
 // Schema -.
 type Schema interface {
-	ExampleValue() interface{}
+	ExampleValue() any
 }
 
 // BooleanSchema -.
@@ -57,7 +57,7 @@ type BooleanSchema struct {
 }
 
 // ExampleValue -.
-func (b BooleanSchema) ExampleValue() interface{} {
+func (b BooleanSchema) ExampleValue() any {
 	return b.Example
 }
 
@@ -67,7 +67,7 @@ type IntSchema struct {
 }
 
 // ExampleValue -.
-func (i IntSchema) ExampleValue() interface{} {
+func (i IntSchema) ExampleValue() any {
 	return i.Example
 }
 
@@ -77,7 +77,7 @@ type FloatSchema struct {
 }
 
 // ExampleValue -.
-func (f FloatSchema) ExampleValue() interface{} {
+func (f FloatSchema) ExampleValue() any {
 	return f.Example
 }
 
@@ -87,7 +87,7 @@ type StringSchema struct {
 }
 
 // ExampleValue -.
-func (s StringSchema) ExampleValue() interface{} {
+func (s StringSchema) ExampleValue() any {
 	return s.Example
 }
 
@@ -98,27 +98,27 @@ type ArraySchema struct {
 }
 
 // ExampleValue -.
-func (a ArraySchema) ExampleValue() interface{} {
+func (a ArraySchema) ExampleValue() any {
 	if len(a.Example) > 0 {
 		return a.Example
 	}
 
-	return []interface{}{a.Type.ExampleValue()}
+	return []any{a.Type.ExampleValue()}
 }
 
 // ObjectSchema -.
 type ObjectSchema struct {
 	Properties map[string]Schema
-	Example    map[string]interface{}
+	Example    map[string]any
 }
 
 // ExampleValue -.
-func (o ObjectSchema) ExampleValue() interface{} {
+func (o ObjectSchema) ExampleValue() any {
 	if len(o.Example) > 0 {
 		return o.Example
 	}
 
-	example := make(map[string]interface{}, len(o.Properties))
+	example := make(map[string]any, len(o.Properties))
 
 	for key, propSchema := range o.Properties {
 		example[key] = propSchema.ExampleValue()
@@ -129,10 +129,10 @@ func (o ObjectSchema) ExampleValue() interface{} {
 
 // FakerSchema -.
 type FakerSchema struct {
-	Example interface{}
+	Example any
 }
 
 // ExampleValue -.
-func (f FakerSchema) ExampleValue() interface{} {
+func (f FakerSchema) ExampleValue() any {
 	return f.Example
 }

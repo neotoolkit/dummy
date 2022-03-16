@@ -42,7 +42,7 @@ func (a API) FindResponse(params FindResponseParams) (Response, error) {
 
 	switch params.Method {
 	case http.MethodPost, http.MethodPut, http.MethodPatch:
-		var body map[string]interface{}
+		var body map[string]any
 
 		err := json.NewDecoder(params.Body).Decode(&body)
 		if err != nil {
