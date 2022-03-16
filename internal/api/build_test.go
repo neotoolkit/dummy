@@ -32,25 +32,25 @@ func TestArrayExampleError(t *testing.T) {
 func TestParseArrayExample(t *testing.T) {
 	tests := []struct {
 		name string
-		data interface{}
-		want []interface{}
+		data any
+		want []any
 		err  error
 	}{
 		{
 			name: "nil data",
 			data: nil,
-			want: []interface{}{},
+			want: []any{},
 			err:  nil,
 		},
 		{
 			name: "array",
-			data: []interface{}{
-				map[string]interface{}{
+			data: []any{
+				map[string]any{
 					"key": "value",
 				},
 			},
-			want: []interface{}{
-				map[string]interface{}{
+			want: []any{
+				map[string]any{
 					"key": "value",
 				},
 			},
@@ -87,20 +87,20 @@ func TestObjectExampleError(t *testing.T) {
 func TestParseObjectExample(t *testing.T) {
 	tests := []struct {
 		name string
-		data interface{}
-		want map[string]interface{}
+		data any
+		want map[string]any
 		err  error
 	}{
 		{
 			name: "nil data",
 			data: nil,
-			want: map[string]interface{}{},
+			want: map[string]any{},
 			err:  nil,
 		},
 		{
 			name: "object",
-			data: map[string]interface{}{},
-			want: map[string]interface{}{},
+			data: map[string]any{},
+			want: map[string]any{},
 			err:  nil,
 		},
 		{

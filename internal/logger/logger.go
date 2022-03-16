@@ -38,11 +38,11 @@ func (l *Logger) Info(msg string) {
 	l.logger.Info(msg)
 }
 
-func (l *Logger) Infof(msg string, args ...interface{}) {
+func (l *Logger) Infof(msg string, args ...any) {
 	l.logger.Infof(msg, args)
 }
 
-func (l *Logger) Infow(msg string, w ...interface{}) {
+func (l *Logger) Infow(msg string, w ...any) {
 	l.logger.Infow(msg, w...)
 }
 
@@ -54,11 +54,11 @@ func (l *Logger) Error(msg string) {
 	l.logger.Error(msg)
 }
 
-func (l *Logger) Errorf(msg string, args ...interface{}) {
+func (l *Logger) Errorf(msg string, args ...any) {
 	l.logger.Errorf(msg, args)
 }
 
-func (l *Logger) Errorw(msg string, w ...interface{}) {
+func (l *Logger) Errorw(msg string, w ...any) {
 	l.logger.Errorw(msg, w...)
 }
 
