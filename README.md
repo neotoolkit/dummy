@@ -10,6 +10,8 @@
 
 Run mock server based off an API contract with one command
 
+[Dummy](https://evrone.com/dummy?utm_source=github&utm_campaign=dummy) is created & supported by [Evrone](https://evrone.com?utm_source=github&utm_campaign=dummy)
+
 ## Features
 - Supports `OpenAPI 3.x`
 
