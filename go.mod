@@ -8,7 +8,7 @@ require (
 	github.com/lamoda/gonkey v1.15.0
 	github.com/neotoolkit/faker v0.1.2
 	github.com/neotoolkit/openapi v0.10.0
-	github.com/stretchr/testify v1.7.1
+	github.com/stretchr/testify v1.7.2
 	go.uber.org/zap v1.21.0
 )
 
@@ -32,5 +32,5 @@ require (
 	golang.org/x/sys v0.0.0-20220207234003-57398862261d // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
