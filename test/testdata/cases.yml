@@ -168,3 +168,12 @@
 
   response:
     404: |
+
+- name: Set status code
+  method: GET
+  path: /users
+  headers:
+    X-Set-Status-Code: 500
+
+  response:
+    500: |
