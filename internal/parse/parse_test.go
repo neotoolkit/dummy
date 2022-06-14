@@ -77,7 +77,7 @@ func TestParse(t *testing.T) {
 			name: "unknown format",
 			path: "./testdata/api.raml",
 			want: api.API{},
-			err: &parse.SpecTypeError{
+			err: &parse.SpecFileError{
 				Path: "./testdata/api.raml",
 			},
 		},
@@ -243,7 +243,7 @@ func TestGetSpecType(t *testing.T) {
 			name: "",
 			path: "./testdata/api.raml",
 			want: parse.Unknown,
-			err: &parse.SpecTypeError{
+			err: &parse.SpecFileError{
 				Path: "./testdata/api.raml",
 			},
 		},

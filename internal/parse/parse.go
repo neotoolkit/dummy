@@ -2,7 +2,7 @@ package parse
 
 import (
 	"errors"
-	"strings"
+	"path/filepath"
 
 	"github.com/goccy/go-yaml"
 	"github.com/neotoolkit/faker"
@@ -82,9 +82,9 @@ func GetSpecType(path string) (SpecType, error) {
 		return Unknown, ErrEmptySpecTypePath
 	}
 
-	splitPath := strings.Split(path[1:], ".")
+	p := filepath.Ext(path)
 
-	if len(splitPath) == 1 {
+	if len(p) == 0 {
 		return Unknown, &SpecFileError{Path: path}
 	}
 
@@ -93,8 +93,8 @@ func GetSpecType(path string) (SpecType, error) {
 		return Unknown, err
 	}
 
-	switch splitPath[len(splitPath)-1] {
-	case "yml", "yaml":
+	switch p {
+	case ".yml", ".yaml":
 		var oapi openapi.OpenAPI
 
 		if err := yaml.Unmarshal(file, &oapi); err != nil || len(oapi.OpenAPI) == 0 {
@@ -102,9 +102,9 @@ func GetSpecType(path string) (SpecType, error) {
 		}
 
 		return OpenAPI, nil
-	case "graphql":
+	case ".graphql":
 		return GraphQL, nil
 	default:
-		return Unknown, nil
+		return Unknown, &SpecFileError{Path: path}
 	}
 }
