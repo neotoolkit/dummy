@@ -8,7 +8,7 @@ require (
 	github.com/lamoda/gonkey v1.17.0
 	github.com/neotoolkit/faker v0.1.2
 	github.com/neotoolkit/openapi v0.10.0
-	github.com/stretchr/testify v1.7.2
+	github.com/stretchr/testify v1.7.3
 	go.uber.org/zap v1.21.0
 )
 
