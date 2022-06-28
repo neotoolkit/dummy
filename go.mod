@@ -3,7 +3,7 @@ module github.com/neotoolkit/dummy
 go 1.18
 
 require (
-	github.com/cristalhq/acmd v0.5.7
+	github.com/cristalhq/acmd v0.6.0
 	github.com/goccy/go-yaml v1.9.5
 	github.com/lamoda/gonkey v1.18.1
 	github.com/neotoolkit/faker v0.1.2
