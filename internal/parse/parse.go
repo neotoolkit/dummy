@@ -5,7 +5,6 @@ import (
 	"path/filepath"
 
 	"github.com/goccy/go-yaml"
-	"github.com/neotoolkit/faker"
 	"github.com/neotoolkit/openapi"
 
 	"github.com/neotoolkit/dummy/internal/api"
@@ -61,11 +60,8 @@ func Parse(path string) (api.API, error) {
 			return api.API{}, err
 		}
 
-		f := faker.NewFaker()
-
 		b := &api.Builder{
 			OpenAPI: oapi,
-			Faker:   f,
 		}
 
 		return b.Build()
