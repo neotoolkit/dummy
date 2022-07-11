@@ -77,7 +77,6 @@ func ParseObjectExample(data any) (map[string]any, error) {
 type Builder struct {
 	OpenAPI    openapi.OpenAPI
 	Operations []Operation
-	Faker      faker.Faker
 }
 
 // Build -.
@@ -232,8 +231,9 @@ func (b *Builder) convertSchema(s openapi.Schema) (Schema, error) {
 		s = schema
 	}
 
-	if s.Faker != "" {
-		return FakerSchema{Example: b.Faker.ByName(s.Faker)}, nil
+	f, err := faker.Faker(s.Faker)
+	if s.Faker != "" && err == nil {
+		return FakerSchema{Example: f}, nil
 	}
 
 	switch s.Type {
