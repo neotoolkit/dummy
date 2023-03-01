@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/cristalhq/acmd v0.8.0
-	github.com/goccy/go-yaml v1.9.5
+	github.com/goccy/go-yaml v1.10.0
 	github.com/lamoda/gonkey v1.18.2
 	github.com/neotoolkit/faker v0.9.1
 	github.com/neotoolkit/openapi v0.10.0
@@ -41,7 +41,7 @@ require (
 	go.uber.org/multierr v1.6.0 // indirect
 	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/sys v0.0.0-20220207234003-57398862261d // indirect
+	golang.org/x/sys v0.0.0-20220406163625-3f8b81556e12 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
